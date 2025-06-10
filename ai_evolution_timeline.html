@@ -25,6 +25,43 @@
             padding: 40px 20px;
         }
         
+        .site-header {
+            margin-bottom: 40px;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            color: #f0f8ff;
+        }
+        
+        .back-arrow {
+            font-size: 1.3rem;
+            margin-right: 10px;
+            transition: transform 0.3s ease;
+        }
+        
+        .back-link:hover .back-arrow {
+            transform: translateX(-3px);
+        }
+        
         .header {
             text-align: center;
             margin-bottom: 60px;
@@ -239,6 +276,16 @@
                 font-size: 2.5rem;
             }
             
+            .back-link {
+                font-size: 1rem;
+                padding: 10px 16px;
+            }
+            
+            .back-arrow {
+                font-size: 1.1rem;
+                margin-right: 8px;
+            }
+            
             .timeline::before {
                 left: 30px;
             }
@@ -261,6 +308,13 @@
 </head>
 <body>
     <div class="container">
+        <div class="site-header">
+            <a href="index.html" class="back-link">
+                <span class="back-arrow">←</span>
+                Strategic Advisory for Experience (SAX.LLC)
+            </a>
+        </div>
+        
         <div class="header">
             <h1 class="title">The Evolution of AI</h1>
             <p class="subtitle">From foundational breakthroughs to the latest insights on reasoning limitations</p>
