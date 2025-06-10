@@ -62,6 +62,48 @@
             transform: translateX(-3px);
         }
         
+        .paper-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(145deg, #4a90e2, #357abd);
+            color: white;
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 18px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 4px 8px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 15px;
+        }
+        
+        .paper-link:hover {
+            background: linear-gradient(145deg, #5ba0f2, #4080cd);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 6px 16px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+        }
+        
+        .paper-link:active {
+            transform: translateY(0px);
+            box-shadow: 
+                0 2px 4px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+        }
+        
+        .link-icon {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
         .header {
             text-align: center;
             margin-bottom: 60px;
@@ -330,6 +372,9 @@
                         Introduced the Transformer architecture, revolutionizing NLP by replacing RNNs and CNNs with self-attention mechanisms. This paper laid the foundation for all modern large language models.
                     </div>
                     <span class="impact breakthrough">Foundational Breakthrough</span>
+                    <a href="https://arxiv.org/abs/1706.03762" target="_blank" class="paper-link">
+                        <span class="link-icon">🔗</span>
+                    </a>
                 </div>
                 <div class="timeline-dot breakthrough"></div>
             </div>
@@ -343,6 +388,9 @@
                         Demonstrated the power of bidirectional training and transfer learning, achieving state-of-the-art results across multiple NLP benchmarks and establishing pre-training as the dominant paradigm.
                     </div>
                     <span class="impact">Architecture Innovation</span>
+                    <a href="https://arxiv.org/abs/1810.04805" target="_blank" class="paper-link">
+                        <span class="link-icon">🔗</span>
+                    </a>
                 </div>
                 <div class="timeline-dot"></div>
             </div>
@@ -356,7 +404,9 @@
                         Showed that scaling language models leads to emergent capabilities across tasks without explicit training, introducing the concept of zero-shot task transfer and demonstrating the power of scale.
                     </div>
                     <span class="impact">Scaling Breakthrough</span>
-                </div>
+                    <a href="https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf" target="_blank" class="paper-link">
+                        <span class="link-icon">🔗</span>
+               </div>
                 <div class="timeline-dot"></div>
             </div>
             
@@ -369,6 +419,8 @@
                         Demonstrated that massive scale (175B parameters) enables in-context learning and few-shot performance, marking the beginning of the large language model era and changing AI's trajectory.
                     </div>
                     <span class="impact breakthrough">Paradigm Shift</span>
+                    <a href="https://arxiv.org/abs/2005.14165" target="_blank" class="paper-link">
+                        <span class="link-icon">🔗</span>
                 </div>
                 <div class="timeline-dot breakthrough"></div>
             </div>
@@ -382,6 +434,9 @@
                         Raised critical ethical concerns about large language models, arguing they are "stochastic parrots" that generate plausible text without understanding. Highlighted environmental costs, bias amplification, and risks of deception, sparking crucial conversations about AI ethics and responsible development.
                     </div>
                     <span class="impact breakthrough">Ethics Awakening</span>
+                    <a href="https://dl.acm.org/doi/10.1145/3442188.3445922" target="_blank" class="paper-link">
+                        <span class="link-icon">🔗</span>
+                    </a>
                 </div>
                 <div class="timeline-dot breakthrough"></div>
             </div>
@@ -395,6 +450,9 @@
                         Introduced InstructGPT and RLHF (Reinforcement Learning from Human Feedback), showing how to align language models with human preferences and create more helpful, harmless, and honest AI systems.
                     </div>
                     <span class="impact">Alignment Breakthrough</span>
+                    <a href="https://arxiv.org/abs/2203.02155" target="_blank" class="paper-link">
+                        <span class="link-icon">🔗</span>
+                    </a>
                 </div>
                 <div class="timeline-dot"></div>
             </div>
@@ -408,6 +466,9 @@
                         Showed that prompting models to generate intermediate reasoning steps dramatically improves performance on complex reasoning tasks, launching the field of reasoning enhancement techniques.
                     </div>
                     <span class="impact">Reasoning Innovation</span>
+                    <a href="https://arxiv.org/abs/2201.11903" target="_blank" class="paper-link">
+                        <span class="link-icon">🔗</span>
+                    </a>
                 </div>
                 <div class="timeline-dot"></div>
             </div>
@@ -421,6 +482,9 @@
                         Revealed that language models struggle to effectively use information from the middle of long contexts, showing that simply expanding context windows doesn't guarantee better performance. Challenged the assumption that more tokens automatically lead to better AI capabilities.
                     </div>
                     <span class="impact">Reality Check</span>
+                    <a href="https://arxiv.org/abs/2307.03172" target="_blank" class="paper-link">
+                        <span class="link-icon">🔗</span>
+                    </a>
                 </div>
                 <div class="timeline-dot"></div>
             </div>
@@ -434,6 +498,9 @@
                         Introduced reasoning models that spend more compute at inference time, showing dramatic improvements on mathematical and scientific reasoning tasks through reinforcement learning on reasoning traces.
                     </div>
                     <span class="impact recent">Reasoning Models Era</span>
+                    <a href="https://openai.com/index/learning-to-reason-with-llms/" target="_blank" class="paper-link">
+                        <span class="link-icon">🔗</span>
+                    </a>
                 </div>
                 <div class="timeline-dot recent"></div>
             </div>
@@ -447,6 +514,9 @@
                         Challenges the reasoning capabilities of LRMs, showing they collapse on high-complexity tasks and rely more on pattern matching than true reasoning. Reveals three performance regimes and fundamental scaling limitations.
                     </div>
                     <span class="impact recent">Reality Check</span>
+                    <a href="https://machinelearning.apple.com/research/illusion-of-thinking" target="_blank" class="paper-link">
+                        <span class="link-icon">🔗</span>
+                    </a>
                 </div>
                 <div class="timeline-dot recent"></div>
             </div>
