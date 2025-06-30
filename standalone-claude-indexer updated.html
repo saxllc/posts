@@ -43,6 +43,10 @@
             padding: 1rem;
             z-index: 50;
         }
+        .modal-content {
+            max-height: 90vh;
+            overflow-y: auto;
+        }
     </style>
 </head>
 <body>
@@ -51,7 +55,7 @@
         <div class="mb-8">
             <h1 class="text-3xl font-bold text-gray-900 mb-2">Claude Conversation Indexer</h1>
             <p class="text-gray-600 mb-4">Organize, search, and explore your Claude conversations</p>
-            <div class="flex gap-2 text-sm">
+            <div class="flex gap-2 text-sm flex-wrap">
                 <a href="https://claude.ai" target="_blank" rel="noopener noreferrer"
                    class="flex items-center gap-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 btn">
                     <svg class="lucide-icon" viewBox="0 0 24 24">
@@ -72,7 +76,7 @@
 
         <!-- Navigation -->
         <div class="mb-6">
-            <div class="flex gap-2 mb-4">
+            <div class="flex gap-2 mb-4 flex-wrap">
                 <button id="nav-dashboard" onclick="setActiveView('dashboard')" 
                         class="px-4 py-2 rounded-lg font-medium bg-blue-600 text-white">
                     Dashboard
@@ -112,14 +116,17 @@
                             class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 btn">
                         Import Conversation
                     </button>
-                    <div class="text-sm text-gray-600">
-                        <p><strong>How to export from Claude.ai:</strong></p>
-                        <ol class="list-decimal list-inside mt-2 space-y-1">
+                    <div class="text-sm text-gray-600 bg-blue-50 p-4 rounded-lg">
+                        <p class="font-semibold mb-2">How to export from Claude.ai:</p>
+                        <ol class="list-decimal list-inside space-y-1">
                             <li>Open your conversation in Claude.ai</li>
-                            <li>Copy the entire conversation text</li>
+                            <li>Copy the entire conversation text (Ctrl+A, then Ctrl+C)</li>
                             <li>Paste it in the text area above</li>
                             <li>Click "Import Conversation"</li>
                         </ol>
+                        <p class="mt-2 text-xs text-gray-500">
+                            Note: The first line will be used as the conversation title.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -142,8 +149,11 @@
                     </svg>
                     Conversation Network
                 </h3>
-                <svg id="network-svg" width="800" height="600" class="border rounded"></svg>
-                <div id="network-legend" class="mt-4 flex gap-4 text-sm flex-wrap"></div>
+                <div class="mb-4">
+                    <svg id="network-svg" width="100%" height="600" viewBox="0 0 800 600" class="border rounded bg-gray-50"></svg>
+                </div>
+                <div id="network-legend" class="flex gap-4 text-sm flex-wrap"></div>
+                <p class="text-xs text-gray-500 mt-2">Click on any node to view conversation details</p>
             </div>
         </div>
 
@@ -201,7 +211,7 @@
 
         <!-- Detail Modal -->
         <div id="detail-modal" class="modal-overlay hidden">
-            <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full modal-content">
                 <div class="p-6 border-b">
                     <div class="flex items-center justify-between">
                         <h2 id="detail-title" class="text-2xl font-bold text-gray-900"></h2>
@@ -242,6 +252,11 @@
                         <h3 class="font-semibold text-gray-900 mb-2">Connected Conversations</h3>
                         <div id="detail-connections" class="space-y-2"></div>
                     </div>
+                    
+                    <div>
+                        <h3 class="font-semibold text-gray-900 mb-2">Full Content</h3>
+                        <div id="detail-content" class="bg-gray-50 p-4 rounded-lg max-h-60 overflow-y-auto text-sm text-gray-700"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -255,7 +270,7 @@
         var allTopics = [];
         var allTags = [];
 
-        // Sample data
+        // Sample data for demonstration
         function getSampleConversations() {
             return [
                 {
@@ -265,7 +280,7 @@
                     topic: "Technical Help",
                     summary: "Discussed React hooks optimization and component architecture. Explored useCallback and useMemo for performance improvements.",
                     tags: ["React", "JavaScript", "Performance", "Hooks"],
-                    content: "Full conversation about React optimization techniques...",
+                    content: "Full conversation about React optimization techniques including best practices for component architecture, proper use of React hooks, and performance optimization strategies.",
                     nextSteps: ["Implement React.memo for expensive components", "Explore React DevTools Profiler", "Research state management patterns"],
                     connections: [2, 5]
                 },
@@ -276,7 +291,7 @@
                     topic: "Data Analysis",
                     summary: "Built automated data preprocessing pipeline. Covered feature engineering and model validation strategies.",
                     tags: ["Machine Learning", "Python", "Data Processing", "Automation"],
-                    content: "Detailed discussion about ML pipeline architecture...",
+                    content: "Detailed discussion about ML pipeline architecture, data preprocessing techniques, feature engineering methods, and cross-validation strategies for model development.",
                     nextSteps: ["Implement cross-validation", "Add data drift detection", "Create model monitoring dashboard"],
                     connections: [1, 4]
                 },
@@ -287,7 +302,7 @@
                     topic: "Creative Writing",
                     summary: "Explored narrative structure and character development. Discussed show vs tell principles and dialogue techniques.",
                     tags: ["Writing", "Storytelling", "Characters", "Dialogue"],
-                    content: "Conversation about creative writing methods...",
+                    content: "Conversation about creative writing methods, narrative structure, character development techniques, and effective dialogue writing strategies.",
                     nextSteps: ["Practice writing compelling dialogue", "Develop character backstories", "Experiment with different POV styles"],
                     connections: [6]
                 },
@@ -298,7 +313,7 @@
                     topic: "Technical Help",
                     summary: "Designed relational database schema. Covered normalization, indexing strategies, and query optimization.",
                     tags: ["Database", "SQL", "Architecture", "Performance"],
-                    content: "Database design discussion...",
+                    content: "Database design discussion covering schema design, normalization principles, indexing strategies, and query optimization techniques.",
                     nextSteps: ["Implement database indexing strategy", "Set up query performance monitoring", "Design backup and recovery plan"],
                     connections: [2, 5]
                 },
@@ -309,7 +324,7 @@
                     topic: "Technical Help",
                     summary: "Implemented JWT authentication and API rate limiting. Discussed security best practices and vulnerability assessment.",
                     tags: ["Security", "API", "Authentication", "JWT"],
-                    content: "API security conversation...",
+                    content: "API security conversation covering JWT implementation, rate limiting, security best practices, and vulnerability assessment methods.",
                     nextSteps: ["Implement OAuth 2.0", "Add API versioning", "Set up security testing automation"],
                     connections: [1, 4]
                 },
@@ -320,38 +335,65 @@
                     topic: "Business Analysis",
                     summary: "Developed strategic planning framework. Analyzed market positioning and competitive advantages.",
                     tags: ["Strategy", "Business", "Analysis", "Planning"],
-                    content: "Business strategy discussion...",
+                    content: "Business strategy discussion about strategic planning frameworks, market analysis, competitive positioning, and strategic advantage development.",
                     nextSteps: ["Conduct competitor analysis", "Define key performance indicators", "Create implementation roadmap"],
                     connections: [3]
                 }
             ];
         }
 
+        // Utility functions
+        function escapeHtml(text) {
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function generateId() {
+            return Date.now() + Math.random();
+        }
+
+        function formatDate(date) {
+            return new Date(date).toLocaleDateString();
+        }
+
         // Initialize app
         function initApp() {
+            console.log('Initializing Claude Conversation Indexer...');
             loadConversations();
             updateTopicsAndTags();
             renderAll();
+            console.log('App initialized successfully!');
         }
 
         // Load conversations from localStorage
         function loadConversations() {
-            var saved = localStorage.getItem('claudeConversations');
-            if (saved) {
-                try {
+            try {
+                var saved = localStorage.getItem('claudeConversations');
+                if (saved) {
                     conversations = JSON.parse(saved);
-                } catch (e) {
-                    console.error('Error loading saved conversations:', e);
+                    console.log('Loaded', conversations.length, 'conversations from storage');
+                } else {
                     conversations = getSampleConversations();
+                    saveConversations();
+                    console.log('Loaded sample conversations');
                 }
-            } else {
+            } catch (e) {
+                console.error('Error loading saved conversations:', e);
                 conversations = getSampleConversations();
+                saveConversations();
             }
         }
 
         // Save conversations to localStorage
         function saveConversations() {
-            localStorage.setItem('claudeConversations', JSON.stringify(conversations));
+            try {
+                localStorage.setItem('claudeConversations', JSON.stringify(conversations));
+                console.log('Conversations saved to localStorage');
+            } catch (e) {
+                console.error('Error saving conversations:', e);
+                alert('Error saving data. Your browser storage may be full.');
+            }
         }
 
         // Update topics and tags arrays
@@ -370,9 +412,10 @@
                     }
                 }
             }
+            console.log('Updated topics:', allTopics.length, 'tags:', allTags.length);
         }
 
-        // Process uploaded data
+        // Process uploaded conversation data
         function processUploadedData() {
             var textarea = document.getElementById('upload-textarea');
             var uploadedData = textarea.value.trim();
@@ -383,15 +426,36 @@
             }
             
             try {
-                var lines = uploadedData.split('\n').filter(function(line) { return line.trim(); });
+                var lines = uploadedData.split('\n').filter(function(line) { 
+                    return line.trim().length > 0; 
+                });
+                
+                var title = lines[0] ? lines[0].substring(0, 100) : "Untitled Conversation";
+                var content = uploadedData;
+                
+                // Simple content analysis for tags
+                var detectedTags = [];
+                var lowerContent = content.toLowerCase();
+                var commonTags = ['react', 'javascript', 'python', 'machine learning', 'api', 'database', 'security', 'writing', 'business', 'analysis'];
+                
+                for (var i = 0; i < commonTags.length; i++) {
+                    if (lowerContent.indexOf(commonTags[i]) !== -1) {
+                        detectedTags.push(commonTags[i].charAt(0).toUpperCase() + commonTags[i].slice(1));
+                    }
+                }
+                
+                if (detectedTags.length === 0) {
+                    detectedTags = ["Imported"];
+                }
+                
                 var newConversation = {
-                    id: Date.now(),
-                    title: lines[0] || "Untitled Conversation",
+                    id: generateId(),
+                    title: title,
                     date: new Date().toISOString().split('T')[0],
                     topic: "General",
-                    summary: "Imported conversation - processing for summary...",
-                    tags: ["Imported"],
-                    content: uploadedData,
+                    summary: "Imported conversation - " + (content.length > 150 ? content.substring(0, 150) + "..." : content),
+                    tags: detectedTags,
+                    content: content,
                     nextSteps: ["Review and categorize", "Add relevant tags", "Connect to related conversations"],
                     connections: []
                 };
@@ -400,27 +464,34 @@
                 saveConversations();
                 updateTopicsAndTags();
                 textarea.value = '';
-                alert('Conversation imported successfully!');
                 
-                // Switch back to dashboard to see the new conversation
+                alert('Conversation "' + title + '" imported successfully!');
                 setActiveView('dashboard');
+                
             } catch (error) {
+                console.error('Import error:', error);
                 alert('Error processing conversation data: ' + error.message);
             }
         }
 
-        // Export data
+        // Export data to JSON file
         function exportData() {
-            var dataStr = JSON.stringify(conversations, null, 2);
-            var dataBlob = new Blob([dataStr], {type: 'application/json'});
-            var url = URL.createObjectURL(dataBlob);
-            var link = document.createElement('a');
-            link.href = url;
-            link.download = 'claude-conversations-backup.json';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
+            try {
+                var dataStr = JSON.stringify(conversations, null, 2);
+                var dataBlob = new Blob([dataStr], {type: 'application/json'});
+                var url = URL.createObjectURL(dataBlob);
+                var link = document.createElement('a');
+                link.href = url;
+                link.download = 'claude-conversations-backup-' + new Date().toISOString().split('T')[0] + '.json';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                console.log('Data exported successfully');
+            } catch (error) {
+                console.error('Export error:', error);
+                alert('Error exporting data: ' + error.message);
+            }
         }
 
         // Clear all data
@@ -428,6 +499,7 @@
             if (confirm('Are you sure you want to clear all conversation data? This cannot be undone.')) {
                 localStorage.removeItem('claudeConversations');
                 conversations = getSampleConversations();
+                selectedTags = [];
                 saveConversations();
                 updateTopicsAndTags();
                 renderAll();
@@ -438,45 +510,52 @@
         // Set active view
         function setActiveView(view) {
             activeView = view;
+            console.log('Switching to view:', view);
             
             // Update navigation buttons
-            document.getElementById('nav-dashboard').className = view === 'dashboard' ? 
-                'px-4 py-2 rounded-lg font-medium bg-blue-600 text-white' :
-                'px-4 py-2 rounded-lg font-medium bg-white text-gray-700 hover:bg-gray-50 btn';
-            document.getElementById('nav-network').className = view === 'network' ? 
-                'px-4 py-2 rounded-lg font-medium bg-blue-600 text-white' :
-                'px-4 py-2 rounded-lg font-medium bg-white text-gray-700 hover:bg-gray-50 btn';
-            document.getElementById('nav-upload').className = view === 'upload' ? 
-                'px-4 py-2 rounded-lg font-medium bg-blue-600 text-white' :
-                'px-4 py-2 rounded-lg font-medium bg-white text-gray-700 hover:bg-gray-50 btn';
+            var navButtons = ['dashboard', 'network', 'upload'];
+            for (var i = 0; i < navButtons.length; i++) {
+                var btn = document.getElementById('nav-' + navButtons[i]);
+                if (navButtons[i] === view) {
+                    btn.className = 'px-4 py-2 rounded-lg font-medium bg-blue-600 text-white';
+                } else {
+                    btn.className = 'px-4 py-2 rounded-lg font-medium bg-white text-gray-700 hover:bg-gray-50 btn';
+                }
+            }
             
             // Show/hide views
             document.getElementById('dashboard-view').className = view === 'dashboard' ? '' : 'hidden';
             document.getElementById('network-view').className = view === 'network' ? '' : 'hidden';
             document.getElementById('upload-view').className = view === 'upload' ? '' : 'hidden';
             
+            // Render specific view content
             if (view === 'network') {
-                renderNetwork();
+                setTimeout(renderNetwork, 100); // Delay to ensure DOM is ready
             } else if (view === 'dashboard') {
                 renderDashboard();
             }
         }
 
-        // Filter conversations
+        // Filter conversations based on search criteria
         function filterConversations() {
-            var searchTerm = document.getElementById('search-input').value.toLowerCase();
+            var searchTerm = document.getElementById('search-input').value.toLowerCase().trim();
             var selectedTopic = document.getElementById('topic-filter').value;
             
             var filtered = conversations.filter(function(conv) {
                 var matchesSearch = searchTerm === '' || 
                     conv.title.toLowerCase().indexOf(searchTerm) !== -1 ||
                     conv.summary.toLowerCase().indexOf(searchTerm) !== -1 ||
-                    conv.tags.some(function(tag) { return tag.toLowerCase().indexOf(searchTerm) !== -1; });
+                    conv.content.toLowerCase().indexOf(searchTerm) !== -1 ||
+                    conv.tags.some(function(tag) { 
+                        return tag.toLowerCase().indexOf(searchTerm) !== -1; 
+                    });
                 
                 var matchesTopic = selectedTopic === '' || conv.topic === selectedTopic;
                 
                 var matchesTags = selectedTags.length === 0 || 
-                    selectedTags.every(function(tag) { return conv.tags.indexOf(tag) !== -1; });
+                    selectedTags.every(function(tag) { 
+                        return conv.tags.indexOf(tag) !== -1; 
+                    });
                 
                 return matchesSearch && matchesTopic && matchesTags;
             });
@@ -497,7 +576,7 @@
             filterConversations();
         }
 
-        // Render all components
+        // Render all dashboard components
         function renderAll() {
             renderTopicFilter();
             renderTagFilters();
@@ -505,10 +584,11 @@
             filterConversations();
         }
 
-        // Render topic filter
+        // Render topic filter dropdown
         function renderTopicFilter() {
             var select = document.getElementById('topic-filter');
             select.innerHTML = '<option value="">All Topics</option>';
+            
             for (var i = 0; i < allTopics.length; i++) {
                 var option = document.createElement('option');
                 option.value = allTopics[i];
@@ -517,10 +597,15 @@
             }
         }
 
-        // Render tag filters
+        // Render tag filter buttons
         function renderTagFilters() {
             var container = document.getElementById('tag-filters');
             container.innerHTML = '';
+            
+            if (allTags.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-sm">No tags available</p>';
+                return;
+            }
             
             for (var i = 0; i < allTags.length; i++) {
                 var tag = allTags[i];
@@ -538,7 +623,7 @@
             }
         }
 
-        // Render stats
+        // Render statistics
         function renderStats() {
             document.getElementById('stat-total').textContent = conversations.length;
             document.getElementById('stat-topics').textContent = allTopics.length;
@@ -550,6 +635,11 @@
             var grid = document.getElementById('conversations-grid');
             grid.innerHTML = '';
             
+            if (convs.length === 0) {
+                grid.innerHTML = '<div class="col-span-full text-center py-8 text-gray-500"><p>No conversations found matching your criteria.</p></div>';
+                return;
+            }
+            
             for (var i = 0; i < convs.length; i++) {
                 var conv = convs[i];
                 var card = document.createElement('div');
@@ -557,18 +647,21 @@
                 
                 var tagsHtml = '';
                 for (var j = 0; j < conv.tags.length; j++) {
-                    tagsHtml += '<span class="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs">' + conv.tags[j] + '</span>';
+                    tagsHtml += '<span class="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs">' + 
+                                escapeHtml(conv.tags[j]) + '</span>';
                 }
                 
                 var nextStepsHtml = '';
                 for (var k = 0; k < Math.min(2, conv.nextSteps.length); k++) {
-                    nextStepsHtml += '<li class="flex items-start gap-2"><span class="text-blue-600 mt-1">•</span><span>' + conv.nextSteps[k] + '</span></li>';
+                    nextStepsHtml += '<li class="flex items-start gap-2"><span class="text-blue-600 mt-1">•</span><span>' + 
+                                     escapeHtml(conv.nextSteps[k]) + '</span></li>';
                 }
                 
                 card.innerHTML = 
                     '<div class="p-6">' +
                         '<div class="flex items-start justify-between mb-3">' +
-                            '<h3 class="font-semibold text-gray-900 text-lg leading-tight">' + conv.title + '</h3>' +
+                            '<h3 class="font-semibold text-gray-900 text-lg leading-tight">' + 
+                            escapeHtml(conv.title) + '</h3>' +
                             '<button onclick="showDetailModal(' + conv.id + ')" class="text-blue-600 hover:text-blue-800">' +
                                 '<svg class="lucide-icon" viewBox="0 0 24 24">' +
                                     '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>' +
@@ -583,14 +676,16 @@
                                 '<line x1="8" x2="8" y1="2" y2="6"/>' +
                                 '<line x1="3" x2="21" y1="10" y2="10"/>' +
                             '</svg>' +
-                            '<span>' + conv.date + '</span>' +
+                            '<span>' + formatDate(conv.date) + '</span>' +
                             '<svg class="lucide-icon ml-2" viewBox="0 0 24 24">' +
                                 '<path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/>' +
                                 '<path d="M7 7h.01"/>' +
                             '</svg>' +
-                            '<span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">' + conv.topic + '</span>' +
+                            '<span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">' + 
+                            escapeHtml(conv.topic) + '</span>' +
                         '</div>' +
-                        '<p class="text-gray-600 text-sm mb-4 leading-relaxed">' + conv.summary + '</p>' +
+                        '<p class="text-gray-600 text-sm mb-4 leading-relaxed">' + 
+                        escapeHtml(conv.summary) + '</p>' +
                         '<div class="flex flex-wrap gap-1 mb-4">' + tagsHtml + '</div>' +
                         '<div class="border-t pt-4">' +
                             '<h4 class="font-medium text-gray-900 mb-2 flex items-center gap-1">' +
@@ -607,4 +702,259 @@
                 
                 grid.appendChild(card);
             }
-        
+        }
+
+        // Render dashboard view
+        function renderDashboard() {
+            renderAll();
+        }
+
+        // Render network visualization
+        function renderNetwork() {
+            var svg = document.getElementById('network-svg');
+            var legend = document.getElementById('network-legend');
+            
+            svg.innerHTML = '';
+            legend.innerHTML = '';
+            
+            if (conversations.length === 0) {
+                svg.innerHTML = '<text x="400" y="300" text-anchor="middle" fill="#6b7280" font-size="16">No conversations to display</text>';
+                return;
+            }
+            
+            var width = 800;
+            var height = 600;
+            
+            // Create nodes
+            var nodes = [];
+            for (var i = 0; i < conversations.length; i++) {
+                var conv = conversations[i];
+                nodes.push({
+                    id: conv.id,
+                    title: conv.title,
+                    topic: conv.topic,
+                    x: Math.random() * (width - 100) + 50,
+                    y: Math.random() * (height - 100) + 50
+                });
+            }
+            
+            // Create links
+            var links = [];
+            for (var i = 0; i < conversations.length; i++) {
+                var conv = conversations[i];
+                for (var j = 0; j < conv.connections.length; j++) {
+                    var connId = conv.connections[j];
+                    if (conversations.find(function(c) { return c.id === connId; })) {
+                        links.push({ source: conv.id, target: connId });
+                    }
+                }
+            }
+            
+            var topicColors = {
+                'Technical Help': '#3b82f6',
+                'Data Analysis': '#10b981',
+                'Creative Writing': '#f59e0b',
+                'Business Analysis': '#ef4444',
+                'General': '#6b7280'
+            };
+            
+            // Draw links first (so they appear behind nodes)
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i];
+                var sourceNode = nodes.find(function(n) { return n.id === link.source; });
+                var targetNode = nodes.find(function(n) { return n.id === link.target; });
+                if (sourceNode && targetNode) {
+                    var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', sourceNode.x);
+                    line.setAttribute('y1', sourceNode.y);
+                    line.setAttribute('x2', targetNode.x);
+                    line.setAttribute('y2', targetNode.y);
+                    line.setAttribute('stroke', '#e5e7eb');
+                    line.setAttribute('stroke-width', '2');
+                    line.setAttribute('opacity', '0.6');
+                    svg.appendChild(line);
+                }
+            }
+            
+            // Draw nodes
+            for (var i = 0; i < nodes.length; i++) {
+                var node = nodes[i];
+                
+                // Create node circle
+                var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', node.x);
+                circle.setAttribute('cy', node.y);
+                circle.setAttribute('r', '20');
+                circle.setAttribute('fill', topicColors[node.topic] || '#6b7280');
+                circle.setAttribute('stroke', '#fff');
+                circle.setAttribute('stroke-width', '3');
+                circle.style.cursor = 'pointer';
+                circle.setAttribute('class', 'hover:opacity-80');
+                
+                // Add click handler
+                circle.onclick = (function(nodeId) {
+                    return function() {
+                        showDetailModal(nodeId);
+                    };
+                })(node.id);
+                
+                svg.appendChild(circle);
+                
+                // Add node label
+                var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', node.x);
+                text.setAttribute('y', node.y - 30);
+                text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('fill', '#374151');
+                text.setAttribute('font-size', '12');
+                text.setAttribute('font-weight', '500');
+                var displayTitle = node.title.length > 20 ? node.title.slice(0, 20) + '...' : node.title;
+                text.textContent = displayTitle;
+                svg.appendChild(text);
+            }
+            
+            // Create legend
+            var uniqueTopics = [];
+            for (var i = 0; i < allTopics.length; i++) {
+                if (conversations.some(function(c) { return c.topic === allTopics[i]; })) {
+                    uniqueTopics.push(allTopics[i]);
+                }
+            }
+            
+            for (var i = 0; i < uniqueTopics.length; i++) {
+                var topic = uniqueTopics[i];
+                var legendItem = document.createElement('div');
+                legendItem.className = 'flex items-center gap-2';
+                
+                var colorBox = document.createElement('div');
+                colorBox.className = 'w-4 h-4 rounded-full border-2 border-white';
+                colorBox.style.backgroundColor = topicColors[topic] || '#6b7280';
+                
+                var label = document.createElement('span');
+                label.textContent = topic;
+                
+                legendItem.appendChild(colorBox);
+                legendItem.appendChild(label);
+                legend.appendChild(legendItem);
+            }
+        }
+
+        // Show conversation detail modal
+        function showDetailModal(conversationId) {
+            var conv = conversations.find(function(c) { return c.id === conversationId; });
+            if (!conv) {
+                console.error('Conversation not found:', conversationId);
+                return;
+            }
+            
+            // Set title
+            document.getElementById('detail-title').textContent = conv.title;
+            
+            // Set meta information
+            var metaHtml = 
+                '<span class="flex items-center gap-1">' +
+                    '<svg class="lucide-icon" viewBox="0 0 24 24">' +
+                        '<rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>' +
+                        '<line x1="16" x2="16" y1="2" y2="6"/>' +
+                        '<line x1="8" x2="8" y1="2" y2="6"/>' +
+                        '<line x1="3" x2="21" y1="10" y2="10"/>' +
+                    '</svg>' +
+                    formatDate(conv.date) +
+                '</span>' +
+                '<span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full">' + 
+                escapeHtml(conv.topic) + '</span>';
+            document.getElementById('detail-meta').innerHTML = metaHtml;
+            
+            // Set summary
+            document.getElementById('detail-summary').textContent = conv.summary;
+            
+            // Set tags
+            var tagsHtml = '';
+            for (var i = 0; i < conv.tags.length; i++) {
+                tagsHtml += '<span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">' + 
+                            escapeHtml(conv.tags[i]) + '</span>';
+            }
+            document.getElementById('detail-tags').innerHTML = tagsHtml;
+            
+            // Set next steps
+            var nextStepsHtml = '';
+            for (var i = 0; i < conv.nextSteps.length; i++) {
+                nextStepsHtml += 
+                    '<li class="flex items-start gap-2">' +
+                        '<span class="text-blue-600 mt-1">•</span>' +
+                        '<span class="text-gray-600">' + escapeHtml(conv.nextSteps[i]) + '</span>' +
+                    '</li>';
+            }
+            document.getElementById('detail-next-steps').innerHTML = nextStepsHtml;
+            
+            // Set connections
+            var connectionsHtml = '';
+            for (var i = 0; i < conv.connections.length; i++) {
+                var connId = conv.connections[i];
+                var connConv = conversations.find(function(c) { return c.id === connId; });
+                if (connConv) {
+                    connectionsHtml += 
+                        '<div class="flex items-center gap-2 p-2 bg-gray-50 rounded cursor-pointer hover:bg-gray-100" onclick="showDetailModal(' + connConv.id + ')">' +
+                            '<svg class="lucide-icon text-gray-400" viewBox="0 0 24 24">' +
+                                '<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>' +
+                                '<circle cx="12" cy="10" r="3"/>' +
+                            '</svg>' +
+                            '<span class="text-sm font-medium">' + escapeHtml(connConv.title) + '</span>' +
+                            '<span class="text-xs text-gray-500">(' + escapeHtml(connConv.topic) + ')</span>' +
+                        '</div>';
+                }
+            }
+            if (!connectionsHtml) {
+                connectionsHtml = '<p class="text-gray-500 text-sm">No connected conversations</p>';
+            }
+            document.getElementById('detail-connections').innerHTML = connectionsHtml;
+            
+            // Set full content
+            var contentElement = document.getElementById('detail-content');
+            contentElement.textContent = conv.content;
+            
+            // Show modal
+            document.getElementById('detail-modal').classList.remove('hidden');
+        }
+
+        // Close detail modal
+        function closeDetailModal() {
+            document.getElementById('detail-modal').classList.add('hidden');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('detail-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDetailModal();
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeDetailModal();
+            }
+            if (e.key === '/' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+                document.getElementById('search-input').focus();
+            }
+        });
+
+        // Initialize app when DOM is loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
+
+        // Also initialize when window loads (backup)
+        window.addEventListener('load', function() {
+            if (conversations.length === 0) {
+                initApp();
+            }
+        });
+
+        console.log('Claude Conversation Indexer script loaded successfully!');
+    </script>
+</body>
+</html>
