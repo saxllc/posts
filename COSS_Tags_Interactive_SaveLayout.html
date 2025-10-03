@@ -1,163 +1,243 @@
-<html><head>
+<!doctype html>
+<html>
+<head>
   <meta charset="utf-8">
-  <title>COSS Tags Interactive Cluster (Save Layout)</title>
+  <title>COSS Tags Interactive Cluster (Final v2)</title>
   <style>
-    body{ font-family: Arial, sans-serif; background: #ffffff; margin: 0; padding: 18px; }
-    .container{ max-width: 1500px; margin: auto; }
-    #svg-wrapper{ border: 1px solid #eee; box-shadow: 0 6px 20px rgba(0,0,0,0.06); overflow: auto; width: 100%; height: 820px; }
-    #svg-container{ transform-origin: 0 0; transition: transform 0.12s ease-out; width: 1400px; height: 900px; }
-    .controls{ margin: 8px 0 18px 0; display:flex; gap:8px; align-items:center; }
-    .btn{ background:#f5f5f5; border:1px solid #ddd; padding:8px 12px; border-radius:6px; cursor:pointer; }
-    .btn:hover{ background:#eee; }
+    @font-face {
+      font-family: 'Noto Sans Local';
+      src: local('Noto Sans'), local('Arial');
+    }
+    body{ font-family: Arial, sans-serif; background:#ffffff; margin:0; padding:0; overflow:auto; }
+    #topbar{ display:flex; gap:10px; align-items:center; padding:10px; background:#fafafa; border-bottom:1px solid #eee; }
+    .btn{ background:#f5f5f5; border:1px solid #ccc; padding:8px 12px; border-radius:6px; cursor:pointer; font-size:14px; }
+    .btn:hover{ background:#eaeaea; }
+    #svg-wrapper{ width:1920px; height:1080px; overflow:auto; }
+    #svg-container{ width:1920px; height:1080px; transform-origin: 0 0; transition: transform 0.12s ease-out; }
     .legend-item:hover{ opacity:0.9; }
+    #quiz-overlay{ position: fixed; top:20px; left:50%; transform:translateX(-50%); padding:18px 36px; border-radius:12px; background: rgba(0,0,0,0.65); color:#fff; font-family:'Noto Sans Local', 'Noto Sans', Arial, sans-serif; font-weight:700; font-size:28px; display:none; z-index:9999; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>COSS Tags — Interactive Cluster Diagram (Enhanced + Save Layout)</h2>
-    <p>Hover a tag to highlight its connections. Drag tags to rearrange. Use zoom controls to scale the canvas. Click <b>Save Layout</b> to download your customized HTML.</p>
-    <div class="controls">
-      <button id="zoom-in" class="btn">Zoom +</button>
-      <button id="zoom-out" class="btn">Zoom -</button>
-      <button id="zoom-reset" class="btn">Reset</button>
-      <button id="save-layout" class="btn">💾 Save Layout</button>
-      <div style="flex:1"></div>
-      <div style="font-size:13px;color:#666">Tip: drag tags or hover legend items</div>
-    </div>
-    <div id="svg-wrapper">
-      <div id="svg-container" style="transform: scale(0.5);"><svg id="coss-svg" xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900" style="background:#fff;"><defs><filter id="glow"><feGaussianBlur stdDeviation="2.5" result="coloredBlur"></feGaussianBlur><feMerge><feMergeNode in="coloredBlur"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter></defs><g id="edges"><line class="edge edge-Language edge-Learning-Loss" id="edge-Language-Learning-Loss" x1="542.1" y1="560" x2="469.3" y2="488.1" stroke="#BBB" stroke-width="2" opacity="0.8" style="opacity: 0.8; stroke: rgb(187, 187, 187); stroke-width: 2;"></line><line class="edge edge-Connectivity edge-Healthcare-Access" id="edge-Connectivity-Healthcare-Access" x1="1240.6" y1="382" x2="1300" y2="451" stroke="#BBB" stroke-width="2" opacity="0.8" style="opacity: 0.8; stroke: rgb(187, 187, 187); stroke-width: 2;"></line><line class="edge edge-Regulation edge-Skilling-Youth" id="edge-Regulation-Skilling-Youth" x1="789.5" y1="164" x2="888.1" y2="91.3" stroke="#BBB" stroke-width="2" opacity="0.8" style="opacity: 0.8; stroke: rgb(187, 187, 187); stroke-width: 2;"></line><line class="edge edge-Awareness edge-Agriculture-Productivity" id="edge-Awareness-Agriculture-Productivity" x1="792.2" y1="581.5" x2="703.9" y2="522.4" stroke="#BBB" stroke-width="2" opacity="0.8" style="opacity: 0.8; stroke: rgb(187, 187, 187); stroke-width: 2;"></line><line class="edge edge-Developers edge-Identity" id="edge-Developers-Identity" x1="367.3" y1="394.5" x2="530.5" y2="340.8" stroke="#BBB" stroke-width="2" opacity="0.8" style="opacity: 0.8; stroke: rgb(187, 187, 187); stroke-width: 2;"></line><line class="edge edge-Policy-makers edge-Payments" id="edge-Policy-makers-Payments" x1="250.4" y1="657.3" x2="206.4" y2="543.4" stroke="#BBB" stroke-width="2" opacity="0.8" style="opacity: 0.8; stroke: rgb(187, 187, 187); stroke-width: 2;"></line><line class="edge edge-Educators edge-Learning" id="edge-Educators-Learning" x1="1245.7" y1="208.7" x2="1130.2" y2="289.9" stroke="#BBB" stroke-width="2" opacity="0.8" style="opacity: 0.8; stroke: rgb(187, 187, 187); stroke-width: 2;"></line><line class="edge edge-Funders edge-Health-Records" id="edge-Funders-Health-Records" x1="489.4" y1="180.3" x2="408.8" y2="93.2" stroke="#BBB" stroke-width="2" opacity="0.8" style="opacity: 0.8; stroke: rgb(187, 187, 187); stroke-width: 2;"></line><line class="edge edge-Learning-Loss edge-Government" id="edge-Learning-Loss-Government" x1="391" y1="572.3" x2="469.3" y2="488.1" stroke="#BBB" stroke-width="2" opacity="0.8" style="opacity: 0.8; stroke: rgb(187, 187, 187); stroke-width: 2;"></line><line class="edge edge-Healthcare-Access edge-Multilateral-Body" id="edge-Healthcare-Access-Multilateral-Body" x1="1240.6" y1="382" x2="1104" y2="522.5" stroke="#BBB" stroke-width="2" opacity="0.8" style="opacity: 0.8; stroke: rgb(187, 187, 187); stroke-width: 2;"></line><line class="edge edge-Skilling-Youth edge-Philanthropist" id="edge-Skilling-Youth-Philanthropist" x1="888.1" y1="91.3" x2="976.8" y2="176.3" stroke="#BBB" stroke-width="2" opacity="0.8" style="opacity: 0.8; stroke: rgb(187, 187, 187); stroke-width: 2;"></line><line class="edge edge-Agriculture-Productivity edge-Startup-Investor" id="edge-Agriculture-Productivity-Startup-Investor" x1="744.8" y1="652.7" x2="792.2" y2="581.5" stroke="#BBB" stroke-width="2" opacity="0.8" style="opacity: 0.8; stroke: rgb(187, 187, 187); stroke-width: 2;"></line><line class="edge edge-Identity edge-Recognition" id="edge-Identity-Recognition" x1="367.3" y1="394.5" x2="324.2" y2="292.4" stroke="#BBB" stroke-width="2" opacity="0.8" style="opacity: 0.8; stroke: rgb(187, 187, 187); stroke-width: 2;"></line><line class="edge edge-Payments edge-Collaboration" id="edge-Payments-Collaboration" x1="206.4" y1="543.4" x2="91.7" y2="620.5" stroke="#BBB" stroke-width="2" opacity="0.8" style="opacity: 0.8; stroke: rgb(187, 187, 187); stroke-width: 2;"></line><line class="edge edge-Learning edge-Reach" id="edge-Learning-Reach" x1="965.7" y1="342.8" x2="1130.2" y2="289.9" stroke="#BBB" stroke-width="2" opacity="0.8" style="opacity: 0.8; stroke: rgb(187, 187, 187); stroke-width: 2;"></line><line class="edge edge-Health-Records edge-Impact" id="edge-Health-Records-Impact" x1="655.5" y1="216.2" x2="489.4" y2="180.3" stroke="#BBB" stroke-width="2" opacity="0.8" style="opacity: 0.8; stroke: rgb(187, 187, 187); stroke-width: 2;"></line><line class="edge edge-Government edge-Designing-for-Scale" id="edge-Government-Designing-for-Scale" x1="475.5" y1="646.7" x2="391" y2="572.3" stroke="#BBB" stroke-width="2" opacity="0.8" style="opacity: 0.8; stroke: rgb(187, 187, 187); stroke-width: 2;"></line><line class="edge edge-Multilateral-Body edge-Coding-for-DPGs" id="edge-Multilateral-Body-Coding-for-DPGs" x1="1104" y1="522.5" x2="971.4000000000001" y2="451.5" stroke="#BBB" stroke-width="2" opacity="0.8" style="opacity: 0.8; stroke: rgb(187, 187, 187); stroke-width: 2;"></line><line class="edge edge-Philanthropist edge-Building-Policy-Bridges" id="edge-Philanthropist-Building-Policy-Bridges" x1="976.8" y1="176.3" x2="953" y2="238.7" stroke="#BBB" stroke-width="2" opacity="0.8" style="opacity: 0.8; stroke: rgb(187, 187, 187); stroke-width: 2;"></line><line class="edge edge-Startup-Investor edge-Impact-Measurement" id="edge-Startup-Investor-Impact-Measurement" x1="971.1" y1="649.1" x2="744.8" y2="652.7" stroke="#BBB" stroke-width="2" opacity="0.8" style="opacity: 0.8; stroke: rgb(187, 187, 187); stroke-width: 2;"></line><line class="edge edge-Recognition edge-Cost-Savings" id="edge-Recognition-Cost-Savings" x1="196" y1="364.7" x2="324.2" y2="292.4" stroke="#BBB" stroke-width="2" opacity="0.8" style="opacity: 0.8; stroke: rgb(187, 187, 187); stroke-width: 2;"></line><line class="edge edge-Collaboration edge-Inclusion" id="edge-Collaboration-Inclusion" x1="91.7" y1="620.5" x2="120" y2="487.4" stroke="#BBB" stroke-width="2" opacity="0.8" style="opacity: 0.8; stroke: rgb(187, 187, 187); stroke-width: 2;"></line><line class="edge edge-Impact edge-Trust" id="edge-Impact-Trust" x1="633.3" y1="75" x2="655.5" y2="216.2" stroke="#BBB" stroke-width="2" opacity="0.8" style="opacity: 0.8; stroke: rgb(187, 187, 187); stroke-width: 2;"></line></g><g id="nodes"><g class="node-group" data-node="Language" data-label="Language" data-cluster="Barriers" transform="translate(0,0)"><rect id="rect-Language" class="node rect-Language" x="482.1" y="542" rx="10" ry="10" width="120.0" height="36.0" fill="#1f77b4" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Language" x="542.1" y="566" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Language</text></g><g class="node-group" data-node="Connectivity" data-label="Connectivity" data-cluster="Barriers" transform="translate(0,0)"><rect id="rect-Connectivity" class="node rect-Connectivity" x="1232" y="433" rx="10" ry="10" width="136.0" height="36.0" fill="#1f77b4" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Connectivity" x="1300" y="457" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Connectivity</text></g><g class="node-group" data-node="Regulation" data-label="Regulation" data-cluster="Barriers" transform="translate(0,0)"><rect id="rect-Regulation" class="node rect-Regulation" x="729.5" y="146" rx="10" ry="10" width="120.0" height="36.0" fill="#1f77b4" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Regulation" x="789.5" y="170" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Regulation</text></g><g class="node-group" data-node="Awareness" data-label="Awareness" data-cluster="Barriers" transform="translate(0,0)"><rect id="rect-Awareness" class="node rect-Awareness" x="643.9" y="504.4" rx="10" ry="10" width="120.0" height="36.0" fill="#1f77b4" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Awareness" x="703.9" y="528.4" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Awareness</text></g><g class="node-group" data-node="Developers" data-label="Developers" data-cluster="Actors" transform="translate(0,0)"><rect id="rect-Developers" class="node rect-Developers" x="470.5" y="322.8" rx="10" ry="10" width="120.0" height="36.0" fill="#ff7f0e" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Developers" x="530.5" y="346.8" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Developers</text></g><g class="node-group" data-node="Policy-makers" data-label="Policy-makers" data-cluster="Actors" transform="translate(0,0)"><rect id="rect-Policy-makers" class="node rect-Policy-makers" x="178.4" y="639.3" rx="10" ry="10" width="144.0" height="36.0" fill="#ff7f0e" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Policy-makers" x="250.4" y="663.3" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Policy-makers</text></g><g class="node-group" data-node="Educators" data-label="Educators" data-cluster="Actors" transform="translate(0,0)"><rect id="rect-Educators" class="node rect-Educators" x="1185.7" y="190.7" rx="10" ry="10" width="120.0" height="36.0" fill="#ff7f0e" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Educators" x="1245.7" y="214.7" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Educators</text></g><g class="node-group" data-node="Funders" data-label="Funders" data-cluster="Actors" transform="translate(0,0)"><rect id="rect-Funders" class="node rect-Funders" x="348.8" y="75.2" rx="10" ry="10" width="120.0" height="36.0" fill="#ff7f0e" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Funders" x="408.8" y="99.2" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Funders</text></g><g class="node-group" data-node="Learning-Loss" data-label="Learning Loss" data-cluster="Use Cases" transform="translate(0,0)"><rect id="rect-Learning-Loss" class="node rect-Learning-Loss" x="397.3" y="470.1" rx="10" ry="10" width="144.0" height="36.0" fill="#2ca02c" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Learning-Loss" x="469.3" y="494.1" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Learning Loss</text></g><g class="node-group" data-node="Healthcare-Access" data-label="Healthcare Access" data-cluster="Use Cases" transform="translate(0,0)"><rect id="rect-Healthcare-Access" class="node rect-Healthcare-Access" x="1152.6" y="364" rx="10" ry="10" width="176.0" height="36.0" fill="#2ca02c" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Healthcare-Access" x="1240.6" y="388" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Healthcare Access</text></g><g class="node-group" data-node="Skilling-Youth" data-label="Skilling Youth" data-cluster="Use Cases" transform="translate(0,0)"><rect id="rect-Skilling-Youth" class="node rect-Skilling-Youth" x="812.1" y="73.3" rx="10" ry="10" width="152.0" height="36.0" fill="#2ca02c" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Skilling-Youth" x="888.1" y="97.3" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Skilling Youth</text></g><g class="node-group" data-node="Agriculture-Productivity" data-label="Agriculture Productivity" data-cluster="Use Cases" transform="translate(0,0)"><rect id="rect-Agriculture-Productivity" class="node rect-Agriculture-Productivity" x="676.2" y="563.5" rx="10" ry="10" width="232.0" height="36.0" fill="#2ca02c" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Agriculture-Productivity" x="792.2" y="587.5" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Agriculture Productivity</text></g><g class="node-group" data-node="Identity" data-label="Identity" data-cluster="Building Blocks" transform="translate(0,0)"><rect id="rect-Identity" class="node rect-Identity" x="307.3" y="376.5" rx="10" ry="10" width="120.0" height="36.0" fill="#d62728" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Identity" x="367.3" y="400.5" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Identity</text></g><g class="node-group" data-node="Payments" data-label="Payments" data-cluster="Building Blocks" transform="translate(0,0)"><rect id="rect-Payments" class="node rect-Payments" x="146.4" y="525.4" rx="10" ry="10" width="120.0" height="36.0" fill="#d62728" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Payments" x="206.4" y="549.4" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Payments</text></g><g class="node-group" data-node="Learning" data-label="Learning" data-cluster="Community" transform="translate(0,0)"><rect id="rect-Learning" class="node rect-Learning" x="1070.2" y="271.9" rx="10" ry="10" width="120.0" height="36.0" fill="#8c564b" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Learning" x="1130.2" y="295.9" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Learning</text></g><g class="node-group" data-node="Health-Records" data-label="Health Records" data-cluster="Building Blocks" transform="translate(0,0)"><rect id="rect-Health-Records" class="node rect-Health-Records" x="413.4" y="162.3" rx="10" ry="10" width="152.0" height="36.0" fill="#d62728" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Health-Records" x="489.4" y="186.3" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Health Records</text></g><g class="node-group" data-node="Government" data-label="Government" data-cluster="Partnerships" transform="translate(0,0)"><rect id="rect-Government" class="node rect-Government" x="331" y="554.3" rx="10" ry="10" width="120.0" height="36.0" fill="#9467bd" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Government" x="391" y="578.3" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Government</text></g><g class="node-group" data-node="Multilateral-Body" data-label="Multilateral Body" data-cluster="Partnerships" transform="translate(0,0)"><rect id="rect-Multilateral-Body" class="node rect-Multilateral-Body" x="1016" y="504.5" rx="10" ry="10" width="176.0" height="36.0" fill="#9467bd" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Multilateral-Body" x="1104" y="528.5" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Multilateral Body</text></g><g class="node-group" data-node="Philanthropist" data-label="Philanthropist" data-cluster="Partnerships" transform="translate(0,0)"><rect id="rect-Philanthropist" class="node rect-Philanthropist" x="900.8" y="158.3" rx="10" ry="10" width="152.0" height="36.0" fill="#9467bd" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Philanthropist" x="976.8" y="182.3" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Philanthropist</text></g><g class="node-group" data-node="Startup-Investor" data-label="Startup Investor" data-cluster="Partnerships" transform="translate(0,0)"><rect id="rect-Startup-Investor" class="node rect-Startup-Investor" x="660.8" y="634.7" rx="10" ry="10" width="168.0" height="36.0" fill="#9467bd" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Startup-Investor" x="744.8" y="658.7" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Startup Investor</text></g><g class="node-group" data-node="Recognition" data-label="Recognition" data-cluster="Community" transform="translate(0,0)"><rect id="rect-Recognition" class="node rect-Recognition" x="260.2" y="274.4" rx="10" ry="10" width="128.0" height="36.0" fill="#8c564b" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Recognition" x="324.2" y="298.4" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Recognition</text></g><g class="node-group" data-node="Collaboration" data-label="Collaboration" data-cluster="Community" transform="translate(0,0)"><rect id="rect-Collaboration" class="node rect-Collaboration" x="19.700000000000003" y="602.5" rx="10" ry="10" width="144.0" height="36.0" fill="#8c564b" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Collaboration" x="91.7" y="626.5" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Collaboration</text></g><g class="node-group" data-node="Impact" data-label="Impact" data-cluster="Community" transform="translate(0,0)"><rect id="rect-Impact" class="node rect-Impact" x="595.5" y="198.2" rx="10" ry="10" width="120.0" height="36.0" fill="#8c564b" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Impact" x="655.5" y="222.2" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Impact</text></g><g class="node-group" data-node="Designing-for-Scale" data-label="Designing for Scale" data-cluster="Training" transform="translate(0,0)"><rect id="rect-Designing-for-Scale" class="node rect-Designing-for-Scale" x="379.5" y="628.7" rx="10" ry="10" width="192.0" height="36.0" fill="#e377c2" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Designing-for-Scale" x="475.5" y="652.7" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Designing for Scale</text></g><g class="node-group" data-node="Coding-for-DPGs" data-label="Coding for DPGs" data-cluster="Training" transform="translate(0,0)"><rect id="rect-Coding-for-DPGs" class="node rect-Coding-for-DPGs" x="891.4000000000001" y="433.5" rx="10" ry="10" width="160.0" height="36.0" fill="#e377c2" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Coding-for-DPGs" x="971.4000000000001" y="457.5" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Coding for DPGs</text></g><g class="node-group" data-node="Building-Policy-Bridges" data-label="Building Policy Bridges" data-cluster="Training" transform="translate(0,0)"><rect id="rect-Building-Policy-Bridges" class="node rect-Building-Policy-Bridges" x="841" y="220.7" rx="10" ry="10" width="224.0" height="36.0" fill="#e377c2" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Building-Policy-Bridges" x="953" y="244.7" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Building Policy Bridges</text></g><g class="node-group" data-node="Impact-Measurement" data-label="Impact Measurement" data-cluster="Training" transform="translate(0,0)"><rect id="rect-Impact-Measurement" class="node rect-Impact-Measurement" x="879.1" y="631.1" rx="10" ry="10" width="184.0" height="36.0" fill="#e377c2" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Impact-Measurement" x="971.1" y="655.1" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Impact Measurement</text></g><g class="node-group" data-node="Reach" data-label="Reach" data-cluster="Impact" transform="translate(0,0)"><rect id="rect-Reach" class="node rect-Reach" x="905.7" y="324.8" rx="10" ry="10" width="120.0" height="36.0" fill="#7f7f7f" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Reach" x="965.7" y="348.8" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Reach</text></g><g class="node-group" data-node="Cost-Savings" data-label="Cost Savings" data-cluster="Impact" transform="translate(0,0)"><rect id="rect-Cost-Savings" class="node rect-Cost-Savings" x="128" y="346.7" rx="10" ry="10" width="136.0" height="36.0" fill="#7f7f7f" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Cost-Savings" x="196" y="370.7" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Cost Savings</text></g><g class="node-group" data-node="Inclusion" data-label="Inclusion" data-cluster="Impact" transform="translate(0,0)"><rect id="rect-Inclusion" class="node rect-Inclusion" x="60.0" y="469.4" rx="10" ry="10" width="120.0" height="36.0" fill="#7f7f7f" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Inclusion" x="120.0" y="493.4" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Inclusion</text></g><g class="node-group" data-node="Trust" data-label="Trust" data-cluster="Impact" transform="translate(0,0)"><rect id="rect-Trust" class="node rect-Trust" x="573.3" y="57" rx="10" ry="10" width="120.0" height="36.0" fill="#7f7f7f" stroke="#222" stroke-width="0.8" style="opacity: 1;"></rect><text id="text-Trust" x="633.3" y="81" text-anchor="middle" font-family="Arial" font-size="12" font-weight="700" fill="#ffffff" style="opacity: 1;">Trust</text></g></g><g id="legend" transform="translate(40,40)"><g class="legend-item" data-cluster="Barriers" transform="translate(0,0)" style="cursor:pointer"><rect x="0" y="0" width="18" height="18" fill="#1f77b4" stroke="#333"></rect><text x="24" y="14" font-family="Arial" font-size="13" fill="#222">Barriers</text></g><g class="legend-item" data-cluster="Actors" transform="translate(0,34)" style="cursor:pointer"><rect x="0" y="0" width="18" height="18" fill="#ff7f0e" stroke="#333"></rect><text x="24" y="14" font-family="Arial" font-size="13" fill="#222">Actors</text></g><g class="legend-item" data-cluster="Use Cases" transform="translate(0,68)" style="cursor:pointer"><rect x="0" y="0" width="18" height="18" fill="#2ca02c" stroke="#333"></rect><text x="24" y="14" font-family="Arial" font-size="13" fill="#222">Use Cases</text></g><g class="legend-item" data-cluster="Building Blocks" transform="translate(0,102)" style="cursor:pointer"><rect x="0" y="0" width="18" height="18" fill="#d62728" stroke="#333"></rect><text x="24" y="14" font-family="Arial" font-size="13" fill="#222">Building Blocks</text></g><g class="legend-item" data-cluster="Partnerships" transform="translate(0,136)" style="cursor:pointer"><rect x="0" y="0" width="18" height="18" fill="#9467bd" stroke="#333"></rect><text x="24" y="14" font-family="Arial" font-size="13" fill="#222">Partnerships</text></g><g class="legend-item" data-cluster="Community" transform="translate(0,170)" style="cursor:pointer"><rect x="0" y="0" width="18" height="18" fill="#8c564b" stroke="#333"></rect><text x="24" y="14" font-family="Arial" font-size="13" fill="#222">Community</text></g><g class="legend-item" data-cluster="Training" transform="translate(0,204)" style="cursor:pointer"><rect x="0" y="0" width="18" height="18" fill="#e377c2" stroke="#333"></rect><text x="24" y="14" font-family="Arial" font-size="13" fill="#222">Training</text></g><g class="legend-item" data-cluster="Impact" transform="translate(0,238)" style="cursor:pointer"><rect x="0" y="0" width="18" height="18" fill="#7f7f7f" stroke="#333"></rect><text x="24" y="14" font-family="Arial" font-size="13" fill="#222">Impact</text></g></g></svg></div>
-    </div>
+  <div id="topbar">
+    <button id="zoom-in" class="btn">🔍 +</button>
+    <button id="zoom-out" class="btn">🔍 -</button>
+    <button id="zoom-reset" class="btn">Reset Zoom</button>
+    <button id="reset-layout" class="btn">Reset Layout</button>
+    <button id="save-layout" class="btn">💾 Save Layout</button>
+    <button id="save-image" class="btn">🖼️ Save as Image</button>
+    <div style="flex:1"></div>
+    <div style="font-size:13px;color:#666;padding-right:10px">Tip: drag tags to rearrange. Hover legend to read quiz question.</div>
   </div>
-  
+  <div id="quiz-overlay"></div>
+  <div id="svg-wrapper"><div id="svg-container"><svg id="coss-svg" xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" style="background:#fff;"><g id="edges"><line class="edge edge-Language edge-Learning-Loss" id="edge-Language-Learning-Loss" x1="781.1" y1="960.0" x2="715.7" y2="944.7" stroke="#999" stroke-width="4" opacity="0.9" /><line class="edge edge-Connectivity edge-Healthcare-Access" id="edge-Connectivity-Healthcare-Access" x1="1766.8" y1="353.9" x2="1763.1" y2="383.2" stroke="#999" stroke-width="4" opacity="0.9" /><line class="edge edge-Regulation edge-Skilling-Youth" id="edge-Regulation-Skilling-Youth" x1="1211.5" y1="129.5" x2="1271.9" y2="120.0" stroke="#999" stroke-width="4" opacity="0.9" /><line class="edge edge-Awareness edge-Agriculture-Productivity" id="edge-Awareness-Agriculture-Productivity" x1="1252.8" y1="809.6" x2="1287.6" y2="836.3" stroke="#999" stroke-width="4" opacity="0.9" /><line class="edge edge-Developers edge-Identity" id="edge-Developers-Identity" x1="387.3" y1="445.3" x2="308.6" y2="427.7" stroke="#999" stroke-width="4" opacity="0.9" /><line class="edge edge-Policy-makers edge-Payments" id="edge-Policy-makers-Payments" x1="150.2" y1="713.2" x2="123.6" y2="681.8" stroke="#999" stroke-width="4" opacity="0.9" /><line class="edge edge-Educators edge-Learning" id="edge-Educators-Learning" x1="1654.2" y1="631.2" x2="1710.8" y2="647.1" stroke="#999" stroke-width="4" opacity="0.9" /><line class="edge edge-Funders edge-Health-Records" id="edge-Funders-Health-Records" x1="730.7" y1="122.4" x2="710.8" y2="151.2" stroke="#999" stroke-width="4" opacity="0.9" /><line class="edge edge-Learning-Loss edge-Government" id="edge-Learning-Loss-Government" x1="715.7" y1="944.7" x2="737.1" y2="956.5" stroke="#999" stroke-width="4" opacity="0.9" /><line class="edge edge-Healthcare-Access edge-Multilateral-Body" id="edge-Healthcare-Access-Multilateral-Body" x1="1763.1" y1="383.2" x2="1800.0" y2="409.7" stroke="#999" stroke-width="4" opacity="0.9" /><line class="edge edge-Skilling-Youth edge-Philanthropist" id="edge-Skilling-Youth-Philanthropist" x1="1271.9" y1="120.0" x2="1320.9" y2="141.6" stroke="#999" stroke-width="4" opacity="0.9" /><line class="edge edge-Agriculture-Productivity edge-Startup-Investor" id="edge-Agriculture-Productivity-Startup-Investor" x1="1287.6" y1="836.3" x2="1328.8" y2="869.1" stroke="#999" stroke-width="4" opacity="0.9" /><line class="edge edge-Identity edge-Recognition" id="edge-Identity-Recognition" x1="308.6" y1="427.7" x2="233.7" y2="410.9" stroke="#999" stroke-width="4" opacity="0.9" /><line class="edge edge-Payments edge-Collaboration" id="edge-Payments-Collaboration" x1="123.6" y1="681.8" x2="142.9" y2="709.1" stroke="#999" stroke-width="4" opacity="0.9" /><line class="edge edge-Learning edge-Reach" id="edge-Learning-Reach" x1="1710.8" y1="647.1" x2="1748.6" y2="665.5" stroke="#999" stroke-width="4" opacity="0.9" /><line class="edge edge-Health-Records edge-Impact" id="edge-Health-Records-Impact" x1="710.8" y1="151.2" x2="663.3" y2="173.0" stroke="#999" stroke-width="4" opacity="0.9" /><line class="edge edge-Government edge-Designing-for-Scale" id="edge-Government-Designing-for-Scale" x1="737.1" y1="956.5" x2="769.6" y2="933.0" stroke="#999" stroke-width="4" opacity="0.9" /><line class="edge edge-Multilateral-Body edge-Coding-for-DPGs" id="edge-Multilateral-Body-Coding-for-DPGs" x1="1800.0" y1="409.7" x2="1778.0" y2="438.2" stroke="#999" stroke-width="4" opacity="0.9" /><line class="edge edge-Philanthropist edge-Building-Policy-Bridges" id="edge-Philanthropist-Building-Policy-Bridges" x1="1320.9" y1="141.6" x2="1364.0" y2="161.6" stroke="#999" stroke-width="4" opacity="0.9" /><line class="edge edge-Startup-Investor edge-Impact-Measurement" id="edge-Startup-Investor-Impact-Measurement" x1="1328.8" y1="869.1" x2="1364.9" y2="898.2" stroke="#999" stroke-width="4" opacity="0.9" /><line class="edge edge-Recognition edge-Cost-Savings" id="edge-Recognition-Cost-Savings" x1="233.7" y1="410.9" x2="171.1" y2="396.9" stroke="#999" stroke-width="4" opacity="0.9" /><line class="edge edge-Collaboration edge-Inclusion" id="edge-Collaboration-Inclusion" x1="124.9" y1="691.1" x2="120.0" y2="656.9" stroke="#999" stroke-width="4" opacity="0.9" /><line class="edge edge-Impact edge-Trust" id="edge-Impact-Trust" x1="663.3" y1="173.0" x2="603.3" y2="175.3" stroke="#999" stroke-width="4" opacity="0.9" /></g><g id="nodes"><g class="node-group" data-node="Language" data-label="Language" data-cluster="Barriers"><rect id="rect-Language" class="node rect-Language" x="711.1" y="940.0" rx="12" ry="12" width="140.0" height="40.0" fill="#1f77b4" stroke="#222" stroke-width="1.2" /><text id="text-Language" x="781.1" y="966.0" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Language</text></g><g class="node-group" data-node="Connectivity" data-label="Connectivity" data-cluster="Barriers"><rect id="rect-Connectivity" class="node rect-Connectivity" x="1687.8" y="333.9" rx="12" ry="12" width="158.0" height="40.0" fill="#1f77b4" stroke="#222" stroke-width="1.2" /><text id="text-Connectivity" x="1766.8" y="359.9" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Connectivity</text></g><g class="node-group" data-node="Regulation" data-label="Regulation" data-cluster="Barriers"><rect id="rect-Regulation" class="node rect-Regulation" x="1141.5" y="109.5" rx="12" ry="12" width="140.0" height="40.0" fill="#1f77b4" stroke="#222" stroke-width="1.2" /><text id="text-Regulation" x="1211.5" y="135.5" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Regulation</text></g><g class="node-group" data-node="Awareness" data-label="Awareness" data-cluster="Barriers"><rect id="rect-Awareness" class="node rect-Awareness" x="1182.8" y="789.6" rx="12" ry="12" width="140.0" height="40.0" fill="#1f77b4" stroke="#222" stroke-width="1.2" /><text id="text-Awareness" x="1252.8" y="815.6" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Awareness</text></g><g class="node-group" data-node="Developers" data-label="Developers" data-cluster="Actors"><rect id="rect-Developers" class="node rect-Developers" x="317.3" y="425.3" rx="12" ry="12" width="140.0" height="40.0" fill="#ff7f0e" stroke="#222" stroke-width="1.2" /><text id="text-Developers" x="387.3" y="451.3" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Developers</text></g><g class="node-group" data-node="Policy-makers" data-label="Policy-makers" data-cluster="Actors"><rect id="rect-Policy-makers" class="node rect-Policy-makers" x="66.7" y="693.2" rx="12" ry="12" width="167.0" height="40.0" fill="#ff7f0e" stroke="#222" stroke-width="1.2" /><text id="text-Policy-makers" x="150.2" y="719.2" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Policy-makers</text></g><g class="node-group" data-node="Educators" data-label="Educators" data-cluster="Actors"><rect id="rect-Educators" class="node rect-Educators" x="1584.2" y="611.2" rx="12" ry="12" width="140.0" height="40.0" fill="#ff7f0e" stroke="#222" stroke-width="1.2" /><text id="text-Educators" x="1654.2" y="637.2" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Educators</text></g><g class="node-group" data-node="Funders" data-label="Funders" data-cluster="Actors"><rect id="rect-Funders" class="node rect-Funders" x="660.7" y="102.4" rx="12" ry="12" width="140.0" height="40.0" fill="#ff7f0e" stroke="#222" stroke-width="1.2" /><text id="text-Funders" x="730.7" y="128.4" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Funders</text></g><g class="node-group" data-node="Learning-Loss" data-label="Learning Loss" data-cluster="Use Cases"><rect id="rect-Learning-Loss" class="node rect-Learning-Loss" x="632.2" y="924.7" rx="12" ry="12" width="167.0" height="40.0" fill="#2ca02c" stroke="#222" stroke-width="1.2" /><text id="text-Learning-Loss" x="715.7" y="950.7" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Learning Loss</text></g><g class="node-group" data-node="Healthcare-Access" data-label="Healthcare Access" data-cluster="Use Cases"><rect id="rect-Healthcare-Access" class="node rect-Healthcare-Access" x="1661.6" y="363.2" rx="12" ry="12" width="203.0" height="40.0" fill="#2ca02c" stroke="#222" stroke-width="1.2" /><text id="text-Healthcare-Access" x="1763.1" y="389.2" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Healthcare Access</text></g><g class="node-group" data-node="Skilling-Youth" data-label="Skilling Youth" data-cluster="Use Cases"><rect id="rect-Skilling-Youth" class="node rect-Skilling-Youth" x="1183.9" y="100.0" rx="12" ry="12" width="176.0" height="40.0" fill="#2ca02c" stroke="#222" stroke-width="1.2" /><text id="text-Skilling-Youth" x="1271.9" y="126.0" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Skilling Youth</text></g><g class="node-group" data-node="Agriculture-Productivity" data-label="Agriculture Productivity" data-cluster="Use Cases"><rect id="rect-Agriculture-Productivity" class="node rect-Agriculture-Productivity" x="1154.6" y="816.3" rx="12" ry="12" width="266.0" height="40.0" fill="#2ca02c" stroke="#222" stroke-width="1.2" /><text id="text-Agriculture-Productivity" x="1287.6" y="842.3" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Agriculture Productivity</text></g><g class="node-group" data-node="Identity" data-label="Identity" data-cluster="Building Blocks"><rect id="rect-Identity" class="node rect-Identity" x="238.6" y="407.7" rx="12" ry="12" width="140.0" height="40.0" fill="#d62728" stroke="#222" stroke-width="1.2" /><text id="text-Identity" x="308.6" y="433.7" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Identity</text></g><g class="node-group" data-node="Payments" data-label="Payments" data-cluster="Building Blocks"><rect id="rect-Payments" class="node rect-Payments" x="53.6" y="661.8" rx="12" ry="12" width="140.0" height="40.0" fill="#d62728" stroke="#222" stroke-width="1.2" /><text id="text-Payments" x="123.6" y="687.8" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Payments</text></g><g class="node-group" data-node="Learning" data-label="Learning" data-cluster="Community"><rect id="rect-Learning" class="node rect-Learning" x="1640.8" y="627.1" rx="12" ry="12" width="140.0" height="40.0" fill="#8c564b" stroke="#222" stroke-width="1.2" /><text id="text-Learning" x="1710.8" y="653.1" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Learning</text></g><g class="node-group" data-node="Health-Records" data-label="Health Records" data-cluster="Building Blocks"><rect id="rect-Health-Records" class="node rect-Health-Records" x="622.8" y="131.2" rx="12" ry="12" width="176.0" height="40.0" fill="#d62728" stroke="#222" stroke-width="1.2" /><text id="text-Health-Records" x="710.8" y="157.2" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Health Records</text></g><g class="node-group" data-node="Government" data-label="Government" data-cluster="Partnerships"><rect id="rect-Government" class="node rect-Government" x="667.1" y="936.5" rx="12" ry="12" width="140.0" height="40.0" fill="#9467bd" stroke="#222" stroke-width="1.2" /><text id="text-Government" x="737.1" y="962.5" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Government</text></g><g class="node-group" data-node="Multilateral-Body" data-label="Multilateral Body" data-cluster="Partnerships"><rect id="rect-Multilateral-Body" class="node rect-Multilateral-Body" x="1698.5" y="389.7" rx="12" ry="12" width="203.0" height="40.0" fill="#9467bd" stroke="#222" stroke-width="1.2" /><text id="text-Multilateral-Body" x="1800.0" y="415.7" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Multilateral Body</text></g><g class="node-group" data-node="Philanthropist" data-label="Philanthropist" data-cluster="Partnerships"><rect id="rect-Philanthropist" class="node rect-Philanthropist" x="1232.9" y="121.6" rx="12" ry="12" width="176.0" height="40.0" fill="#9467bd" stroke="#222" stroke-width="1.2" /><text id="text-Philanthropist" x="1320.9" y="147.6" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Philanthropist</text></g><g class="node-group" data-node="Startup-Investor" data-label="Startup Investor" data-cluster="Partnerships"><rect id="rect-Startup-Investor" class="node rect-Startup-Investor" x="1231.8" y="849.1" rx="12" ry="12" width="194.0" height="40.0" fill="#9467bd" stroke="#222" stroke-width="1.2" /><text id="text-Startup-Investor" x="1328.8" y="875.1" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Startup Investor</text></g><g class="node-group" data-node="Recognition" data-label="Recognition" data-cluster="Community"><rect id="rect-Recognition" class="node rect-Recognition" x="159.2" y="390.9" rx="12" ry="12" width="149.0" height="40.0" fill="#8c564b" stroke="#222" stroke-width="1.2" /><text id="text-Recognition" x="233.7" y="416.9" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Recognition</text></g><g class="node-group" data-node="Collaboration" data-label="Collaboration" data-cluster="Community"><rect id="rect-Collaboration" class="node rect-Collaboration" x="41.4" y="671.1" rx="12" ry="12" width="167.0" height="40.0" fill="#8c564b" stroke="#222" stroke-width="1.2" /><text id="text-Collaboration" x="124.9" y="697.1" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Collaboration</text></g><g class="node-group" data-node="Impact" data-label="Impact" data-cluster="Community"><rect id="rect-Impact" class="node rect-Impact" x="593.3" y="153.0" rx="12" ry="12" width="140.0" height="40.0" fill="#8c564b" stroke="#222" stroke-width="1.2" /><text id="text-Impact" x="663.3" y="179.0" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Impact</text></g><g class="node-group" data-node="Designing-for-Scale" data-label="Designing for Scale" data-cluster="Training"><rect id="rect-Designing-for-Scale" class="node rect-Designing-for-Scale" x="659.1" y="913.0" rx="12" ry="12" width="221.0" height="40.0" fill="#e377c2" stroke="#222" stroke-width="1.2" /><text id="text-Designing-for-Scale" x="769.6" y="939.0" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Designing for Scale</text></g><g class="node-group" data-node="Coding-for-DPGs" data-label="Coding for DPGs" data-cluster="Training"><rect id="rect-Coding-for-DPGs" class="node rect-Coding-for-DPGs" x="1685.5" y="418.2" rx="12" ry="12" width="185.0" height="40.0" fill="#e377c2" stroke="#222" stroke-width="1.2" /><text id="text-Coding-for-DPGs" x="1778.0" y="444.2" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Coding for DPGs</text></g><g class="node-group" data-node="Building-Policy-Bridges" data-label="Building Policy Bridges" data-cluster="Training"><rect id="rect-Building-Policy-Bridges" class="node rect-Building-Policy-Bridges" x="1235.5" y="141.6" rx="12" ry="12" width="257.0" height="40.0" fill="#e377c2" stroke="#222" stroke-width="1.2" /><text id="text-Building-Policy-Bridges" x="1364.0" y="167.6" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Building Policy Bridges</text></g><g class="node-group" data-node="Impact-Measurement" data-label="Impact Measurement" data-cluster="Training"><rect id="rect-Impact-Measurement" class="node rect-Impact-Measurement" x="1258.9" y="878.2" rx="12" ry="12" width="212.0" height="40.0" fill="#e377c2" stroke="#222" stroke-width="1.2" /><text id="text-Impact-Measurement" x="1364.9" y="904.2" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Impact Measurement</text></g><g class="node-group" data-node="Reach" data-label="Reach" data-cluster="Impact"><rect id="rect-Reach" class="node rect-Reach" x="1678.6" y="645.5" rx="12" ry="12" width="140.0" height="40.0" fill="#7f7f7f" stroke="#222" stroke-width="1.2" /><text id="text-Reach" x="1748.6" y="671.5" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Reach</text></g><g class="node-group" data-node="Cost-Savings" data-label="Cost Savings" data-cluster="Impact"><rect id="rect-Cost-Savings" class="node rect-Cost-Savings" x="92.1" y="376.9" rx="12" ry="12" width="158.0" height="40.0" fill="#7f7f7f" stroke="#222" stroke-width="1.2" /><text id="text-Cost-Savings" x="171.1" y="402.9" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Cost Savings</text></g><g class="node-group" data-node="Inclusion" data-label="Inclusion" data-cluster="Impact"><rect id="rect-Inclusion" class="node rect-Inclusion" x="50.0" y="636.9" rx="12" ry="12" width="140.0" height="40.0" fill="#7f7f7f" stroke="#222" stroke-width="1.2" /><text id="text-Inclusion" x="120.0" y="662.9" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Inclusion</text></g><g class="node-group" data-node="Trust" data-label="Trust" data-cluster="Impact"><rect id="rect-Trust" class="node rect-Trust" x="533.3" y="155.3" rx="12" ry="12" width="140.0" height="40.0" fill="#7f7f7f" stroke="#222" stroke-width="1.2" /><text id="text-Trust" x="603.3" y="181.3" text-anchor="middle" font-family="Noto Sans, Arial" font-size="13" font-weight="700" fill="#ffffff">Trust</text></g></g><g id="legend" transform="translate(40,40)"><g class="legend-item" data-cluster="Barriers" data-question="What barriers stop societies from unlocking the power of digital transformation?" transform="translate(0,0)" style="cursor:pointer"><rect x="0" y="0" width="18" height="18" fill="#1f77b4" stroke="#333"/><text x="24" y="14" font-family="Arial" font-size="13" fill="#222">Barriers</text></g><g class="legend-item" data-cluster="Actors" data-question="Who are the key actors driving adoption of Digital Public Goods (DPGs)?" transform="translate(0,34)" style="cursor:pointer"><rect x="0" y="0" width="18" height="18" fill="#ff7f0e" stroke="#333"/><text x="24" y="14" font-family="Arial" font-size="13" fill="#222">Actors</text></g><g class="legend-item" data-cluster="Use Cases" data-question="Which use cases of DPIs/DPGs matter most for development?" transform="translate(0,68)" style="cursor:pointer"><rect x="0" y="0" width="18" height="18" fill="#2ca02c" stroke="#333"/><text x="24" y="14" font-family="Arial" font-size="13" fill="#222">Use Cases</text></g><g class="legend-item" data-cluster="Building Blocks" data-question="What foundational digital building blocks are essential for scaling impact?" transform="translate(0,102)" style="cursor:pointer"><rect x="0" y="0" width="18" height="18" fill="#d62728" stroke="#333"/><text x="24" y="14" font-family="Arial" font-size="13" fill="#222">Building Blocks</text></g><g class="legend-item" data-cluster="Partnerships" data-question="Which partnerships accelerate the adoption of open societal systems?" transform="translate(0,136)" style="cursor:pointer"><rect x="0" y="0" width="18" height="18" fill="#9467bd" stroke="#333"/><text x="24" y="14" font-family="Arial" font-size="13" fill="#222">Partnerships</text></g><g class="legend-item" data-cluster="Community" data-question="How does community learning and recognition strengthen DPIs/DPGs?" transform="translate(0,170)" style="cursor:pointer"><rect x="0" y="0" width="18" height="18" fill="#8c564b" stroke="#333"/><text x="24" y="14" font-family="Arial" font-size="13" fill="#222">Community</text></g><g class="legend-item" data-cluster="Training" data-question="What skills and training help scale DPG solutions sustainably?" transform="translate(0,204)" style="cursor:pointer"><rect x="0" y="0" width="18" height="18" fill="#e377c2" stroke="#333"/><text x="24" y="14" font-family="Arial" font-size="13" fill="#222">Training</text></g><g class="legend-item" data-cluster="Impact" data-question="How do we measure trust, inclusion, and cost savings from DPIs?" transform="translate(0,238)" style="cursor:pointer"><rect x="0" y="0" width="18" height="18" fill="#7f7f7f" stroke="#333"/><text x="24" y="14" font-family="Arial" font-size="13" fill="#222">Impact</text></g></g></svg></div></div>
 <script>
-function sanitize(s){ return s.replace(/[^a-zA-Z0-9]/g, "-"); }
+// Data injected from server
 const adjacency = {"Language": ["Learning-Loss"], "Connectivity": ["Healthcare-Access"], "Regulation": ["Skilling-Youth"], "Awareness": ["Agriculture-Productivity"], "Developers": ["Identity"], "Policy-makers": ["Payments"], "Educators": ["Learning"], "Funders": ["Health-Records"], "Learning-Loss": ["Language", "Government"], "Healthcare-Access": ["Connectivity", "Multilateral-Body"], "Skilling-Youth": ["Regulation", "Philanthropist"], "Agriculture-Productivity": ["Awareness", "Startup-Investor"], "Identity": ["Developers", "Recognition"], "Payments": ["Policy-makers", "Collaboration"], "Learning": ["Educators", "Reach"], "Health-Records": ["Funders", "Impact"], "Government": ["Learning-Loss", "Designing-for-Scale"], "Multilateral-Body": ["Healthcare-Access", "Coding-for-DPGs"], "Philanthropist": ["Skilling-Youth", "Building-Policy-Bridges"], "Startup-Investor": ["Agriculture-Productivity", "Impact-Measurement"], "Recognition": ["Identity", "Cost-Savings"], "Collaboration": ["Payments", "Inclusion"], "Impact": ["Health-Records", "Trust"], "Designing-for-Scale": ["Government"], "Coding-for-DPGs": ["Multilateral-Body"], "Building-Policy-Bridges": ["Philanthropist"], "Impact-Measurement": ["Startup-Investor"], "Reach": ["Learning"], "Cost-Savings": ["Recognition"], "Inclusion": ["Collaboration"], "Trust": ["Impact"]};
+const initialPositions = {"Language": {"x": 711.1, "y": 940.0, "w": 140, "h": 40, "cx": 781.1, "cy": 960.0}, "Connectivity": {"x": 1687.8, "y": 333.9, "w": 158, "h": 40, "cx": 1766.8, "cy": 353.9}, "Regulation": {"x": 1141.5, "y": 109.5, "w": 140, "h": 40, "cx": 1211.5, "cy": 129.5}, "Awareness": {"x": 1182.8, "y": 789.6, "w": 140, "h": 40, "cx": 1252.8, "cy": 809.6}, "Developers": {"x": 317.3, "y": 425.3, "w": 140, "h": 40, "cx": 387.3, "cy": 445.3}, "Policy-makers": {"x": 66.7, "y": 693.2, "w": 167, "h": 40, "cx": 150.2, "cy": 713.2}, "Educators": {"x": 1584.2, "y": 611.2, "w": 140, "h": 40, "cx": 1654.2, "cy": 631.2}, "Funders": {"x": 660.7, "y": 102.4, "w": 140, "h": 40, "cx": 730.7, "cy": 122.4}, "Learning-Loss": {"x": 632.2, "y": 924.7, "w": 167, "h": 40, "cx": 715.7, "cy": 944.7}, "Healthcare-Access": {"x": 1661.6, "y": 363.2, "w": 203, "h": 40, "cx": 1763.1, "cy": 383.2}, "Skilling-Youth": {"x": 1183.9, "y": 100.0, "w": 176, "h": 40, "cx": 1271.9, "cy": 120.0}, "Agriculture-Productivity": {"x": 1154.6, "y": 816.3, "w": 266, "h": 40, "cx": 1287.6, "cy": 836.3}, "Identity": {"x": 238.6, "y": 407.7, "w": 140, "h": 40, "cx": 308.6, "cy": 427.7}, "Payments": {"x": 53.6, "y": 661.8, "w": 140, "h": 40, "cx": 123.6, "cy": 681.8}, "Learning": {"x": 1640.8, "y": 627.1, "w": 140, "h": 40, "cx": 1710.8, "cy": 647.1}, "Health-Records": {"x": 622.8, "y": 131.2, "w": 176, "h": 40, "cx": 710.8, "cy": 151.2}, "Government": {"x": 667.1, "y": 936.5, "w": 140, "h": 40, "cx": 737.1, "cy": 956.5}, "Multilateral-Body": {"x": 1698.5, "y": 389.7, "w": 203, "h": 40, "cx": 1800.0, "cy": 409.7}, "Philanthropist": {"x": 1232.9, "y": 121.6, "w": 176, "h": 40, "cx": 1320.9, "cy": 141.6}, "Startup-Investor": {"x": 1231.8, "y": 849.1, "w": 194, "h": 40, "cx": 1328.8, "cy": 869.1}, "Recognition": {"x": 159.2, "y": 390.9, "w": 149, "h": 40, "cx": 233.7, "cy": 410.9}, "Collaboration": {"x": 41.4, "y": 671.1, "w": 167, "h": 40, "cx": 124.9, "cy": 691.1}, "Impact": {"x": 593.3, "y": 153.0, "w": 140, "h": 40, "cx": 663.3, "cy": 173.0}, "Designing-for-Scale": {"x": 659.1, "y": 913.0, "w": 221, "h": 40, "cx": 769.6, "cy": 933.0}, "Coding-for-DPGs": {"x": 1685.5, "y": 418.2, "w": 185, "h": 40, "cx": 1778.0, "cy": 438.2}, "Building-Policy-Bridges": {"x": 1235.5, "y": 141.6, "w": 257, "h": 40, "cx": 1364.0, "cy": 161.6}, "Impact-Measurement": {"x": 1258.9, "y": 878.2, "w": 212, "h": 40, "cx": 1364.9, "cy": 898.2}, "Reach": {"x": 1678.6, "y": 645.5, "w": 140, "h": 40, "cx": 1748.6, "cy": 665.5}, "Cost-Savings": {"x": 92.1, "y": 376.9, "w": 158, "h": 40, "cx": 171.1, "cy": 396.9}, "Inclusion": {"x": 50.0, "y": 636.9, "w": 140, "h": 40, "cx": 120.0, "cy": 656.9}, "Trust": {"x": 533.3, "y": 155.3, "w": 140, "h": 40, "cx": 603.3, "cy": 175.3}};
 
-function dimAll(){
-    document.querySelectorAll('.node').forEach(n => n.style.opacity = 0.25);
-    document.querySelectorAll('.edge').forEach(e => { e.style.opacity = 0.08; e.style.stroke = '#BBB'; e.style.strokeWidth = 2; });
-}
-function resetAll(){
-    document.querySelectorAll('.node').forEach(n => n.style.opacity = 1);
-    document.querySelectorAll('.edge').forEach(e => { e.style.opacity = 0.8; e.style.stroke = '#BBB'; e.style.strokeWidth = 2; });
-}
+// Utility helpers
+function idRect(id){ return document.getElementById('rect-'+id); }
+function idText(id){ return document.getElementById('text-'+id); }
+function idEdge(a,b){ return document.getElementById('edge-'+a+'-'+b) || document.getElementById('edge-'+b+'-'+a); }
+
+function dimAll(){ document.querySelectorAll('.node').forEach(n => n.style.opacity = 0.25); document.querySelectorAll('.edge').forEach(e => { e.style.opacity = 0.08; e.style.stroke = '#BBB'; e.style.strokeWidth = 3; }); }
+function resetAll(){ document.querySelectorAll('.node').forEach(n => n.style.opacity = 1); document.querySelectorAll('.edge').forEach(e => { e.style.opacity = 0.9; e.style.stroke = '#999'; e.style.strokeWidth = 4; }); }
+
 function highlightNode(nodeId){
-    dimAll();
-    const neigh = new Set([nodeId]);
-    (adjacency[nodeId] || []).forEach(n => neigh.add(n));
-    neigh.forEach(id => { const r = document.getElementById('rect-'+id); if(r) r.style.opacity = 1; const t = document.getElementById('text-'+id); if(t) t.style.opacity=1; });
-    Object.keys(adjacency).forEach(a => adjacency[a].forEach(b => { 
-        if(neigh.has(a) && neigh.has(b)){ 
-            document.querySelectorAll('.edge.edge-'+a+'.edge-'+b).forEach(el => { el.style.opacity=0.95; el.style.stroke='#333'; el.style.strokeWidth=3; });
-            document.querySelectorAll('.edge.edge-'+b+'.edge-'+a).forEach(el => { el.style.opacity=0.95; el.style.stroke='#333'; el.style.strokeWidth=3; });
-        }
-    }));
+  dimAll();
+  const neigh = new Set([nodeId]);
+  (adjacency[nodeId] || []).forEach(n => neigh.add(n));
+  neigh.forEach(id => { const r = idRect(id); if(r) r.style.opacity = 1; const t = idText(id); if(t) t.style.opacity=1; });
+  Object.keys(adjacency).forEach(a => adjacency[a].forEach(b => {
+    if(neigh.has(a) && neigh.has(b)){
+      const el = idEdge(a,b);
+      if(el){ el.style.opacity = 0.98; el.style.stroke = '#333'; el.style.strokeWidth = 6; }
+    }
+  }));
 }
 
+// On load: attach interactions
 document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.node-group').forEach(g => {
-        g.addEventListener('mouseover', () => highlightNode(g.getAttribute('data-node')));
-        g.addEventListener('mouseout', () => resetAll());
-        // click does nothing now (no alerts)
-    });
-    document.querySelectorAll('.legend-item').forEach(item => {
-        item.addEventListener('mouseover', () => {
-            const cluster = item.getAttribute('data-cluster');
-            dimAll();
-            document.querySelectorAll('.node-group').forEach(g => { if(g.getAttribute('data-cluster')===cluster){ const id=g.getAttribute('data-node'); document.getElementById('rect-'+id).style.opacity=1; document.getElementById('text-'+id).style.opacity=1; } });
-        });
-        item.addEventListener('mouseout', () => resetAll());
-    });
-    // Dragging
-    let selected = null, offset = {x:0,y:0};
-    const svg = document.getElementById('coss-svg');
-    svg.addEventListener('mousedown', e => {
-        if(e.target.tagName === 'rect' && e.target.classList.contains('node')){
-            selected = e.target;
-            const pt = svg.createSVGPoint();
-            pt.x = e.clientX; pt.y = e.clientY;
-            const ctm = svg.getScreenCTM().inverse();
-            const loc = pt.matrixTransform(ctm);
-            offset.x = loc.x - parseFloat(selected.getAttribute('x'));
-            offset.y = loc.y - parseFloat(selected.getAttribute('y'));
-            e.preventDefault();
-        }
-    });
-    svg.addEventListener('mousemove', e => {
-        if(selected){
-            const pt = svg.createSVGPoint();
-            pt.x = e.clientX; pt.y = e.clientY;
-            const ctm = svg.getScreenCTM().inverse();
-            const loc = pt.matrixTransform(ctm);
-            const id = selected.id.replace('rect-','');
-            const newX = loc.x - offset.x;
-            const newY = loc.y - offset.y;
-            selected.setAttribute('x', newX);
-            selected.setAttribute('y', newY);
-            const rectW = parseFloat(selected.getAttribute('width'));
-            const rectH = parseFloat(selected.getAttribute('height'));
-            const cx = newX + rectW/2;
-            const cy = newY + rectH/2;
-            const textEl = document.getElementById('text-'+id);
-            textEl.setAttribute('x', cx);
-            textEl.setAttribute('y', cy+6);
-            (adjacency[id] || []).forEach(nid => {
-                const line = document.querySelector('#edge-'+id+'-'+nid) || document.querySelector('#edge-'+nid+'-'+id);
-                if(line){
-                    const rectA = document.getElementById('rect-'+id);
-                    const rectB = document.getElementById('rect-'+nid);
-                    const ax = parseFloat(rectA.getAttribute('x')) + parseFloat(rectA.getAttribute('width'))/2;
-                    const ay = parseFloat(rectA.getAttribute('y')) + parseFloat(rectA.getAttribute('height'))/2;
-                    const bx = parseFloat(rectB.getAttribute('x')) + parseFloat(rectB.getAttribute('width'))/2;
-                    const by = parseFloat(rectB.getAttribute('y')) + parseFloat(rectB.getAttribute('height'))/2;
-                    line.setAttribute('x1', ax); line.setAttribute('y1', ay);
-                    line.setAttribute('x2', bx); line.setAttribute('y2', by);
-                }
-            });
-        }
-    });
-    svg.addEventListener('mouseup', e => { selected = null; });
-    svg.addEventListener('mouseleave', e => { selected = null; });
-    // Zoom controls
-    let scale = 1.0;
-    const container = document.getElementById('svg-container');
-    function applyScale(){ container.style.transform = 'scale(' + scale + ')'; }
-    document.getElementById('zoom-in').addEventListener('click', () => { scale = Math.min(3, scale + 0.1); applyScale(); });
-    document.getElementById('zoom-out').addEventListener('click', () => { scale = Math.max(0.4, scale - 0.1); applyScale(); });
-    document.getElementById('zoom-reset').addEventListener('click', () => { scale = 1.0; applyScale(); });
-    document.getElementById('svg-wrapper').addEventListener('wheel', e => { if(e.ctrlKey){ e.preventDefault(); scale = Math.min(3, Math.max(0.4, scale + (e.deltaY>0 ? -0.05 : 0.05))); applyScale(); } }, {passive:false});
+  // node hover
+  document.querySelectorAll('.node-group').forEach(g => {
+    g.addEventListener('mouseover', () => highlightNode(g.getAttribute('data-node')));
+    g.addEventListener('mouseout', () => resetAll());
+  });
 
-    // Save Layout
-    document.getElementById('save-layout').addEventListener('click', () => {
-        const positions = {};
-        document.querySelectorAll('.node-group').forEach(g => {
-            const id = g.getAttribute('data-node');
-            const rect = document.getElementById('rect-'+id);
-            const x = parseFloat(rect.getAttribute('x'));
-            const y = parseFloat(rect.getAttribute('y'));
-            const w = parseFloat(rect.getAttribute('width'));
-            const h = parseFloat(rect.getAttribute('height'));
-            const cx = x + w/2;
-            const cy = y + h/2;
-            positions[id] = {x: x, y: y, cx: cx, cy: cy};
-        });
-        const blob = new Blob([document.documentElement.outerHTML], {type: 'text/html'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'COSS_Tags_Interactive_CustomLayout.html';
-        a.click();
-        URL.revokeObjectURL(url);
+  // legend hover -> overlay + highlight cluster
+  const overlay = document.getElementById('quiz-overlay');
+  document.querySelectorAll('.legend-item').forEach(item => {
+    item.addEventListener('mouseover', () => {
+      overlay.innerText = item.getAttribute('data-question');
+      overlay.style.display = 'block';
+      const cluster = item.getAttribute('data-cluster');
+      dimAll();
+      document.querySelectorAll('.node-group').forEach(g => { if(g.getAttribute('data-cluster')===cluster){ const id=g.getAttribute('data-node'); const r=idRect(id); const t=idText(id); if(r) r.style.opacity=1; if(t) t.style.opacity=1; } });
     });
-});
+    item.addEventListener('mouseout', () => { overlay.style.display='none'; resetAll(); });
+  });
+
+  // Dragging support
+  let selected = null, offset = {x:0,y:0};
+  const svg = document.getElementById('coss-svg');
+  svg.addEventListener('mousedown', e => {
+    if(e.target.tagName === 'rect' && e.target.classList.contains('node')){
+      selected = e.target;
+      const pt = svg.createSVGPoint();
+      pt.x = e.clientX; pt.y = e.clientY;
+      const ctm = svg.getScreenCTM().inverse();
+      const loc = pt.matrixTransform(ctm);
+      offset.x = loc.x - parseFloat(selected.getAttribute('x'));
+      offset.y = loc.y - parseFloat(selected.getAttribute('y'));
+      e.preventDefault();
+    }
+  });
+  svg.addEventListener('mousemove', e => {
+    if(selected){
+      const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
+      const ctm = svg.getScreenCTM().inverse(); const loc = pt.matrixTransform(ctm);
+      const id = selected.id.replace('rect-','');
+      const newX = loc.x - offset.x; const newY = loc.y - offset.y;
+      selected.setAttribute('x', newX); selected.setAttribute('y', newY);
+      const rectW = parseFloat(selected.getAttribute('width')); const rectH = parseFloat(selected.getAttribute('height'));
+      const cx = newX + rectW/2; const cy = newY + rectH/2;
+      const textEl = idText(id); if(textEl){ textEl.setAttribute('x', cx); textEl.setAttribute('y', cy+6); }
+      // update connected edges and enforce min connector length 10px
+      (adjacency[id] || []).forEach(nid => {
+        const line = idEdge(id,nid);
+        if(line){
+          const rectA = idRect(id); const rectB = idRect(nid);
+          const ax = parseFloat(rectA.getAttribute('x')) + parseFloat(rectA.getAttribute('width'))/2;
+          const ay = parseFloat(rectA.getAttribute('y')) + parseFloat(rectA.getAttribute('height'))/2;
+          const bx = parseFloat(rectB.getAttribute('x')) + parseFloat(rectB.getAttribute('width'))/2;
+          const by = parseFloat(rectB.getAttribute('y')) + parseFloat(rectB.getAttribute('height'))/2;
+          let dx = bx-ax, dy = by-ay;
+          const dist = Math.sqrt(dx*dx+dy*dy);
+          if(dist < 10){ dx += 12; dy += 12; } // nudge to maintain visible connector
+          line.setAttribute('x1', ax); line.setAttribute('y1', ay);
+          line.setAttribute('x2', bx + (dist<10?12:0)); line.setAttribute('y2', by + (dist<10?12:0));
+        }
+      });
+    }
+  });
+  svg.addEventListener('mouseup', e => { selected = null; });
+  svg.addEventListener('mouseleave', e => { selected = null; });
+
+  // Touch support (basic)
+  svg.addEventListener('touchstart', e => {
+    const t = e.touches[0];
+    const el = document.elementFromPoint(t.clientX, t.clientY);
+    if(el && el.tagName==='rect' && el.classList.contains('node')){
+      selected = el;
+      const pt = svg.createSVGPoint(); pt.x = t.clientX; pt.y = t.clientY;
+      const loc = pt.matrixTransform(svg.getScreenCTM().inverse());
+      offset.x = loc.x - parseFloat(selected.getAttribute('x'));
+      offset.y = loc.y - parseFloat(selected.getAttribute('y'));
+      e.preventDefault();
+    }
+  }, {passive:false});
+  svg.addEventListener('touchmove', e => {
+    if(selected){
+      const t = e.touches[0];
+      const pt = svg.createSVGPoint(); pt.x = t.clientX; pt.y = t.clientY;
+      const loc = pt.matrixTransform(svg.getScreenCTM().inverse());
+      const id = selected.id.replace('rect-','');
+      const newX = loc.x - offset.x; const newY = loc.y - offset.y;
+      selected.setAttribute('x', newX); selected.setAttribute('y', newY);
+      const rectW = parseFloat(selected.getAttribute('width')); const rectH = parseFloat(selected.getAttribute('height'));
+      const cx = newX + rectW/2; const cy = newY + rectH/2;
+      const textEl = idText(id); if(textEl){ textEl.setAttribute('x', cx); textEl.setAttribute('y', cy+6); }
+      (adjacency[id] || []).forEach(nid => {
+        const line = idEdge(id,nid);
+        if(line){
+          const rectA = idRect(id); const rectB = idRect(nid);
+          const ax = parseFloat(rectA.getAttribute('x')) + parseFloat(rectA.getAttribute('width'))/2;
+          const ay = parseFloat(rectA.getAttribute('y')) + parseFloat(rectA.getAttribute('height'))/2;
+          const bx = parseFloat(rectB.getAttribute('x')) + parseFloat(rectB.getAttribute('width'))/2;
+          const by = parseFloat(rectB.getAttribute('y')) + parseFloat(rectB.getAttribute('height'))/2;
+          const dx = bx-ax, dy = by-ay; const dist = Math.sqrt(dx*dx+dy*dy);
+          line.setAttribute('x1', ax); line.setAttribute('y1', ay);
+          line.setAttribute('x2', bx + (dist<10?12:0)); line.setAttribute('y2', by + (dist<10?12:0));
+        }
+      });
+      e.preventDefault();
+    }
+  }, {passive:false});
+
+  // Zoom controls (scale container)
+  let scale = 1.0;
+  const container = document.getElementById('svg-container');
+  function applyScale(){ container.style.transform = 'scale(' + scale + ')'; }
+  document.getElementById('zoom-in').addEventListener('click', () => { scale = Math.min(3, scale + 0.1); applyScale(); });
+  document.getElementById('zoom-out').addEventListener('click', () => { scale = Math.max(0.4, scale - 0.1); applyScale(); });
+  document.getElementById('zoom-reset').addEventListener('click', () => { scale = 1.0; applyScale(); });
+
+  // Reset layout -> restore initialPositions
+  document.getElementById('reset-layout').addEventListener('click', () => {
+    Object.keys(initialPositions).forEach(id => {
+      const pos = initialPositions[id];
+      const rect = idRect(id); const txt = idText(id);
+      if(rect){ rect.setAttribute('x', pos.x); rect.setAttribute('y', pos.y); }
+      if(txt){ txt.setAttribute('x', pos.cx); txt.setAttribute('y', pos.cy + 6); }
+    });
+    // update edges to match
+    document.querySelectorAll('.edge').forEach(line => {
+      const classes = Array.from(line.classList).filter(c => c.startsWith('edge-'));
+      if(classes.length>=2){
+        const a = classes[0].replace('edge-',''); const b = classes[1].replace('edge-','');
+        const ra = idRect(a); const rb = idRect(b);
+        if(ra && rb){
+          const ax = parseFloat(ra.getAttribute('x')) + parseFloat(ra.getAttribute('width'))/2;
+          const ay = parseFloat(ra.getAttribute('y')) + parseFloat(ra.getAttribute('height'))/2;
+          const bx = parseFloat(rb.getAttribute('x')) + parseFloat(rb.getAttribute('width'))/2;
+          const by = parseFloat(rb.getAttribute('y')) + parseFloat(rb.getAttribute('height'))/2;
+          const dx = bx-ax, dy = by-ay; const dist = Math.sqrt(dx*dx+dy*dy);
+          line.setAttribute('x1', ax); line.setAttribute('y1', ay);
+          line.setAttribute('x2', bx + (dist<10?12:0)); line.setAttribute('y2', by + (dist<10?12:0));
+        }
+      }
+    });
+  });
+
+  // Save Layout -> download current HTML (positions are persisted in SVG attributes)
+  document.getElementById('save-layout').addEventListener('click', () => {
+    const blob = new Blob([document.documentElement.outerHTML], {type: 'text/html'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'COSS_Tags_Interactive_CustomLayout.html';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  // Save as Image -> serialize SVG and draw to canvas
+  document.getElementById('save-image').addEventListener('click', () => {
+    const svgEl = document.getElementById('coss-svg');
+    const svgData = new XMLSerializer().serializeToString(svgEl);
+    const svgBlob = new Blob([svgData], {type:"image/svg+xml;charset=utf-8"});
+    const url = URL.createObjectURL(svgBlob);
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1920;
+      canvas.height = 1080;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.drawImage(img, 0, 0);
+      const a = document.createElement('a');
+      a.download = 'COSS_Tags_Layout.png';
+      a.href = canvas.toDataURL('image/png');
+      a.click();
+      URL.revokeObjectURL(url);
+    };
+    img.src = url;
+  });
+
+  // Ctrl+wheel zoom support on wrapper
+  document.getElementById('svg-wrapper').addEventListener('wheel', e => { if(e.ctrlKey){ e.preventDefault(); scale = Math.min(3, Math.max(0.4, scale + (e.deltaY>0 ? -0.05 : 0.05))); applyScale(); } }, {passive:false});
+
+}); // DOMContentLoaded end
 </script>
-
-
-
-<iframe frameborder="0" scrolling="no" style="background-color: transparent; border: 0px; display: none;"></iframe><div id="GOOGLE_INPUT_CHEXT_FLAG" input="" input_stat="{&quot;tlang&quot;:true,&quot;tsbc&quot;:true,&quot;pun&quot;:true,&quot;mk&quot;:true,&quot;ss&quot;:true}" style="display: none;"></div><div id="highlighter--hover-tools" style="display: none;">
-    <div id="highlighter--hover-tools--container">
-        <div class="highlighter--icon highlighter--icon-copy" title="Copy"></div>
-        <div class="highlighter--icon highlighter--icon-change-color" title="Change Color"></div>
-        <div class="highlighter--icon highlighter--icon-delete" title="Delete"></div>
-    </div>
-</div></body></html>
+</body>
+</html>
