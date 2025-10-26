@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DPI Tags - Calder Mobile with Curved Arms</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        #canvas {
+            width: 100vw;
+            height: 100vh;
+            cursor: grab;
+        }
+        
+        #canvas:active {
+            cursor: grabbing;
+        }
+        
+        .info-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 280px;
+            z-index: 1000;
+            user-select: none;
+        }
+        
+        .info-panel h2 {
+            margin: 0 0 10px 0;
+            color: #333;
+            font-size: 1.2em;
+        }
+        
+        .info-panel p {
+            margin: 5px 0;
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+            flex-wrap: wrap;
+            max-width: 500px;
+            justify-content: flex-end;
+        }
+        
+        button {
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 500;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(0,0,0,0.3);
+            background: #fff;
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .zoom-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+        
+        .zoom-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+        }
+        
+        .zoom-btn:hover {
+            transform: scale(1.1);
+            background: #fff;
+        }
+        
+        .zoom-level {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px;
+            border-radius: 20px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .legend {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 12px;
+            z-index: 1000;
+            max-width: 200px;
+        }
+        
+        .legend-item {
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .hint {
+            position: absolute;
+            bottom: 150px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            z-index: 999;
+            max-width: 250px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="info-panel">
+        <h2>DPI Tags Mobile</h2>
+        <p><strong>Alexander Calder Style</strong></p>
+        <p>Digital Public Infrastructure as kinetic art</p>
+        <p style="font-style: italic; color: #888; font-size: 0.8em;">
+            "How do we measure trust, inclusion, and cost savings from DPIs?"
+        </p>
+        <p style="font-size: 0.7em; color: #aaa; margin-top: 10px;">
+            Curved arms • Meditative movement
+        </p>
+    </div>
+    
+    <div class="zoom-controls">
+        <button class="zoom-btn" onclick="zoomIn()">+</button>
+        <div class="zoom-level">100%</div>
+        <button class="zoom-btn" onclick="zoomOut()">−</button>
+        <button class="zoom-btn" onclick="resetZoom()" style="font-size: 14px;">⟲</button>
+    </div>
+    
+    <div class="legend">
+        <div class="legend-item">
+            <div class="legend-color" style="background: #FFD93D;"></div>
+            <span>Building Blocks</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: #6BCF7F;"></div>
+            <span>Partnerships</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: #FF6B9D;"></div>
+            <span>Impact Metrics</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: #A8DADC;"></div>
+            <span>Actors</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: #FF9F1C;"></div>
+            <span>Barriers</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: #C77DFF;"></div>
+            <span>Use Cases</span>
+        </div>
+    </div>
+    
+    <div class="hint">
+        💡 <strong>Controls:</strong><br>
+        • Drag to pan • Scroll to zoom<br>
+        • Use slider for precise speed control<br>
+        • Press Space to pause/resume<br>
+        • Notice the gentle, meditative movement
+    </div>
+    
+    <div class="controls">
+        <button onclick="toggleAnimation()">⏸ Pause Motion</button>
+        <button onclick="setWindSpeed(0)">🧘 Meditative</button>
+        <button onclick="setWindSpeed(0.002)">🍃 Gentle</button>
+        <button onclick="setWindSpeed(0.005)">🌬️ Moderate</button>
+        <button onclick="setWindSpeed(0.01)">💨 Strong</button>
+        <button onclick="resetView()">🔄 Reset View</button>
+        <button onclick="expandAll()">📐 Expand All</button>
+    </div>
+    
+    <div style="position: absolute; bottom: 85px; right: 20px; background: rgba(255,255,255,0.95); padding: 12px 18px; border-radius: 20px; font-size: 14px; font-weight: bold; color: #333; z-index: 1000; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+        Speed: <span id="windIndicator" style="color: #667eea;">Gentle</span>
+    </div>
+    
+    <div style="position: absolute; bottom: 135px; right: 20px; background: rgba(255,255,255,0.95); padding: 15px; border-radius: 20px; z-index: 1000; display: flex; align-items: center; gap: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+        <label style="font-size: 12px; font-weight: bold; color: #333;">Fine tune:</label>
+        <input type="range" id="windSlider" min="0" max="100" value="20" style="width: 150px; cursor: pointer;" 
+               oninput="setWindSpeed(this.value / 10000)">
+        <span id="windPercent" style="font-size: 12px; color: #666; min-width: 40px; text-align: right;">20%</span>
+    </div>
+    
+    <canvas id="canvas"></canvas>
+    
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        let animating = true;
+        let windStrength = 0.002;  // DRAMATICALLY reduced - 100x slower
+        let time = 0;
+        let zoom = 1;
+        let panX = 0;
+        let panY = 0;
+        let isDragging = false;
+        let dragStartX = 0;
+        let dragStartY = 0;
+        let lastPanX = 0;
+        let lastPanY = 0;
+        let hoveredElement = null;
+        let expansionFactor = 1;
+        
+        // Mobile structure with DPI tags
+        class MobileElement {
+            constructor(x, y, label, color, level = 0, category = '') {
+                this.baseX = x;
+                this.baseY = y;
+                this.x = x;
+                this.y = y;
+                this.label = label;
+                this.color = color;
+                this.level = level;
+                this.category = category;
+                this.angle = Math.random() * Math.PI * 2;
+                // EXTREMELY slow rotation - like a real Calder mobile
+                this.rotationSpeed = (Math.random() * 0.0001 + 0.00005) * Math.pow(0.8, level);
+                this.baseArmLength = this.calculateArmLength(level);
+                this.armLength = this.baseArmLength;
+                this.children = [];
+                this.parent = null;
+                this.size = Math.max(35 - level * 5, 15);
+                this.windEffect = Math.random() * 0.3 + 0.7;
+                this.swayAmplitude = 0.002 + level * 0.001;  // Very subtle sway
+                this.highlighted = false;
+                // For curved arms
+                this.armCurve = (Math.random() - 0.5) * 0.3;  // Random curve direction
+                this.armTension = 0.3 + Math.random() * 0.2;  // Curve tension
+            }
+            
+            calculateArmLength(level) {
+                // Much longer arms for better spacing
+                const lengths = [0, 200, 180, 150, 120, 100];
+                return lengths[Math.min(level, lengths.length - 1)] || 80;
+            }
+            
+            addChild(child) {
+                this.children.push(child);
+                child.parent = this;
+            }
+            
+            update() {
+                // Update arm length based on expansion
+                this.armLength = this.baseArmLength * expansionFactor;
+                
+                if (animating) {
+                    this.angle += this.rotationSpeed * windStrength;
+                    
+                    // Very subtle pendulum motion
+                    const pendulum = Math.sin(time * 0.00002 * this.windEffect) * this.swayAmplitude;
+                    this.angle += pendulum;
+                }
+                
+                // Update children positions relative to parent with better distribution
+                const childCount = this.children.length;
+                this.children.forEach((child, index) => {
+                    // Spread children more evenly in a circle
+                    const angleOffset = (Math.PI * 2 / childCount) * index;
+                    const currentAngle = this.angle + angleOffset;
+                    
+                    // Add some variation to prevent perfect symmetry
+                    const radiusVariation = 1 + Math.sin(index * 1.5) * 0.1;
+                    
+                    child.x = this.x + Math.cos(currentAngle) * this.armLength * radiusVariation;
+                    child.y = this.y + Math.sin(currentAngle) * this.armLength * radiusVariation;
+                    
+                    child.update();
+                });
+            }
+            
+            isHovered(mouseX, mouseY) {
+                const distance = Math.sqrt(
+                    Math.pow(mouseX - this.x, 2) + 
+                    Math.pow(mouseY - this.y, 2)
+                );
+                return distance <= this.size;
+            }
+            
+            drawCurvedArm(toX, toY) {
+                // Calculate control points for bezier curve
+                const midX = (this.x + toX) / 2;
+                const midY = (this.y + toY) / 2;
+                
+                // Perpendicular to the line for curve control point
+                const dx = toX - this.x;
+                const dy = toY - this.y;
+                const perpX = -dy * this.armCurve;
+                const perpY = dx * this.armCurve;
+                
+                // Control point for quadratic bezier
+                const cpX = midX + perpX;
+                const cpY = midY + perpY + this.armLength * 0.1; // Add gravity effect
+                
+                // Draw the curved arm
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y);
+                ctx.quadraticCurveTo(cpX, cpY, toX, toY);
+                ctx.stroke();
+            }
+            
+            draw() {
+                // Draw curved arms to children
+                this.children.forEach(child => {
+                    const gradient = ctx.createLinearGradient(
+                        this.x, this.y, child.x, child.y
+                    );
+                    
+                    // Make arms slightly more visible when there's movement
+                    const baseOpacity = 0.3 + windStrength * 30;  // Adjusted for new scale
+                    gradient.addColorStop(0, `rgba(0, 0, 0, ${baseOpacity})`);
+                    gradient.addColorStop(0.5, `rgba(0, 0, 0, ${baseOpacity * 0.8})`);
+                    gradient.addColorStop(1, 'rgba(0, 0, 0, 0.1)');
+                    
+                    ctx.strokeStyle = gradient;
+                    ctx.lineWidth = Math.max(2.5 - this.level * 0.4, 1);
+                    ctx.lineCap = 'round';
+                    ctx.lineJoin = 'round';
+                    
+                    // Draw curved arm
+                    this.drawCurvedArm(child.x, child.y);
+                });
+                
+                // Add very subtle glow when moving
+                if (windStrength > 0.001 && animating) {
+                    ctx.fillStyle = `rgba(255, 255, 255, ${windStrength * 1000 * 0.05})`;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size + 8, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                
+                // Draw shadow
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+                ctx.beginPath();
+                ctx.arc(this.x + 3, this.y + 3, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Draw the element with gradient
+                const gradient = ctx.createRadialGradient(
+                    this.x - this.size/3, this.y - this.size/3, 0,
+                    this.x, this.y, this.size
+                );
+                gradient.addColorStop(0, this.lightenColor(this.color, 20));
+                gradient.addColorStop(1, this.color);
+                
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Add highlight if hovered
+                if (this.highlighted) {
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size + 5, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+                
+                // Draw label with better readability
+                if (this.label) {
+                    const fontSize = Math.max(14 - this.level * 2, 10);
+                    ctx.font = `bold ${fontSize}px 'Segoe UI', sans-serif`;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    
+                    // Measure text for background
+                    const metrics = ctx.measureText(this.label);
+                    const textWidth = metrics.width;
+                    const padding = 8;
+                    
+                    // Draw background pill
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+                    const bgHeight = fontSize + padding;
+                    const bgWidth = textWidth + padding * 2;
+                    const bgX = this.x - bgWidth / 2;
+                    const bgY = this.y - bgHeight / 2;
+                    
+                    ctx.beginPath();
+                    ctx.roundRect(bgX, bgY, bgWidth, bgHeight, bgHeight / 2);
+                    ctx.fill();
+                    
+                    // Draw text
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.fillText(this.label, this.x, this.y);
+                }
+                
+                // Draw children
+                this.children.forEach(child => child.draw());
+            }
+            
+            lightenColor(color, percent) {
+                const num = parseInt(color.replace("#", ""), 16);
+                const amt = Math.round(2.55 * percent);
+                const R = (num >> 16) + amt;
+                const G = (num >> 8 & 0x00FF) + amt;
+                const B = (num & 0x0000FF) + amt;
+                return "#" + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
+                    (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
+                    (B < 255 ? B < 1 ? 0 : B : 255))
+                    .toString(16).slice(1);
+            }
+        }
+        
+        // Create the mobile structure with new hierarchy
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2 - 50;
+        
+        const root = new MobileElement(centerX, centerY, 'DPI Ecosystem', '#2C3E50', 0);
+        
+        // Main branches - Top level
+        const buildingBlocks = new MobileElement(0, 0, 'Building Blocks', '#FFD93D', 1, 'building-blocks');
+        const partnerships = new MobileElement(0, 0, 'Partnerships', '#6BCF7F', 1, 'partnerships');
+        const impactMetrics = new MobileElement(0, 0, 'Impact Metrics', '#FF6B9D', 1, 'impact');
+        
+        root.addChild(buildingBlocks);
+        root.addChild(partnerships);
+        root.addChild(impactMetrics);
+        
+        // Building Blocks branch
+        const identity = new MobileElement(0, 0, 'Identity', '#FFE66D', 2);
+        const payments = new MobileElement(0, 0, 'Payments', '#FFE66D', 2);
+        const learning = new MobileElement(0, 0, 'Learning', '#FFE66D', 2);
+        const healthRecords = new MobileElement(0, 0, 'Health Records', '#FFE66D', 2);
+        
+        buildingBlocks.addChild(identity);
+        buildingBlocks.addChild(payments);
+        buildingBlocks.addChild(learning);
+        buildingBlocks.addChild(healthRecords);
+        
+        // Add Use Cases under Building Blocks elements
+        learning.addChild(new MobileElement(0, 0, 'Learning Loss', '#C77DFF', 3));
+        learning.addChild(new MobileElement(0, 0, 'Skilling Youth', '#C77DFF', 3));
+        healthRecords.addChild(new MobileElement(0, 0, 'Healthcare Access', '#C77DFF', 3));
+        payments.addChild(new MobileElement(0, 0, 'Agriculture Productivity', '#C77DFF', 3));
+        
+        // Add Barriers as sub-elements
+        identity.addChild(new MobileElement(0, 0, 'Language', '#FF9F1C', 3));
+        identity.addChild(new MobileElement(0, 0, 'Connectivity', '#FF9F1C', 3));
+        payments.addChild(new MobileElement(0, 0, 'Regulation', '#FF9F1C', 3));
+        learning.addChild(new MobileElement(0, 0, 'Awareness', '#FF9F1C', 3));
+        
+        // Partnerships branch
+        const government = new MobileElement(0, 0, 'Government', '#90EE90', 2);
+        const multilateral = new MobileElement(0, 0, 'Multilateral Body', '#90EE90', 2);
+        const philanthropist = new MobileElement(0, 0, 'Philanthropist', '#90EE90', 2);
+        const startupInvestor = new MobileElement(0, 0, 'Startup Investor', '#90EE90', 2);
+        
+        partnerships.addChild(government);
+        partnerships.addChild(multilateral);
+        partnerships.addChild(philanthropist);
+        partnerships.addChild(startupInvestor);
+        
+        // Add Actors under Partnerships
+        government.addChild(new MobileElement(0, 0, 'Policy-makers', '#A8DADC', 3));
+        multilateral.addChild(new MobileElement(0, 0, 'Funders', '#A8DADC', 3));
+        philanthropist.addChild(new MobileElement(0, 0, 'Educators', '#A8DADC', 3));
+        startupInvestor.addChild(new MobileElement(0, 0, 'Developers', '#A8DADC', 3));
+        
+        // Impact Metrics branch
+        const measurement = new MobileElement(0, 0, 'Impact Measurement', '#FFA0C9', 2);
+        const community = new MobileElement(0, 0, 'Community', '#FFA0C9', 2);
+        const scale = new MobileElement(0, 0, 'Designing for Scale', '#FFA0C9', 2);
+        
+        impactMetrics.addChild(measurement);
+        impactMetrics.addChild(community);
+        impactMetrics.addChild(scale);
+        
+        // Measurement sub-elements
+        measurement.addChild(new MobileElement(0, 0, 'Trust', '#FFB3D0', 3));
+        measurement.addChild(new MobileElement(0, 0, 'Inclusion', '#FFB3D0', 3));
+        measurement.addChild(new MobileElement(0, 0, 'Cost Savings', '#FFB3D0', 3));
+        measurement.addChild(new MobileElement(0, 0, 'Reach', '#FFB3D0', 3));
+        
+        // Community sub-elements
+        community.addChild(new MobileElement(0, 0, 'Recognition', '#FFB3D0', 3));
+        community.addChild(new MobileElement(0, 0, 'Collaboration', '#FFB3D0', 3));
+        community.addChild(new MobileElement(0, 0, 'Training', '#FFB3D0', 3));
+        
+        // Scale sub-elements
+        scale.addChild(new MobileElement(0, 0, 'Coding for DPGs', '#FFB3D0', 3));
+        scale.addChild(new MobileElement(0, 0, 'Building Policy Bridges', '#FFB3D0', 3));
+        
+        // Mouse interaction
+        canvas.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            dragStartX = e.clientX - panX;
+            dragStartY = e.clientY - panY;
+            lastPanX = panX;
+            lastPanY = panY;
+        });
+        
+        canvas.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                panX = e.clientX - dragStartX;
+                panY = e.clientY - dragStartY;
+            }
+            
+            // Check for hover (transform mouse coordinates)
+            const mouseX = (e.clientX - panX) / zoom;
+            const mouseY = (e.clientY - panY) / zoom;
+            
+            // Update hover state
+            checkHover(root, mouseX, mouseY);
+        });
+        
+        canvas.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+        
+        canvas.addEventListener('mouseleave', () => {
+            isDragging = false;
+        });
+        
+        // Zoom with mouse wheel
+        canvas.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const delta = e.deltaY > 0 ? 0.9 : 1.1;
+            const newZoom = Math.max(0.3, Math.min(3, zoom * delta));
+            
+            // Zoom towards mouse position
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+            
+            panX = mouseX - (mouseX - panX) * (newZoom / zoom);
+            panY = mouseY - (mouseY - panY) * (newZoom / zoom);
+            
+            zoom = newZoom;
+            updateZoomDisplay();
+        });
+        
+        function checkHover(element, mouseX, mouseY) {
+            element.highlighted = element.isHovered(mouseX, mouseY);
+            element.children.forEach(child => checkHover(child, mouseX, mouseY));
+        }
+        
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Save context for transformations
+            ctx.save();
+            
+            // Apply zoom and pan
+            ctx.translate(panX, panY);
+            ctx.scale(zoom, zoom);
+            
+            // Draw curved connection to ceiling
+            const ropeEndY = -panY/zoom;
+            const ropeSag = 20;
+            
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(root.x, ropeEndY);
+            ctx.quadraticCurveTo(
+                root.x + ropeSag * Math.sin(time * 0.00001), 
+                (ropeEndY + root.y) / 2, 
+                root.x, 
+                root.y
+            );
+            ctx.stroke();
+            
+            // Update and draw the mobile
+            time++;
+            root.update();
+            root.draw();
+            
+            // Restore context
+            ctx.restore();
+            
+            requestAnimationFrame(animate);
+        }
+        
+        function toggleAnimation() {
+            animating = !animating;
+            event.target.textContent = animating ? '⏸ Pause Motion' : '▶️ Resume Motion';
+        }
+        
+        function resetView() {
+            // Reset all angles
+            function resetAngles(element) {
+                element.angle = Math.random() * Math.PI * 2;
+                element.children.forEach(child => resetAngles(child));
+            }
+            resetAngles(root);
+            
+            // Reset pan and zoom
+            panX = 0;
+            panY = 0;
+            zoom = 1;
+            expansionFactor = 1;
+            updateZoomDisplay();
+        }
+        
+        function setWindSpeed(speed) {
+            windStrength = speed;
+            const indicator = document.getElementById('windIndicator');
+            const slider = document.getElementById('windSlider');
+            const percent = document.getElementById('windPercent');
+            
+            // Update slider position (scale for new range)
+            slider.value = speed * 10000;
+            percent.textContent = Math.round(speed * 10000) + '%';
+            
+            // Update text indicator
+            if (speed === 0) {
+                indicator.textContent = 'Meditative';
+            } else if (speed <= 0.002) {
+                indicator.textContent = 'Gentle';
+            } else if (speed <= 0.005) {
+                indicator.textContent = 'Moderate';
+            } else if (speed <= 0.01) {
+                indicator.textContent = 'Strong';
+            } else {
+                indicator.textContent = 'Very Strong';
+            }
+        }
+        
+        function expandAll() {
+            expansionFactor = expansionFactor === 1 ? 1.5 : 1;
+            event.target.textContent = expansionFactor === 1 ? '📐 Expand All' : '📏 Contract All';
+        }
+        
+        function zoomIn() {
+            zoom = Math.min(3, zoom * 1.2);
+            updateZoomDisplay();
+        }
+        
+        function zoomOut() {
+            zoom = Math.max(0.3, zoom / 1.2);
+            updateZoomDisplay();
+        }
+        
+        function resetZoom() {
+            zoom = 1;
+            panX = 0;
+            panY = 0;
+            updateZoomDisplay();
+        }
+        
+        function updateZoomDisplay() {
+            document.querySelector('.zoom-level').textContent = Math.round(zoom * 100) + '%';
+        }
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        // Keyboard shortcuts for wind control
+        window.addEventListener('keydown', (e) => {
+            if (e.key === ' ') {
+                e.preventDefault();
+                toggleAnimation();
+            } else if (e.key >= '0' && e.key <= '9') {
+                const speed = parseInt(e.key) / 1000;  // Much slower scale
+                setWindSpeed(speed);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                const newSpeed = Math.min(0.01, windStrength + 0.001);
+                setWindSpeed(newSpeed);
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                const newSpeed = Math.max(0, windStrength - 0.001);
+                setWindSpeed(newSpeed);
+            }
+        });
+        
+        // Add roundRect polyfill for older browsers
+        if (!ctx.roundRect) {
+            ctx.constructor.prototype.roundRect = function(x, y, width, height, radius) {
+                if (width < 0) {
+                    x += width;
+                    width = -width;
+                }
+                if (height < 0) {
+                    y += height;
+                    height = -height;
+                }
+                radius = Math.min(radius, width / 2, height / 2);
+                
+                this.beginPath();
+                this.moveTo(x + radius, y);
+                this.lineTo(x + width - radius, y);
+                this.quadraticCurveTo(x + width, y, x + width, y + radius);
+                this.lineTo(x + width, y + height - radius);
+                this.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+                this.lineTo(x + radius, y + height);
+                this.quadraticCurveTo(x, y + height, x, y + height - radius);
+                this.lineTo(x, y + radius);
+                this.quadraticCurveTo(x, y, x + radius, y);
+                this.closePath();
+            };
+        }
+        
+        // Hide hint after 10 seconds
+        setTimeout(() => {
+            document.querySelector('.hint').style.display = 'none';
+        }, 10000);
+        
+        // Start animation
+        animate();
+    </script>
+</body>
+</html>
