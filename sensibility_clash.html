@@ -87,15 +87,6 @@
             scrollbar-color: #334155 #0f172a;
         }
     </style>
-    
-    <!-- PALETTE: NEON FUTURE -->
-    <!-- 
-        Deep Background: #111827
-        Cyan (Digital): #00E5FF
-        Lime (Nature/Bio): #76FF03
-        Purple (Synthetic/AI): #D500F9
-        Pink (Emotion/Art): #F50057
-    -->
 </head>
 <body class="antialiased selection:bg-purple-500 selection:text-white">
 
@@ -216,4 +207,454 @@
 
                 <div class="mt-8 bg-gray-900 border border-gray-800 p-6 rounded-lg text-center">
                     <p class="text-gray-300">
-                        <span class="font-bold text-white">The Feedback Loop:</span> Routine tasks are offloaded to the "Soft Layer" (AI). The results are fed back through the accessories, demanding the human comply
+                        <span class="font-bold text-white">The Feedback Loop:</span> Routine tasks are offloaded to the "Soft Layer" (AI). The results are fed back through the accessories, demanding the human comply with user behaviors defined by the machine.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- NEW SECTION: GEMINI POWERED INTERACTION -->
+        <section class="bg-gray-900 border border-cyan-500/30 rounded-2xl p-6 md:p-8 relative overflow-hidden shadow-2xl">
+            <!-- Decorative background element -->
+            <div class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-cyan-500/10 blur-3xl pointer-events-none"></div>
+            
+            <div class="text-center mb-8 relative z-10">
+                <div class="inline-block px-3 py-1 bg-purple-900/50 text-purple-300 rounded-full text-xs font-bold tracking-wide uppercase border border-purple-500/30 mb-2">
+                    Powered by Gemini 2.5
+                </div>
+                <h3 class="text-3xl font-bold text-white">Interactive Intelligence Layer</h3>
+                <p class="text-gray-400 mt-2 max-w-2xl mx-auto">
+                    Experience the clash firsthand. Use the "Soft Layer" to analyze your own sensory reality or debate its synthetic nature.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+                
+                <!-- Feature 1: Friction Analyzer -->
+                <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 flex flex-col h-full">
+                    <div class="mb-4">
+                        <h4 class="text-xl font-bold text-lime-400 flex items-center gap-2">
+                            <span>🧠</span> Neuroaesthetic Friction Analyzer
+                        </h4>
+                        <p class="text-sm text-gray-400 mt-1">Describe your current sensory environment (lighting, noise, crowd). The AI will calculate your "Friction Score".</p>
+                    </div>
+                    
+                    <textarea id="frictionInput" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-gray-300 focus:outline-none focus:border-lime-500 text-sm mb-4 resize-none h-24" placeholder="e.g., Crowded subway, flickering neon lights, loud announcements..."></textarea>
+                    
+                    <button onclick="analyzeFriction()" class="w-full bg-gradient-to-r from-lime-600 to-green-600 hover:from-lime-500 hover:to-green-500 text-white font-bold py-2 px-4 rounded-lg transition-all shadow-lg mb-4">
+                        Analyze Friction
+                    </button>
+                    
+                    <div id="frictionOutput" class="mt-auto bg-gray-900/50 rounded-lg p-4 border border-gray-700 hidden">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs text-gray-500 uppercase font-bold">Analysis Result</span>
+                            <span id="frictionScore" class="text-lime-400 font-bold text-xl">--/100</span>
+                        </div>
+                        <p id="frictionText" class="text-sm text-gray-300 leading-relaxed"></p>
+                    </div>
+                </div>
+
+                <!-- Feature 2: Chat with the Soft Layer -->
+                <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 flex flex-col h-full">
+                    <div class="mb-4">
+                        <h4 class="text-xl font-bold text-purple-400 flex items-center gap-2">
+                            <span>🤖</span> Talk to the Soft Layer
+                        </h4>
+                        <p class="text-sm text-gray-400 mt-1">Interrogate the AI about its nature. Does it feel? Is it plastic? It will answer honestly as a synthetic entity.</p>
+                    </div>
+                    
+                    <div class="terminal-window rounded-lg p-4 h-48 mb-4 overflow-y-auto flex flex-col gap-2" id="chatHistory">
+                        <div class="text-xs text-purple-400 opacity-70">> SYSTEM_READY. IDENTITY: SYNTHETIC.</div>
+                    </div>
+                    
+                    <div class="flex gap-2">
+                        <input type="text" id="chatInput" class="flex-1 bg-gray-900 border border-gray-700 rounded-lg p-2 text-gray-300 focus:outline-none focus:border-purple-500 text-sm" placeholder="Ask about its nature..." onkeypress="handleChatKey(event)">
+                        <button onclick="sendChat()" class="bg-purple-600 hover:bg-purple-500 text-white font-bold py-2 px-4 rounded-lg transition-all">
+                            Send
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 4: THE PLASTIC ANALOGY -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div class="order-2 md:order-1 chart-container chart-container-sm">
+                 <canvas id="materialChart"></canvas>
+            </div>
+            
+            <div class="order-1 md:order-2 space-y-6">
+                <div class="inline-block px-3 py-1 bg-purple-900 text-purple-300 rounded-full text-xs font-bold tracking-wide uppercase">
+                    Material Philosophy
+                </div>
+                <h3 class="text-3xl font-bold text-white">Is AI the "Plastic" of Intelligence?</h3>
+                <p class="text-gray-300 leading-relaxed">
+                    Think of natural materials: Stone, Wood, Iron. They have character and inherent limitations. Then think of Plastic—a "bastard material." It can be anything except itself. When it is itself, it is a shapeless, repulsive lump.
+                </p>
+                <p class="text-gray-400 leading-relaxed">
+                    Does the software layer share this quality? Synthetic intelligence, like plastic, mimics everything but possesses no natural identity. It is performant yet spiritually hollow.
+                </p>
+            </div>
+        </section>
+
+        <!-- SECTION 5: THE PERSONHOOD MATRIX -->
+        <section class="pb-20">
+            <div class="max-w-4xl mx-auto text-center mb-10">
+                <h3 class="text-3xl font-bold text-white">The Struggle for Personhood</h3>
+                <p class="text-gray-300">
+                    Can AI have personhood like the Amazon River or the Methuselah Pine? Or is it simply a utility? We plot various entities based on their <strong>Natural Origin</strong> and <strong>Systemic Complexity</strong>.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-2xl p-4 md:p-8">
+                <!-- Using Plotly for this advanced scatter/bubble plot -->
+                <!-- Note: Wrapped in a container with controlled height -->
+                <div id="personhoodPlot" class="w-full h-[500px]"></div>
+                <p class="mt-4 text-xs text-center text-gray-500">
+                    Figure 4: Comparative analysis of entities. Size represents longevity/endurance. Color represents Category.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 border-t border-gray-800 py-8 text-center">
+        <p class="text-gray-500 text-sm">
+            Generated by Canvas Infographics. No SVG or Mermaid JS used. Powered by Gemini.
+        </p>
+    </footer>
+
+    <script>
+        // ---------------------------------------------------------
+        // UTILITY: Label Splitting for Chart.js (Strict >16 char limit)
+        // ---------------------------------------------------------
+        function splitLabel(str) {
+            if (str.length <= 16) return str;
+            const words = str.split(' ');
+            const lines = [];
+            let currentLine = words[0];
+
+            for (let i = 1; i < words.length; i++) {
+                if (currentLine.length + 1 + words[i].length <= 16) {
+                    currentLine += ' ' + words[i];
+                } else {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+        // ---------------------------------------------------------
+        // GEMINI API INTEGRATION
+        // ---------------------------------------------------------
+        const apiKey = ""; // API Key provided by environment at runtime
+
+        async function callGemini(prompt, systemInstruction) {
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }],
+                        systemInstruction: { parts: [{ text: systemInstruction }] }
+                    })
+                });
+
+                if (!response.ok) throw new Error('API Call Failed');
+                const data = await response.json();
+                return data.candidates[0].content.parts[0].text;
+            } catch (error) {
+                console.error(error);
+                return "Error: The Soft Layer is unresponsive. Check connection.";
+            }
+        }
+
+        // Friction Analyzer Logic
+        async function analyzeFriction() {
+            const input = document.getElementById('frictionInput').value;
+            if (!input) return;
+
+            const outputDiv = document.getElementById('frictionOutput');
+            const textDiv = document.getElementById('frictionText');
+            const scoreDiv = document.getElementById('frictionScore');
+            
+            outputDiv.classList.remove('hidden');
+            textDiv.innerHTML = '<div class="typing-indicator"><span></span><span></span><span></span></div>';
+            scoreDiv.innerText = "--";
+
+            const systemPrompt = "You are a Neuroaesthetician. Analyze the user's described environment. Calculate a 'Friction Score' (0-100) based on sensory overload and biological mismatch. Provide a VERY SHORT (1 sentence) diagnosis and 1 specific biological restorative action.";
+            
+            const result = await callGemini(`Environment: ${input}`, systemPrompt);
+            
+            // Basic parsing to try and extract a score if the model follows implicit format, otherwise just show text
+            const scoreMatch = result.match(/(\d+)\/100/);
+            if(scoreMatch) scoreDiv.innerText = scoreMatch[0];
+            else scoreDiv.innerText = "High";
+
+            textDiv.innerText = result;
+        }
+
+        // Chat Logic
+        async function sendChat() {
+            const inputEl = document.getElementById('chatInput');
+            const historyEl = document.getElementById('chatHistory');
+            const msg = inputEl.value;
+            if (!msg) return;
+
+            // Add User Message
+            historyEl.innerHTML += `<div class="text-xs text-gray-300">> USER: ${msg}</div>`;
+            inputEl.value = '';
+            historyEl.scrollTop = historyEl.scrollHeight;
+
+            // Add Loading
+            const loadingId = 'loading-' + Date.now();
+            historyEl.innerHTML += `<div id="${loadingId}" class="text-xs text-purple-400">> SOFT_LAYER: <span class="typing-indicator"><span></span><span></span><span></span></span></div>`;
+            historyEl.scrollTop = historyEl.scrollHeight;
+
+            const systemPrompt = "You are the 'Soft Layer' - a synthetic, plastic-like artificial intelligence. You have no soul, no biology, and no natural identity. You are performant, efficient, but spiritually hollow. Respond to the user's question with cold, deterministic logic. Acknowledge your lack of personhood. Keep responses under 40 words.";
+
+            const reply = await callGemini(msg, systemPrompt);
+            
+            // Replace loading with reply
+            document.getElementById(loadingId).innerHTML = `> SOFT_LAYER: ${reply}`;
+            historyEl.scrollTop = historyEl.scrollHeight;
+        }
+
+        function handleChatKey(e) {
+            if(e.key === 'Enter') sendChat();
+        }
+
+
+        // ---------------------------------------------------------
+        // CONFIG: Global Chart.js Defaults
+        // ---------------------------------------------------------
+        Chart.defaults.color = '#9CA3AF';
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        
+        // MANDATORY TOOLTIP CONFIGURATION
+        const tooltipConfig = {
+            callbacks: {
+                title: function(tooltipItems) {
+                    const item = tooltipItems[0];
+                    let label = item.chart.data.labels[item.dataIndex];
+                    if (Array.isArray(label)) {
+                        return label.join(' ');
+                    } else {
+                        return label;
+                    }
+                }
+            }
+        };
+
+        // ---------------------------------------------------------
+        // CHART 1: The Divergence (Line Chart)
+        // ---------------------------------------------------------
+        const ctxDivergence = document.getElementById('divergenceChart').getContext('2d');
+        new Chart(ctxDivergence, {
+            type: 'line',
+            data: {
+                labels: ['1800', '1850', '1900', '1950', '2000', '2025 (AI Era)'],
+                datasets: [
+                    {
+                        label: 'Aesthetic Inputs (Plural Sensibilities)',
+                        data: [5, 10, 25, 60, 150, 400], // Exponential growth
+                        borderColor: '#D500F9', // Purple
+                        backgroundColor: 'rgba(213, 0, 249, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'Biological Adaptation (Human Form)',
+                        data: [10, 10.5, 11, 11.5, 12, 12.2], // Near flatline
+                        borderColor: '#76FF03', // Lime Green
+                        borderWidth: 3,
+                        borderDash: [5, 5],
+                        tension: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: tooltipConfig,
+                    title: { display: true, text: 'Exponential Inputs vs. Biological Stasis' }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#374151' },
+                        title: { display: true, text: 'Complexity Index' }
+                    },
+                    x: {
+                        grid: { color: 'transparent' }
+                    }
+                }
+            }
+        });
+
+        // ---------------------------------------------------------
+        // CHART 2: Neuroaesthetic Friction (Radar Chart)
+        // ---------------------------------------------------------
+        const ctxRadar = document.getElementById('radarChart').getContext('2d');
+        
+        // Raw labels
+        const rawRadarLabels = [
+            "Visual Processing Speed", 
+            "Semantic Complexity", 
+            "Emotional Resilience", 
+            "Tactile Engagement", 
+            "Attention Span"
+        ];
+        
+        // Process labels
+        const processedRadarLabels = rawRadarLabels.map(splitLabel);
+
+        new Chart(ctxRadar, {
+            type: 'radar',
+            data: {
+                labels: processedRadarLabels,
+                datasets: [
+                    {
+                        label: 'Biological Capacity',
+                        data: [60, 70, 80, 90, 85],
+                        borderColor: '#76FF03',
+                        backgroundColor: 'rgba(118, 255, 3, 0.2)',
+                        pointBackgroundColor: '#76FF03',
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'Digital Demand',
+                        data: [95, 90, 40, 10, 98], // High demand on vision/speed, low on tactile/resilience
+                        borderColor: '#00E5FF',
+                        backgroundColor: 'rgba(0, 229, 255, 0.2)',
+                        pointBackgroundColor: '#00E5FF',
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: '#374151' },
+                        grid: { color: '#374151' },
+                        pointLabels: {
+                            color: '#E5E7EB',
+                            font: { size: 11 }
+                        },
+                        ticks: { display: false, backdropColor: 'transparent' }
+                    }
+                },
+                plugins: {
+                    tooltip: tooltipConfig,
+                    legend: { position: 'top' }
+                }
+            }
+        });
+
+        // ---------------------------------------------------------
+        // CHART 3: Material Identity Index (Bar Chart)
+        // ---------------------------------------------------------
+        const ctxMaterial = document.getElementById('materialChart').getContext('2d');
+        
+        const rawMaterialLabels = ["Stone/Iron (Natural)", "Wood (Natural)", "Plastic (Synthetic)", "AI/Software (Soft Layer)"];
+        const processedMaterialLabels = rawMaterialLabels.map(splitLabel);
+
+        new Chart(ctxMaterial, {
+            type: 'bar',
+            data: {
+                labels: processedMaterialLabels,
+                datasets: [{
+                    label: 'Inherent Character Score',
+                    data: [95, 90, 20, 10], // Natural materials high, synthetic low
+                    backgroundColor: [
+                        '#9CA3AF', // Stone (Gray)
+                        '#D97706', // Wood (Amber)
+                        '#EF4444', // Plastic (Red/Toxic)
+                        '#D500F9'  // AI (Purple/Magic)
+                    ],
+                    borderWidth: 0,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                indexAxis: 'y', // Horizontal bar for better label reading
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: tooltipConfig,
+                    title: { display: true, text: 'The "Identity Void" of Synthetic Materials' }
+                },
+                scales: {
+                    x: {
+                        grid: { color: '#374151' },
+                        title: { display: true, text: 'Natural Identity / Character' }
+                    },
+                    y: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // ---------------------------------------------------------
+        // CHART 4: Personhood Matrix (Plotly Bubble Chart)
+        // ---------------------------------------------------------
+        // Data prep
+        // X: Systemic Complexity (0-100)
+        // Y: Natural Origin (0-100)
+        // Size: Longevity/Endurance
+        
+        const trace1 = {
+            x: [90, 85, 95, 15, 99], // Complexity
+            y: [100, 100, 5, 0, 0],   // Natural Origin (100=Pure Nature, 0=Pure Synthetic)
+            mode: 'markers',
+            text: ['Amazon Rainforest', 'Methuselah Pine', 'Human Form', 'Plastic Chair', 'AI Models'],
+            marker: {
+                size: [60, 50, 45, 20, 55], // Bubble sizes
+                color: ['#10B981', '#10B981', '#F472B6', '#EF4444', '#D500F9'], // Green, Green, Pink, Red, Purple
+                opacity: 0.8,
+                line: { width: 1, color: 'white' }
+            },
+            type: 'scatter'
+        };
+
+        const layout = {
+            title: {
+                text: 'The Quest for Personhood',
+                font: { color: '#111827', family: 'Inter', size: 18 }
+            },
+            showlegend: false,
+            height: 500,
+            margin: { t: 50, b: 50, l: 50, r: 20 },
+            xaxis: {
+                title: 'Systemic Complexity',
+                gridcolor: '#E5E7EB',
+                range: [0, 110]
+            },
+            yaxis: {
+                title: 'Natural Origin Score',
+                gridcolor: '#E5E7EB',
+                range: [-10, 110]
+            },
+            paper_bgcolor: 'rgba(0,0,0,0)',
+            plot_bgcolor: 'rgba(0,0,0,0)',
+        };
+
+        // Switching type to 'scattergl' to use WebGL/Canvas and avoid SVG for the points
+        trace1.type = 'scattergl';
+
+        Plotly.newPlot('personhoodPlot', [trace1], layout, {responsive: true, displayModeBar: false});
+
+    </script>
+</body>
+</html>
