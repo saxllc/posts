@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Token Observatory Studio: M3 Design Token Spec</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Marked for Markdown parsing if needed by Gemini, though we process JSON directly -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* M3 Font Family Application */
+        body { font-family: 'Roboto', sans-serif; }
+        
+        /* Chart Container Strict Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container { height: 350px; }
+        }
+
+        /* Custom Scrollbar for Token Lists */
+        .token-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .token-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        .token-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 3px;
+        }
+        .token-scroll::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+
+        /* M3 Elevation Simulation */
+        .m3-elevation-1 { box-shadow: 0px 1px 2px rgba(0,0,0,0.3), 0px 1px 3px 1px rgba(0,0,0,0.15); }
+        .m3-elevation-2 { box-shadow: 0px 1px 2px rgba(0,0,0,0.3), 0px 2px 6px 2px rgba(0,0,0,0.15); }
+        .m3-elevation-3 { box-shadow: 0px 4px 8px 3px rgba(0,0,0,0.15), 0px 1px 3px rgba(0,0,0,0.3); }
+
+        /* Smooth Transitions */
+        .transition-all-300 { transition: all 0.3s ease-in-out; }
+        
+        /* Loading Animation */
+        .sparkle-loader {
+            display: inline-block;
+            animation: pulse-sparkle 1.5s infinite;
+        }
+        @keyframes pulse-sparkle {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-[#fdfcf4] text-[#1c1b1f] antialiased selection:bg-[#6750a4] selection:text-white">
+
+    <!-- Navigation / Header -->
+    <header class="bg-[#f3edf7] sticky top-0 z-50 border-b border-[#cac4d0] m3-elevation-1">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold text-[#1c1b1f] flex items-center gap-2">
+                    Token Observatory Studio 
+                    <span class="text-xs font-normal bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white px-2 py-0.5 rounded-full">AI Powered ✨</span>
+                </h1>
+                <p class="text-sm text-[#49454f]">Design Token Specification for Canonical Journeys (M3 Guidelines)</p>
+            </div>
+            <div class="mt-4 md:mt-0 flex gap-2">
+                <span class="px-3 py-1 bg-[#e8def8] text-[#1d192b] text-xs font-medium rounded-full">Ver 2.1 (Dec 2025)</span>
+                <span class="px-3 py-1 bg-[#d0bcff] text-[#381e72] text-xs font-medium rounded-full">Agentic Patterns</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8 space-y-12">
+
+        <!-- SECTION 1: Architectural Context -->
+        <section id="architecture-context">
+            <div class="mb-6">
+                <h2 class="text-3xl font-normal text-[#1c1b1f] mb-2">1. Architectural Context</h2>
+                <p class="text-[#49454f] max-w-3xl leading-relaxed">
+                    Based on the revised architecture (Gulli, 2025), the Token Observatory functions as a Multi-Agent Collaborative System. 
+                    The <strong>Rhetorical Engine</strong> analyzes intent, the <strong>Generative Engine</strong> builds the UI, and the <strong>Analytical Engine</strong> ensures compliance.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <!-- Text/Logic Block -->
+                <div class="bg-white p-6 rounded-[20px] border border-[#e7e0ec]">
+                    <h3 class="text-xl font-medium text-[#1c1b1f] mb-4">Engine Responsibilities & UI Impact</h3>
+                    <div id="engine-list" class="space-y-3">
+                        <!-- Dynamic Content Loaded via JS -->
+                    </div>
+                </div>
+
+                <!-- Visualization Block -->
+                <div class="bg-white p-6 rounded-[20px] border border-[#e7e0ec] flex flex-col items-center">
+                    <h3 class="text-sm font-bold tracking-wide uppercase text-[#49454f] mb-4">Agentic Pattern Distribution</h3>
+                    <div class="chart-container">
+                        <canvas id="patternsChart"></canvas>
+                    </div>
+                    <p class="text-xs text-[#49454f] mt-4 text-center italic">
+                        Distribution of the 21 Gulli Patterns across the three engines.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: M3 Token Identification Strategy -->
+        <section id="token-strategy">
+            <div class="mb-6">
+                <h2 class="text-3xl font-normal text-[#1c1b1f] mb-2">2. Required Design Inputs (M3 Tokens)</h2>
+                <p class="text-[#49454f] max-w-4xl leading-relaxed">
+                    To enable the Generative Engine to construct journey variations, the designer provides specific Material Design 3 token sets. 
+                    These tokens act as the vocabulary for the "Pixel Space" (Deterministic Layer).
+                </p>
+            </div>
+
+            <!-- Filter Controls -->
+            <div class="flex flex-wrap gap-2 mb-6">
+                <button onclick="filterTokens('all')" class="px-4 py-2 rounded-full bg-[#1d192b] text-white text-sm hover:bg-[#6750a4] transition-colors shadow-md">All Tokens</button>
+                <button onclick="filterTokens('color')" class="px-4 py-2 rounded-full bg-[#e8def8] text-[#1d192b] text-sm hover:bg-[#d0bcff] transition-colors border border-[#cac4d0]">Color (Sys)</button>
+                <button onclick="filterTokens('typography')" class="px-4 py-2 rounded-full bg-[#e8def8] text-[#1d192b] text-sm hover:bg-[#d0bcff] transition-colors border border-[#cac4d0]">Typography</button>
+                <button onclick="filterTokens('shape')" class="px-4 py-2 rounded-full bg-[#e8def8] text-[#1d192b] text-sm hover:bg-[#d0bcff] transition-colors border border-[#cac4d0]">Shape & Elevation</button>
+            </div>
+
+            <!-- Token Grid -->
+            <div id="token-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Tokens injected via JS -->
+            </div>
+        </section>
+
+        <!-- SECTION 3: Journey Variation Simulator (AI ENHANCED) -->
+        <section id="journey-simulator" class="bg-[#f5f5f5] -mx-4 px-4 py-12 md:rounded-[32px] relative overflow-hidden">
+            <!-- Background Decorative Elements -->
+            <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-purple-200 to-transparent rounded-full opacity-30 blur-3xl pointer-events-none"></div>
+
+            <div class="max-w-7xl mx-auto relative z-10">
+                <div class="mb-8 text-center">
+                    <h2 class="text-3xl font-normal text-[#1c1b1f] mb-2 flex items-center justify-center gap-2">
+                        3. Journey Variation Simulator
+                    </h2>
+                    <p class="text-[#49454f] max-w-2xl mx-auto">
+                        See how the <strong>Rhetorical Engine</strong> alters the M3 Tokens to generate different UI variations.
+                        <br><span class="text-sm font-bold text-[#6750a4]">New: Use the AI Input to generate custom scenarios.</span>
+                    </p>
+                </div>
+
+                <!-- AI Prompt Section -->
+                <div class="max-w-3xl mx-auto mb-10 bg-white p-1 rounded-[24px] shadow-lg border border-[#e7e0ec] flex flex-col md:flex-row gap-2">
+                    <input type="text" id="ai-scenario-input" 
+                        placeholder="Describe a user situation (e.g., 'A frustrated user trying to dispute a credit card charge')" 
+                        class="flex-1 p-4 rounded-[20px] bg-transparent outline-none text-[#1c1b1f] placeholder:text-[#938f99]"
+                    >
+                    <button onclick="generateCustomJourney()" id="btn-generate-ai" 
+                        class="bg-gradient-to-r from-[#6750a4] to-[#9c27b0] text-white px-8 py-3 rounded-[20px] font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center gap-2 whitespace-nowrap">
+                        <span class="sparkle-loader">✨</span> Route & Generate
+                    </button>
+                </div>
+
+                <!-- Simulation Controls (Presets) -->
+                <div class="flex flex-wrap justify-center gap-4 mb-10">
+                    <button onclick="setJourney('standard')" id="btn-standard" class="journey-btn active px-6 py-3 rounded-full border border-[#79747e] text-sm font-bold bg-[#6750a4] text-white shadow-md transition-all-300">
+                        Variation A: Standard
+                    </button>
+                    <button onclick="setJourney('urgent')" id="btn-urgent" class="journey-btn px-6 py-3 rounded-full border border-[#79747e] text-sm font-bold bg-white text-[#1c1b1f] shadow-sm transition-all-300">
+                        Variation B: Urgent/Error
+                    </button>
+                    <button onclick="setJourney('simplified')" id="btn-simplified" class="journey-btn px-6 py-3 rounded-full border border-[#79747e] text-sm font-bold bg-white text-[#1c1b1f] shadow-sm transition-all-300">
+                        Variation C: Simplified (A11y)
+                    </button>
+                    <button onclick="setJourney('detailed')" id="btn-detailed" class="journey-btn px-6 py-3 rounded-full border border-[#79747e] text-sm font-bold bg-white text-[#1c1b1f] shadow-sm transition-all-300">
+                        Variation D: Detailed (Edu)
+                    </button>
+                    <!-- Hidden button for Custom state -->
+                    <button id="btn-custom" class="journey-btn hidden px-6 py-3 rounded-full border border-[#79747e] text-sm font-bold bg-gradient-to-r from-indigo-100 to-purple-100 text-[#1c1b1f] shadow-sm transition-all-300 border-2 border-[#6750a4]">
+                        ✨ Variation E: AI Generated
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Column 1: Token Configuration (The "Input") -->
+                    <div class="lg:col-span-1 space-y-4">
+                        <div class="bg-white p-5 rounded-[16px] border border-[#e0e0e0] shadow-sm">
+                            <h4 class="text-xs font-bold text-[#6750a4] uppercase tracking-wider mb-2 flex justify-between">
+                                Context Vector Inputs
+                                <span id="ai-tag-badge" class="hidden text-[10px] bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full">AI Analysis</span>
+                            </h4>
+                            <ul id="context-list" class="space-y-2 text-sm text-[#49454f]">
+                                <!-- Populated by JS -->
+                            </ul>
+                        </div>
+                        <div class="bg-white p-5 rounded-[16px] border border-[#e0e0e0] shadow-sm">
+                            <h4 class="text-xs font-bold text-[#6750a4] uppercase tracking-wider mb-2">Active M3 Token Set</h4>
+                            <div id="active-tokens" class="space-y-3">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                        <!-- AI Reasoning Box (Hidden by default) -->
+                        <div id="ai-reasoning-box" class="hidden bg-gradient-to-br from-[#f3edf7] to-white p-5 rounded-[16px] border border-[#cac4d0]">
+                            <h4 class="text-xs font-bold text-[#1d192b] uppercase tracking-wider mb-2 flex items-center gap-1">
+                                <span>🤖</span> Rhetorical Reasoning
+                            </h4>
+                            <p id="ai-reasoning-text" class="text-xs text-[#49454f] italic leading-relaxed">
+                                <!-- Reasoning injected here -->
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: The Mock Interface (The "Output") -->
+                    <div class="lg:col-span-2 flex justify-center">
+                        <div id="mock-device" class="bg-white w-full max-w-sm h-[600px] border-[8px] border-[#1c1b1f] rounded-[36px] overflow-hidden relative shadow-2xl flex flex-col transition-all duration-500">
+                            <!-- Status Bar -->
+                            <div class="bg-[#1c1b1f] h-6 w-full flex justify-between px-4 items-center shrink-0">
+                                <span class="text-[10px] text-white">9:41</span>
+                                <div class="flex gap-1">
+                                    <div class="w-3 h-3 rounded-full bg-white opacity-20"></div>
+                                    <div class="w-3 h-3 rounded-full bg-white opacity-20"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Dynamic UI Body -->
+                            <div id="ui-mock-body" class="flex-1 p-4 bg-[#fffbfe] flex flex-col relative overflow-y-auto scrollbar-hide">
+                                <!-- Content injected by JS -->
+                            </div>
+
+                            <!-- Bottom Nav / Action Area -->
+                            <div id="ui-mock-footer" class="h-16 border-t border-[#e7e0ec] flex items-center justify-around bg-[#f3edf7] shrink-0">
+                                <div class="w-16 h-8 rounded-full bg-[#e8def8] flex items-center justify-center">
+                                    <span class="text-xl">⌂</span>
+                                </div>
+                                <div class="text-xl text-[#49454f]">≡</div>
+                                <div class="text-xl text-[#49454f]">⚙</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: Reference Glossary -->
+        <section id="glossary" class="border-t border-[#cac4d0] pt-12">
+            <h2 class="text-2xl font-normal text-[#1c1b1f] mb-6">4. Glossary: Token Observatory Alignment</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-left text-sm whitespace-nowrap">
+                    <thead class="uppercase tracking-wider border-b-2 border-[#1c1b1f] font-medium text-[#1c1b1f]">
+                        <tr>
+                            <th scope="col" class="px-6 py-4">Term</th>
+                            <th scope="col" class="px-6 py-4">Gulli Pattern Mapping</th>
+                            <th scope="col" class="px-6 py-4">UI Implication</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-[#e7e0ec]">
+                        <tr class="hover:bg-[#f5f5f5]">
+                            <td class="px-6 py-4 font-medium">Rhetorical Engine</td>
+                            <td class="px-6 py-4 text-[#49454f]">Routing (Ch. 2), Memory (Ch. 8)</td>
+                            <td class="px-6 py-4 text-[#49454f]">Determines <em>Structure</em> (Layout tokens)</td>
+                        </tr>
+                        <tr class="hover:bg-[#f5f5f5]">
+                            <td class="px-6 py-4 font-medium">Generative Engine</td>
+                            <td class="px-6 py-4 text-[#49454f]">Prompt Chaining (Ch. 1), Tools</td>
+                            <td class="px-6 py-4 text-[#49454f]">Assembles <em>Components</em> (Shape/Color tokens)</td>
+                        </tr>
+                        <tr class="hover:bg-[#f5f5f5]">
+                            <td class="px-6 py-4 font-medium">Analytical Engine</td>
+                            <td class="px-6 py-4 text-[#49454f]">Guardrails (Ch. 18), Exceptions</td>
+                            <td class="px-6 py-4 text-[#49454f]">Enforces <em>States</em> (Error/Disabled tokens)</td>
+                        </tr>
+                        <tr class="hover:bg-[#f5f5f5]">
+                            <td class="px-6 py-4 font-medium bg-purple-50">✨ Context Vector (AI)</td>
+                            <td class="px-6 py-4 text-[#49454f]">Reasoning (Ch. 17)</td>
+                            <td class="px-6 py-4 text-[#49454f]">Dynamic generation of context tags via LLM</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-[#1c1b1f] text-white py-12 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-sm opacity-70">Generated for Token Observatory Studio Analysis.</p>
+            <p class="text-xs opacity-50 mt-2">Powered by Gemini API. No SVG or Mermaid JS used. Visualizations rendered via Chart.js and Tailwind CSS.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- API CONFIGURATION ---
+        const apiKey = ""; // System will provide API key
+
+        // --- DATA STORE ---
+
+        // 1. Engine Data
+        const engineData = [
+            {
+                name: "Rhetorical Engine",
+                desc: "Analyzes intent & context. Decides 'Why' the user is here.",
+                role: "Pattern: Memory Management + Routing",
+                uiImpact: "Decides Layout Density & Tone."
+            },
+            {
+                name: "Generative Engine",
+                desc: "Composes the journey steps using tools.",
+                role: "Pattern: Prompt Chaining + Tool Use",
+                uiImpact: "Selects Components (Cards, Inputs)."
+            },
+            {
+                name: "Analytical Engine",
+                desc: "Validates against canonical truth.",
+                role: "Pattern: Guardrails + Exception Handling",
+                uiImpact: "Injects Validation States & Error Colors."
+            }
+        ];
+
+        // 2. M3 Token Data
+        const m3Tokens = [
+            // Colors
+            { id: 1, type: 'color', name: 'md.sys.color.primary', desc: 'Main action buttons (FAB, FilledButton)', value: '#6750a4' },
+            { id: 2, type: 'color', name: 'md.sys.color.onPrimary', desc: 'Text on primary buttons', value: '#ffffff' },
+            { id: 3, type: 'color', name: 'md.sys.color.primaryContainer', desc: 'Active states, selected chips', value: '#eaddff' },
+            { id: 4, type: 'color', name: 'md.sys.color.surface', desc: 'Background of cards/sheets', value: '#fffbfe' },
+            { id: 5, type: 'color', name: 'md.sys.color.error', desc: 'Analytical Engine Guardrail alerts', value: '#b3261e' },
+            { id: 6, type: 'color', name: 'md.sys.color.tertiary', desc: 'Accents for "Rhetorical" context highlights', value: '#7d5260' },
+            
+            // Typography
+            { id: 7, type: 'typography', name: 'md.sys.typescale.displayLarge', desc: 'Hero screens (Educational Journey)', value: '57px / 64px' },
+            { id: 8, type: 'typography', name: 'md.sys.typescale.headlineSmall', desc: 'Standard card titles', value: '24px / 32px' },
+            { id: 9, type: 'typography', name: 'md.sys.typescale.bodyLarge', desc: 'Primary reading content', value: '16px / 24px' },
+            { id: 10, type: 'typography', name: 'md.sys.typescale.labelLarge', desc: 'Button text', value: '14px / 20px (Medium)' },
+
+            // Shapes & Elevation
+            { id: 11, type: 'shape', name: 'md.sys.shape.corner.large', desc: 'Standard Card Radius (16dp)', value: '16px' },
+            { id: 12, type: 'shape', name: 'md.sys.shape.corner.full', desc: 'Buttons & Chips (Stadium)', value: '999px' },
+            { id: 13, type: 'shape', name: 'md.sys.elevation.level1', desc: 'Default card state', value: 'Shadow Level 1' },
+            { id: 14, type: 'shape', name: 'md.sys.elevation.level3', desc: 'Dialogs (Exception Handling)', value: 'Shadow Level 3' }
+        ];
+
+        // 3. Journey Variations Data (Simulated Logic)
+        const journeyVariations = {
+            standard: {
+                title: "Variation A: Standard",
+                context: ["User: Authenticated", "Intent: Update Address", "Device: Mobile"],
+                tokens: ["md.sys.color.primary", "md.sys.shape.corner.large", "md.sys.typescale.bodyLarge"],
+                mockHTML: `
+                    <div class="mt-4">
+                        <h2 class="text-2xl font-normal text-[#1c1b1f] mb-1">Update Address</h2>
+                        <p class="text-sm text-[#49454f] mb-6">Verify your new location.</p>
+                        
+                        <div class="bg-white rounded-[16px] p-4 m3-elevation-1 border border-[#e7e0ec] mb-4">
+                            <label class="block text-xs text-[#49454f] mb-1">Street Address</label>
+                            <div class="h-10 border-b border-[#49454f] flex items-center text-[#1c1b1f]">123 Token Blvd</div>
+                        </div>
+
+                        <div class="flex justify-end mt-8">
+                            <button class="bg-[#6750a4] text-white px-6 py-2.5 rounded-full font-medium text-sm m3-elevation-1">
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
+                `
+            },
+            urgent: {
+                title: "Variation B: Urgent/Error",
+                context: ["User: Authenticated", "Intent: Fix Error", "Status: Guardrail Triggered"],
+                tokens: ["md.sys.color.error", "md.sys.color.errorContainer", "md.sys.typescale.labelLarge"],
+                mockHTML: `
+                    <div class="mt-4">
+                        <div class="bg-[#f9dedc] text-[#410e0b] p-4 rounded-[12px] mb-6 flex gap-3 items-start">
+                            <span class="text-xl">⚠</span>
+                            <div class="text-sm"><strong>Action Required:</strong> Invalid postal code detected by Analytical Engine.</div>
+                        </div>
+
+                        <h2 class="text-2xl font-normal text-[#1c1b1f] mb-1">Correction Needed</h2>
+                        
+                        <div class="bg-white rounded-[16px] p-4 border-2 border-[#b3261e] mb-4 relative">
+                            <label class="block text-xs text-[#b3261e] font-bold mb-1">Postal Code*</label>
+                            <div class="h-10 border-b border-[#b3261e] flex items-center text-[#1c1b1f]">XYZ-99</div>
+                            <span class="absolute right-4 top-4 text-[#b3261e] text-xs">Invalid format</span>
+                        </div>
+
+                        <div class="flex justify-end mt-8">
+                            <button class="bg-[#b3261e] text-white px-6 py-2.5 rounded-full font-medium text-sm m3-elevation-1 w-full">
+                                Update Immediately
+                            </button>
+                        </div>
+                    </div>
+                `
+            },
+            simplified: {
+                title: "Variation C: Simplified",
+                context: ["User: Elderly/Low-Tech", "Intent: Clarity", "Access: High Contrast"],
+                tokens: ["md.sys.typescale.headlineSmall", "md.sys.shape.corner.medium (4px)", "md.sys.color.onSurface"],
+                mockHTML: `
+                    <div class="mt-8">
+                        <h2 class="text-3xl font-bold text-black mb-4">Is this your new home?</h2>
+                        
+                        <div class="bg-[#f5f5f5] rounded-[4px] p-6 border border-black mb-6">
+                            <p class="text-lg font-bold text-black mb-2">123 Token Blvd</p>
+                            <p class="text-lg text-black">San Francisco, CA</p>
+                        </div>
+
+                        <div class="space-y-4">
+                            <button class="bg-black text-white w-full py-4 rounded-[8px] font-bold text-lg border-2 border-black">
+                                YES, THIS IS CORRECT
+                            </button>
+                            <button class="bg-white text-black w-full py-4 rounded-[8px] font-bold text-lg border-2 border-black">
+                                NO, GO BACK
+                            </button>
+                        </div>
+                    </div>
+                `
+            },
+            detailed: {
+                title: "Variation D: Educational",
+                context: ["User: New User", "Intent: Learning", "Mode: Rhetorical Explanation"],
+                tokens: ["md.sys.color.tertiaryContainer", "md.sys.typescale.bodyMedium", "md.sys.elevation.level0"],
+                mockHTML: `
+                    <div class="mt-4">
+                        <div class="bg-[#ffd8e4] p-4 rounded-[16px] mb-4">
+                            <h3 class="text-[#31111d] font-bold text-sm mb-1">Did you know?</h3>
+                            <p class="text-[#31111d] text-xs">Updating your address here syncs with all government services automatically.</p>
+                        </div>
+
+                        <h2 class="text-xl text-[#1c1b1f] mb-4">Address Details</h2>
+                        
+                        <div class="bg-white rounded-[12px] p-0 border border-[#e7e0ec] overflow-hidden mb-4">
+                            <div class="bg-[#e8def8] px-4 py-2 text-xs font-bold text-[#1d192b]">STEP 1 OF 3</div>
+                            <div class="p-4">
+                                <label class="block text-xs text-[#49454f] mb-1">New Street</label>
+                                <div class="h-10 bg-[#f5f5f5] rounded px-2 flex items-center text-[#1c1b1f]">123 Token Blvd</div>
+                                <p class="text-[10px] text-[#49454f] mt-1">Enter street name without abbreviations.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center mt-6">
+                            <button class="text-[#6750a4] text-sm font-bold">Skip Context</button>
+                            <button class="bg-[#eaddff] text-[#21005d] px-6 py-2.5 rounded-full font-bold text-sm">
+                                Next Step
+                            </button>
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        // --- FUNCTIONS ---
+
+        // 1. Initialize Engine List
+        function initEngineList() {
+            const container = document.getElementById('engine-list');
+            engineData.forEach(engine => {
+                const el = document.createElement('div');
+                el.className = 'border-l-4 border-[#6750a4] pl-4 py-1';
+                el.innerHTML = `
+                    <h4 class="font-bold text-[#1c1b1f]">${engine.name}</h4>
+                    <p class="text-xs text-[#49454f] mb-1">${engine.role}</p>
+                    <p class="text-xs text-[#6750a4] italic">UI Impact: ${engine.uiImpact}</p>
+                `;
+                container.appendChild(el);
+            });
+        }
+
+        // 2. Filter Tokens
+        function filterTokens(type) {
+            const grid = document.getElementById('token-grid');
+            grid.innerHTML = '';
+            
+            const filtered = type === 'all' ? m3Tokens : m3Tokens.filter(t => t.type === type);
+            
+            filtered.forEach(token => {
+                const card = document.createElement('div');
+                card.className = 'bg-white p-4 rounded-[12px] border border-[#e7e0ec] hover:shadow-md transition-shadow';
+                
+                // Color preview circle if type is color
+                let visualPreview = '';
+                if(token.type === 'color') {
+                    visualPreview = `<div class="w-8 h-8 rounded-full border border-gray-200 mb-2" style="background-color: ${token.value}"></div>`;
+                } else if (token.type === 'shape') {
+                    visualPreview = `<div class="w-8 h-8 bg-[#e8def8] border border-[#1c1b1f] mb-2" style="border-radius: ${token.value.includes('Shadow') ? '4px' : token.value}"></div>`;
+                } else {
+                    visualPreview = `<div class="text-2xl font-serif text-[#1c1b1f] mb-2">Aa</div>`;
+                }
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        ${visualPreview}
+                        <span class="text-[10px] uppercase font-bold text-[#49454f] bg-[#f5f5f5] px-2 py-1 rounded">${token.type}</span>
+                    </div>
+                    <code class="block text-xs font-bold text-[#6750a4] mb-1 break-all">${token.name}</code>
+                    <p class="text-xs text-[#49454f] mb-2">${token.desc}</p>
+                    <div class="text-[10px] text-[#49454f] bg-[#fdfcf4] p-1 rounded border border-[#e7e0ec] inline-block">Value: ${token.value}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // 3. Set Journey Simulation
+        function setJourney(variantKey, customData = null) {
+            // Hide AI box if not custom
+            const aiReasoningBox = document.getElementById('ai-reasoning-box');
+            const aiBadge = document.getElementById('ai-tag-badge');
+            
+            let data;
+            if (variantKey === 'custom' && customData) {
+                data = customData;
+                aiReasoningBox.classList.remove('hidden');
+                aiBadge.classList.remove('hidden');
+                // Unhide the custom button
+                document.getElementById('btn-custom').classList.remove('hidden');
+            } else {
+                data = journeyVariations[variantKey];
+                aiReasoningBox.classList.add('hidden');
+                aiBadge.classList.add('hidden');
+                // Hide custom button if we switch away (optional, but cleaner)
+                // document.getElementById('btn-custom').classList.add('hidden'); 
+            }
+
+            const body = document.getElementById('ui-mock-body');
+            const contextList = document.getElementById('context-list');
+            const tokenList = document.getElementById('active-tokens');
+            const buttons = document.querySelectorAll('.journey-btn');
+
+            // Update Buttons
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-[#6750a4]', 'text-white', 'bg-white', 'text-[#1c1b1f]', 'active');
+                
+                // Special handling for Custom Button Gradient
+                if(btn.id === 'btn-custom') {
+                     btn.classList.remove('from-indigo-100', 'to-purple-100');
+                     btn.style.background = ""; // reset inline style
+                }
+
+                if (btn.id === `btn-${variantKey}`) {
+                    btn.classList.add('bg-[#6750a4]', 'text-white', 'active');
+                } else {
+                    btn.classList.add('bg-white', 'text-[#1c1b1f]');
+                }
+            });
+            
+            // Highlight custom button if selected
+            if(variantKey === 'custom') {
+                const cBtn = document.getElementById('btn-custom');
+                cBtn.classList.remove('bg-white', 'text-[#1c1b1f]');
+                cBtn.classList.add('text-white');
+                cBtn.style.background = "linear-gradient(to right, #6750a4, #9c27b0)";
+            }
+
+            // Update UI Body (Fade effect)
+            body.style.opacity = '0';
+            setTimeout(() => {
+                body.innerHTML = data.mockHTML;
+                body.style.opacity = '1';
+            }, 200);
+
+            // Update Context List
+            contextList.innerHTML = data.context.map(c => `<li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-[#6750a4]"></span>${c}</li>`).join('');
+
+            // Update Token List
+            tokenList.innerHTML = data.tokens.map(t => `
+                <div class="flex items-center gap-2 bg-[#f5f5f5] p-2 rounded text-xs text-[#1c1b1f] border border-[#e0e0e0]">
+                    <span class="font-mono text-[10px] text-[#6750a4]">●</span> ${t}
+                </div>
+            `).join('');
+
+            if(variantKey === 'custom' && customData.reasoning) {
+                document.getElementById('ai-reasoning-text').innerText = customData.reasoning;
+            }
+        }
+
+        // 4. Init Chart.js
+        function initChart() {
+            const ctx = document.getElementById('patternsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Rhetorical (Routing)', 'Generative (Prompting)', 'Analytical (Guardrails)'],
+                    datasets: [{
+                        data: [6, 8, 7], // Approximate distribution of the 21 patterns
+                        backgroundColor: ['#7d5260', '#6750a4', '#b3261e'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: { size: 10, family: 'Roboto' },
+                                boxWidth: 10
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const labels = [
+                                        ['Routing', 'Memory', 'Persona', 'Context'],
+                                        ['Prompt Chaining', 'Tools', 'Decomposition', 'Reflection'],
+                                        ['Guardrails', 'Exceptions', 'Evaluation', 'Telemetry']
+                                    ];
+                                    return `Includes: ${labels[context.dataIndex].slice(0,2).join(', ')}...`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- GEMINI API INTEGRATION ---
+
+        async function generateCustomJourney() {
+            const input = document.getElementById('ai-scenario-input').value;
+            if (!input) {
+                alert("Please describe a scenario first.");
+                return;
+            }
+
+            const btn = document.getElementById('btn-generate-ai');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<span class="sparkle-loader">✨</span> Generating...`;
+            btn.disabled = true;
+
+            const systemPrompt = `
+                You are the 'Rhetorical Engine' and 'Generative Engine' for a Material Design 3 (M3) system.
+                Your goal is to analyze a user scenario, determine the 'Context Vector' (Intent, Sentiment, Tech Literacy), 
+                and then Generate the HTML for a mobile UI mock that solves the scenario using M3 Tokens.
+                
+                You must return valid JSON with this structure:
+                {
+                    "context": ["String 1", "String 2"], // E.g., "Sentiment: Frustrated", "Device: Mobile"
+                    "tokens": ["String 1", "String 2"], // List 3-4 key M3 tokens used (e.g., md.sys.color.error)
+                    "html": "String", // The HTML content for the mock screen. MUST be using Tailwind CSS. 
+                                      // IMPORTANT: Use Tailwind for styling. Background should remain white/neutral. 
+                                      // Make it look like a real mobile app screen. 
+                                      // If sentiment is negative/error, use reddish colors. 
+                                      // If accessible, use high contrast.
+                    "title": "String", // Short title for the variation
+                    "reasoning": "String" // Brief explanation of why you chose these tokens based on the context.
+                }
+
+                STRICT RULE: The 'html' field must NOT contain <html>, <head>, or <body> tags. Just the inner content for the device screen div.
+            `;
+
+            const userPrompt = `User Scenario: "${input}"`;
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: userPrompt }] }],
+                        systemInstruction: { parts: [{ text: systemPrompt }] },
+                        generationConfig: { responseMimeType: "application/json" }
+                    })
+                });
+
+                const data = await response.json();
+                const result = JSON.parse(data.candidates[0].content.parts[0].text);
+
+                // Construct the custom object matching our simulator structure
+                const customJourney = {
+                    title: result.title,
+                    context: result.context,
+                    tokens: result.tokens,
+                    mockHTML: result.html, // Using the raw HTML from Gemini
+                    reasoning: result.reasoning
+                };
+
+                // Trigger the update
+                setJourney('custom', customJourney);
+
+            } catch (error) {
+                console.error("Gemini API Error:", error);
+                alert("Failed to generate journey. Please try again.");
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initEngineList();
+            filterTokens('all');
+            setJourney('standard'); // Default view
+            initChart();
+        });
+
+    </script>
+</body>
+</html>
