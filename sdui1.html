@@ -1,0 +1,1179 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>token_observatory_hybrid_sdui.md</title><style>@charset "UTF-8";@import 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0-alpha2/katex.min.css';code{color:#c7254e;background-color:#f9f2f4;border-radius:4px}code,kbd{padding:2px 4px}kbd{color:#fff;background-color:#333;border-radius:3px;box-shadow:inset 0 -1px 0 rgba(0,0,0,.25)}kbd kbd{padding:0;font-size:100%;box-shadow:none}pre{display:block;margin:0 0 10px;word-break:break-all;word-wrap:break-word;color:#333;background-color:#f5f5f5;border:1px solid #ccc;border-radius:4px}pre code{padding:0;font-size:inherit;color:inherit;white-space:pre-wrap;background-color:transparent;border-radius:0}.pre-scrollable{max-height:340px;overflow-y:scroll}table{background-color:transparent}th{text-align:left}.table{width:100%;max-width:100%;margin-bottom:20px}.table>thead>tr>th{padding:8px;line-height:1.428571429;border-top:1px solid #ddd}.table>thead>tr>td,.table>tbody>tr>th,.table>tbody>tr>td,.table>tfoot>tr>th,.table>tfoot>tr>td{padding:8px;line-height:1.428571429;vertical-align:top;border-top:1px solid #ddd}.table>thead>tr>th{vertical-align:bottom;border-bottom:2px solid #ddd}.table>caption+thead>tr:first-child>th,.table>caption+thead>tr:first-child>td,.table>colgroup+thead>tr:first-child>th,.table>colgroup+thead>tr:first-child>td,.table>thead:first-child>tr:first-child>th,.table>thead:first-child>tr:first-child>td{border-top:0}.table>tbody+tbody{border-top:2px solid #ddd}.table .table{background-color:#fff}.table-condensed>thead>tr>th,.table-condensed>thead>tr>td,.table-condensed>tbody>tr>th,.table-condensed>tbody>tr>td,.table-condensed>tfoot>tr>th,.table-condensed>tfoot>tr>td{padding:5px}.table-bordered,.table-bordered>thead>tr>th,.table-bordered>thead>tr>td,.table-bordered>tbody>tr>th,.table-bordered>tbody>tr>td,.table-bordered>tfoot>tr>th,.table-bordered>tfoot>tr>td{border:1px solid #ddd}.table-bordered>thead>tr>th,.table-bordered>thead>tr>td{border-bottom-width:2px}.table-striped>tbody>tr:nth-child(odd)>td,.table-striped>tbody>tr:nth-child(odd)>th{background-color:#f9f9f9}.table-hover>tbody>tr:hover>td,.table-hover>tbody>tr:hover>th{background-color:#f5f5f5}table col[class*=col-]{position:static;float:none;display:table-column}table td[class*=col-],table th[class*=col-]{position:static;float:none;display:table-cell}.table>thead>tr>td.active,.table>thead>tr>th.active,.table>thead>tr.active>td,.table>thead>tr.active>th,.table>tbody>tr>td.active,.table>tbody>tr>th.active,.table>tbody>tr.active>td,.table>tbody>tr.active>th,.table>tfoot>tr>td.active,.table>tfoot>tr>th.active,.table>tfoot>tr.active>td,.table>tfoot>tr.active>th{background-color:#f5f5f5}.table-hover>tbody>tr>td.active:hover,.table-hover>tbody>tr>th.active:hover,.table-hover>tbody>tr.active:hover>td,.table-hover>tbody>tr:hover>.active,.table-hover>tbody>tr.active:hover>th{background-color:rgb(232.25,232.25,232.25)}.table>thead>tr>td.success,.table>thead>tr>th.success,.table>thead>tr.success>td,.table>thead>tr.success>th,.table>tbody>tr>td.success,.table>tbody>tr>th.success,.table>tbody>tr.success>td,.table>tbody>tr.success>th,.table>tfoot>tr>td.success,.table>tfoot>tr>th.success,.table>tfoot>tr.success>td,.table>tfoot>tr.success>th{background-color:#dff0d8}.table-hover>tbody>tr>td.success:hover,.table-hover>tbody>tr>th.success:hover,.table-hover>tbody>tr.success:hover>td,.table-hover>tbody>tr:hover>.success,.table-hover>tbody>tr.success:hover>th{background-color:rgb(207.8888888889,232.9166666667,197.5833333333)}.table>thead>tr>td.info,.table>thead>tr>th.info,.table>thead>tr.info>td,.table>thead>tr.info>th,.table>tbody>tr>td.info,.table>tbody>tr>th.info,.table>tbody>tr.info>td,.table>tbody>tr.info>th,.table>tfoot>tr>td.info,.table>tfoot>tr>th.info,.table>tfoot>tr.info>td,.table>tfoot>tr.info>th{background-color:#d9edf7}.table-hover>tbody>tr>td.info:hover,.table-hover>tbody>tr>th.info:hover,.table-hover>tbody>tr.info:hover>td,.table-hover>tbody>tr:hover>.info,.table-hover>tbody>tr.info:hover>th{background-color:rgb(195.9347826087,227.0217391304,242.5652173913)}.table>thead>tr>td.warning,.table>thead>tr>th.warning,.table>thead>tr.warning>td,.table>thead>tr.warning>th,.table>tbody>tr>td.warning,.table>tbody>tr>th.warning,.table>tbody>tr.warning>td,.table>tbody>tr.warning>th,.table>tfoot>tr>td.warning,.table>tfoot>tr>th.warning,.table>tfoot>tr.warning>td,.table>tfoot>tr.warning>th{background-color:#fcf8e3}.table-hover>tbody>tr>td.warning:hover,.table-hover>tbody>tr>th.warning:hover,.table-hover>tbody>tr.warning:hover>td,.table-hover>tbody>tr:hover>.warning,.table-hover>tbody>tr.warning:hover>th{background-color:rgb(249.5322580645,242.2419354839,203.9677419355)}.table>thead>tr>td.danger,.table>thead>tr>th.danger,.table>thead>tr.danger>td,.table>thead>tr.danger>th,.table>tbody>tr>td.danger,.table>tbody>tr>th.danger,.table>tbody>tr.danger>td,.table>tbody>tr.danger>th,.table>tfoot>tr>td.danger,.table>tfoot>tr>th.danger,.table>tfoot>tr.danger>td,.table>tfoot>tr.danger>th{background-color:#f2dede}.table-hover>tbody>tr>td.danger:hover,.table-hover>tbody>tr>th.danger:hover,.table-hover>tbody>tr.danger:hover>td,.table-hover>tbody>tr:hover>.danger,.table-hover>tbody>tr.danger:hover>th{background-color:rgb(234.7934782609,203.7065217391,203.7065217391)}fieldset{border:0;min-width:0}legend{display:block;width:100%;margin-bottom:20px;font-size:21px;line-height:inherit;color:#333;border-bottom:1px solid #e5e5e5}label{display:inline-block;max-width:100%;margin-bottom:5px;font-weight:700}input[type=radio],input[type=checkbox]{margin:4px 0 0;margin-top:1px \9;line-height:normal}input[type=file]{display:block}input[type=range]{display:block;width:100%}select[multiple],select[size]{height:auto}input[type=file]:focus,input[type=radio]:focus,input[type=checkbox]:focus{outline:thin dotted;outline:5px auto -webkit-focus-ring-color;outline-offset:-2px}output{padding-top:7px}output,.form-control{display:block;font-size:14px;line-height:1.428571429;color:rgb(85.425,85.425,85.425)}.form-control{width:100%;height:34px;padding:6px 12px;background-color:#fff;background-image:none;border:1px solid #ccc;border-radius:4px;box-shadow:inset 0 1px 1px rgba(0,0,0,.075);transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s}.form-control:focus{border-color:#66afe9;outline:0;box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}.form-control::-moz-placeholder{color:rgb(119.085,119.085,119.085);opacity:1}.form-control:-ms-input-placeholder{color:rgb(119.085,119.085,119.085)}.form-control::-webkit-input-placeholder{color:rgb(119.085,119.085,119.085)}.form-control[disabled],.form-control[readonly],fieldset[disabled] .form-control{cursor:not-allowed;background-color:rgb(238.425,238.425,238.425);opacity:1}textarea.form-control{height:auto}input[type=date],input[type=time],input[type=datetime-local],input[type=month]{line-height:34px;line-height:1.428571429 \0}input[type=date].input-sm,.input-group-sm>input[type=date].form-control,.input-group-sm>input[type=date].input-group-addon,.input-group-sm>.input-group-btn>input[type=date].btn,.form-horizontal .form-group-sm input[type=date].form-control,input[type=time].input-sm,.input-group-sm>input[type=time].form-control,.input-group-sm>input[type=time].input-group-addon,.input-group-sm>.input-group-btn>input[type=time].btn,.form-horizontal .form-group-sm input[type=time].form-control,input[type=datetime-local].input-sm,.input-group-sm>input[type=datetime-local].form-control,.input-group-sm>input[type=datetime-local].input-group-addon,.input-group-sm>.input-group-btn>input[type=datetime-local].btn,.form-horizontal .form-group-sm input[type=datetime-local].form-control,input[type=month].input-sm,.input-group-sm>input[type=month].form-control,.input-group-sm>input[type=month].input-group-addon,.input-group-sm>.input-group-btn>input[type=month].btn,.form-horizontal .form-group-sm input[type=month].form-control{line-height:30px}input[type=date].input-lg,.input-group-lg>input[type=date].form-control,.input-group-lg>input[type=date].input-group-addon,.input-group-lg>.input-group-btn>input[type=date].btn,.form-horizontal .form-group-lg input[type=date].form-control,input[type=time].input-lg,.input-group-lg>input[type=time].form-control,.input-group-lg>input[type=time].input-group-addon,.input-group-lg>.input-group-btn>input[type=time].btn,.form-horizontal .form-group-lg input[type=time].form-control,input[type=datetime-local].input-lg,.input-group-lg>input[type=datetime-local].form-control,.input-group-lg>input[type=datetime-local].input-group-addon,.input-group-lg>.input-group-btn>input[type=datetime-local].btn,.form-horizontal .form-group-lg input[type=datetime-local].form-control,input[type=month].input-lg,.input-group-lg>input[type=month].form-control,.input-group-lg>input[type=month].input-group-addon,.input-group-lg>.input-group-btn>input[type=month].btn,.form-horizontal .form-group-lg input[type=month].form-control{line-height:46px}.form-group{margin-bottom:15px}.radio,.checkbox{position:relative;display:block;min-height:20px;margin-top:10px;margin-bottom:10px}.radio label,.checkbox label{padding-left:20px;margin-bottom:0;font-weight:400;cursor:pointer}.radio input[type=radio],.radio-inline input[type=radio],.checkbox input[type=checkbox],.checkbox-inline input[type=checkbox]{position:absolute;margin-left:-20px;margin-top:4px \9}.radio+.radio,.checkbox+.checkbox{margin-top:-5px}.radio-inline,.checkbox-inline{display:inline-block;padding-left:20px;margin-bottom:0;vertical-align:middle;font-weight:400;cursor:pointer}.radio-inline+.radio-inline,.checkbox-inline+.checkbox-inline{margin-top:0;margin-left:10px}input[type=radio][disabled],input[type=radio].disabled,fieldset[disabled] input[type=radio],input[type=checkbox][disabled],input[type=checkbox].disabled,fieldset[disabled] input[type=checkbox],.radio-inline.disabled,fieldset[disabled] .radio-inline,.checkbox-inline.disabled,fieldset[disabled] .checkbox-inline,.radio.disabled label,fieldset[disabled] .radio label,.checkbox.disabled label,fieldset[disabled] .checkbox label{cursor:not-allowed}.form-control-static{padding-top:7px;padding-bottom:7px;margin-bottom:0}.form-control-static.input-lg,.input-group-lg>.form-control-static.form-control,.input-group-lg>.form-control-static.input-group-addon,.input-group-lg>.input-group-btn>.form-control-static.btn,.form-horizontal .form-group-lg .form-control-static.form-control,.form-control-static.input-sm,.input-group-sm>.form-control-static.form-control,.input-group-sm>.form-control-static.input-group-addon,.input-group-sm>.input-group-btn>.form-control-static.btn,.form-horizontal .form-group-sm .form-control-static.form-control{padding-left:0;padding-right:0}.input-sm,.input-group-sm>.form-control{height:30px;padding:5px 10px;font-size:12px;line-height:1.5;border-radius:3px}.input-group-sm>.input-group-addon{height:30px;line-height:1.5}.input-group-sm>.input-group-btn>.btn,.form-horizontal .form-group-sm .form-control{height:30px;padding:5px 10px;font-size:12px;line-height:1.5;border-radius:3px}select.input-sm,.input-group-sm>select.form-control,.input-group-sm>select.input-group-addon,.input-group-sm>.input-group-btn>select.btn,.form-horizontal .form-group-sm select.form-control{height:30px;line-height:30px}textarea.input-sm,.input-group-sm>textarea.form-control,.input-group-sm>textarea.input-group-addon,.input-group-sm>.input-group-btn>textarea.btn,.form-horizontal .form-group-sm textarea.form-control,select[multiple].input-sm,.input-group-sm>select[multiple].form-control,.input-group-sm>select[multiple].input-group-addon,.input-group-sm>.input-group-btn>select[multiple].btn,.form-horizontal .form-group-sm select[multiple].form-control{height:auto}.input-lg,.input-group-lg>.form-control{height:46px;padding:10px 16px;font-size:18px;line-height:1.33;border-radius:6px}.input-group-lg>.input-group-addon{height:46px;line-height:1.33}.input-group-lg>.input-group-btn>.btn,.form-horizontal .form-group-lg .form-control{height:46px;padding:10px 16px;font-size:18px;line-height:1.33;border-radius:6px}select.input-lg,.input-group-lg>select.form-control,.input-group-lg>select.input-group-addon,.input-group-lg>.input-group-btn>select.btn,.form-horizontal .form-group-lg select.form-control{height:46px;line-height:46px}textarea.input-lg,.input-group-lg>textarea.form-control,.input-group-lg>textarea.input-group-addon,.input-group-lg>.input-group-btn>textarea.btn,.form-horizontal .form-group-lg textarea.form-control,select[multiple].input-lg,.input-group-lg>select[multiple].form-control,.input-group-lg>select[multiple].input-group-addon,.input-group-lg>.input-group-btn>select[multiple].btn,.form-horizontal .form-group-lg select[multiple].form-control{height:auto}.has-feedback{position:relative}.has-feedback .form-control{padding-right:42.5px}.form-control-feedback{position:absolute;top:25px;right:0;z-index:2;display:block;width:34px;height:34px;line-height:34px;text-align:center}.input-lg+.form-control-feedback,.input-group-lg>.form-control+.form-control-feedback,.input-group-lg>.input-group-addon+.form-control-feedback,.input-group-lg>.input-group-btn>.btn+.form-control-feedback,.form-horizontal .form-group-lg .form-control+.form-control-feedback{width:46px;height:46px;line-height:46px}.input-sm+.form-control-feedback,.input-group-sm>.form-control+.form-control-feedback,.input-group-sm>.input-group-addon+.form-control-feedback,.input-group-sm>.input-group-btn>.btn+.form-control-feedback,.form-horizontal .form-group-sm .form-control+.form-control-feedback{width:30px;height:30px;line-height:30px}.has-success .help-block,.has-success .control-label,.has-success .radio,.has-success .checkbox,.has-success .radio-inline,.has-success .checkbox-inline{color:#3c763d}.has-success .form-control{border-color:#3c763d;box-shadow:inset 0 1px 1px rgba(0,0,0,.075)}.has-success .form-control:focus{border-color:rgb(42.808988764,84.191011236,43.5224719101);box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 6px rgb(102.5280898876,177.4719101124,103.8202247191)}.has-success .input-group-addon{color:#3c763d;border-color:#3c763d;background-color:#dff0d8}.has-success .form-control-feedback{color:#3c763d}.has-warning .help-block,.has-warning .control-label,.has-warning .radio,.has-warning .checkbox,.has-warning .radio-inline,.has-warning .checkbox-inline{color:#8a6d3b}.has-warning .form-control{border-color:#8a6d3b;box-shadow:inset 0 1px 1px rgba(0,0,0,.075)}.has-warning .form-control:focus{border-color:rgb(102.2741116751,80.7817258883,43.7258883249);box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 6px rgb(191.807106599,160.7461928934,107.192893401)}.has-warning .input-group-addon{color:#8a6d3b;border-color:#8a6d3b;background-color:#fcf8e3}.has-warning .form-control-feedback{color:#8a6d3b}.has-error .help-block,.has-error .control-label,.has-error .radio,.has-error .checkbox,.has-error .radio-inline,.has-error .checkbox-inline{color:#a94442}.has-error .form-control{border-color:#a94442;box-shadow:inset 0 1px 1px rgba(0,0,0,.075)}.has-error .form-control:focus{border-color:rgb(132.3234042553,53.2425531915,51.6765957447);box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 6px rgb(206.4127659574,132.0595744681,130.5872340426)}.has-error .input-group-addon{color:#a94442;border-color:#a94442;background-color:#f2dede}.has-error .form-control-feedback{color:#a94442}.has-feedback label.sr-only~.form-control-feedback{top:0}.help-block{display:block;margin-top:5px;margin-bottom:10px;color:rgb(114.75,114.75,114.75)}.form-horizontal .radio,.form-horizontal .checkbox,.form-horizontal .radio-inline,.form-horizontal .checkbox-inline{margin-top:0;margin-bottom:0;padding-top:7px}.form-horizontal .radio,.form-horizontal .checkbox{min-height:27px}.form-horizontal .form-group{margin-left:-15px;margin-right:-15px}.form-horizontal .form-group:before{content:" ";display:table}.form-horizontal .form-group:after{content:" ";display:table;clear:both}.form-horizontal .has-feedback .form-control-feedback{top:0;right:15px}.btn{display:inline-block;vertical-align:middle;cursor:pointer;background-image:none;border:1px solid transparent;white-space:nowrap;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.btn:focus,.btn:active:focus,.btn.active:focus{outline:thin dotted;outline:5px auto -webkit-focus-ring-color;outline-offset:-2px}.btn:hover,.btn:focus{color:#333;text-decoration:none}.btn:active,.btn.active{outline:0;background-image:none;box-shadow:inset 0 3px 5px rgba(0,0,0,.125)}.btn.disabled,.btn[disabled],fieldset[disabled] .btn{cursor:not-allowed;pointer-events:none;opacity:.65;filter:alpha(opacity=65);box-shadow:none}.btn-default{color:#333;background-color:#fff;border-color:#ccc}.btn-default:hover,.btn-default:focus,.btn-default:active,.btn-default.active,.open>.btn-default.dropdown-toggle{color:#333;background-color:rgb(229.5,229.5,229.5);border-color:rgb(173.4,173.4,173.4)}.btn-default:active,.btn-default.active,.open>.btn-default.dropdown-toggle{background-image:none}.btn-default.disabled,.btn-default.disabled:hover,.btn-default.disabled:focus,.btn-default.disabled:active,.btn-default.disabled.active,.btn-default[disabled],.btn-default[disabled]:hover,.btn-default[disabled]:focus,.btn-default[disabled]:active,.btn-default[disabled].active,fieldset[disabled] .btn-default,fieldset[disabled] .btn-default:hover,fieldset[disabled] .btn-default:focus,fieldset[disabled] .btn-default:active,fieldset[disabled] .btn-default.active{background-color:#fff;border-color:#ccc}.btn-default .badge{color:#fff;background-color:#333}.btn-primary{color:#fff;background-color:#428bca;border-color:rgb(53.1095041322,126.2603305785,189.3904958678)}.btn-primary:hover,.btn-primary:focus,.btn-primary:active,.btn-primary.active,.open>.btn-primary.dropdown-toggle{color:#fff;background-color:rgb(47.5247933884,112.9834710744,169.4752066116);border-color:rgb(39.7061983471,94.3958677686,141.5938016529)}.btn-primary:active,.btn-primary.active,.open>.btn-primary.dropdown-toggle{background-image:none}.btn-primary.disabled,.btn-primary.disabled:hover,.btn-primary.disabled:focus,.btn-primary.disabled:active,.btn-primary.disabled.active,.btn-primary[disabled],.btn-primary[disabled]:hover,.btn-primary[disabled]:focus,.btn-primary[disabled]:active,.btn-primary[disabled].active,fieldset[disabled] .btn-primary,fieldset[disabled] .btn-primary:hover,fieldset[disabled] .btn-primary:focus,fieldset[disabled] .btn-primary:active,fieldset[disabled] .btn-primary.active{background-color:#428bca;border-color:rgb(53.1095041322,126.2603305785,189.3904958678)}.btn-primary .badge{color:#428bca;background-color:#fff}.btn-success{color:#fff;background-color:#5cb85c;border-color:rgb(76.0064102564,174.4935897436,76.0064102564)}.btn-success:hover,.btn-success:focus,.btn-success:active,.btn-success.active,.open>.btn-success.dropdown-toggle{color:#fff;background-color:rgb(68.2692307692,156.7307692308,68.2692307692);border-color:rgb(57.4371794872,131.8628205128,57.4371794872)}.btn-success:active,.btn-success.active,.open>.btn-success.dropdown-toggle{background-image:none}.btn-success.disabled,.btn-success.disabled:hover,.btn-success.disabled:focus,.btn-success.disabled:active,.btn-success.disabled.active,.btn-success[disabled],.btn-success[disabled]:hover,.btn-success[disabled]:focus,.btn-success[disabled]:active,.btn-success[disabled].active,fieldset[disabled] .btn-success,fieldset[disabled] .btn-success:hover,fieldset[disabled] .btn-success:focus,fieldset[disabled] .btn-success:active,fieldset[disabled] .btn-success.active{background-color:#5cb85c;border-color:rgb(76.0064102564,174.4935897436,76.0064102564)}.btn-success .badge{color:#5cb85c;background-color:#fff}.btn-info{color:#fff;background-color:#5bc0de;border-color:rgb(69.7715736041,183.845177665,217.7284263959)}.btn-info:hover,.btn-info:focus,.btn-info:active,.btn-info.active,.open>.btn-info.dropdown-toggle{color:#fff;background-color:rgb(48.5431472081,175.6903553299,213.4568527919);border-color:rgb(37.9081218274,153.9299492386,188.3918781726)}.btn-info:active,.btn-info.active,.open>.btn-info.dropdown-toggle{background-image:none}.btn-info.disabled,.btn-info.disabled:hover,.btn-info.disabled:focus,.btn-info.disabled:active,.btn-info.disabled.active,.btn-info[disabled],.btn-info[disabled]:hover,.btn-info[disabled]:focus,.btn-info[disabled]:active,.btn-info[disabled].active,fieldset[disabled] .btn-info,fieldset[disabled] .btn-info:hover,fieldset[disabled] .btn-info:focus,fieldset[disabled] .btn-info:active,fieldset[disabled] .btn-info.active{background-color:#5bc0de;border-color:rgb(69.7715736041,183.845177665,217.7284263959)}.btn-info .badge{color:#5bc0de;background-color:#fff}.btn-warning{color:#fff;background-color:#f0ad4e;border-color:rgb(238.0078125,162.109375,54.4921875)}.btn-warning:hover,.btn-warning:focus,.btn-warning:active,.btn-warning.active,.open>.btn-warning.dropdown-toggle{color:#fff;background-color:rgb(236.015625,151.21875,30.984375);border-color:rgb(213.2296875,132.515625,18.0703125)}.btn-warning:active,.btn-warning.active,.open>.btn-warning.dropdown-toggle{background-image:none}.btn-warning.disabled,.btn-warning.disabled:hover,.btn-warning.disabled:focus,.btn-warning.disabled:active,.btn-warning.disabled.active,.btn-warning[disabled],.btn-warning[disabled]:hover,.btn-warning[disabled]:focus,.btn-warning[disabled]:active,.btn-warning[disabled].active,fieldset[disabled] .btn-warning,fieldset[disabled] .btn-warning:hover,fieldset[disabled] .btn-warning:focus,fieldset[disabled] .btn-warning:active,fieldset[disabled] .btn-warning.active{background-color:#f0ad4e;border-color:rgb(238.0078125,162.109375,54.4921875)}.btn-warning .badge{color:#f0ad4e;background-color:#fff}.btn-danger{color:#fff;background-color:#d9534f;border-color:rgb(212.4719626168,62.5046728972,58.0280373832)}.btn-danger:hover,.btn-danger:focus,.btn-danger:active,.btn-danger.active,.open>.btn-danger.dropdown-toggle{color:#fff;background-color:rgb(201.4953271028,48.0841121495,43.5046728972);border-color:rgb(172.1345794393,41.0775700935,37.1654205607)}.btn-danger:active,.btn-danger.active,.open>.btn-danger.dropdown-toggle{background-image:none}.btn-danger.disabled,.btn-danger.disabled:hover,.btn-danger.disabled:focus,.btn-danger.disabled:active,.btn-danger.disabled.active,.btn-danger[disabled],.btn-danger[disabled]:hover,.btn-danger[disabled]:focus,.btn-danger[disabled]:active,.btn-danger[disabled].active,fieldset[disabled] .btn-danger,fieldset[disabled] .btn-danger:hover,fieldset[disabled] .btn-danger:focus,fieldset[disabled] .btn-danger:active,fieldset[disabled] .btn-danger.active{background-color:#d9534f;border-color:rgb(212.4719626168,62.5046728972,58.0280373832)}.btn-danger .badge{color:#d9534f;background-color:#fff}.btn-link{color:#428bca;font-weight:400;cursor:pointer;border-radius:0}.btn-link,.btn-link:active,.btn-link[disabled],fieldset[disabled] .btn-link{background-color:transparent;box-shadow:none}.btn-link,.btn-link:hover,.btn-link:focus,.btn-link:active{border-color:transparent}.btn-link:hover,.btn-link:focus{color:rgb(41.9400826446,99.7066115702,149.5599173554);text-decoration:underline;background-color:transparent}.btn-link[disabled]:hover,.btn-link[disabled]:focus,fieldset[disabled] .btn-link:hover,fieldset[disabled] .btn-link:focus{color:rgb(119.085,119.085,119.085);text-decoration:none}.btn-lg{padding:10px 16px;font-size:18px;line-height:1.33;border-radius:6px}.btn-sm{padding:5px 10px}.btn-sm,.btn-xs{font-size:12px;line-height:1.5;border-radius:3px}.btn-xs{padding:1px 5px}.btn-block{display:block;width:100%}.btn-block+.btn-block{margin-top:5px}input[type=submit].btn-block,input[type=reset].btn-block,input[type=button].btn-block{width:100%}.fade{opacity:0;transition:opacity .15s linear}.fade.in{opacity:1}.collapse{display:none}.collapse.in{display:block}tr.collapse.in{display:table-row}tbody.collapse.in{display:table-row-group}.collapsing{position:relative;height:0;overflow:hidden;transition:height .35s ease}.input-group{position:relative;display:table;border-collapse:separate}.input-group[class*=col-]{float:none;padding-left:0;padding-right:0}.input-group .form-control{position:relative;z-index:2;float:left;width:100%;margin-bottom:0}.input-group-addon,.input-group-btn,.input-group .form-control{display:table-cell}.input-group-addon:not(:first-child):not(:last-child),.input-group-btn:not(:first-child):not(:last-child),.input-group .form-control:not(:first-child):not(:last-child){border-radius:0}.input-group-addon{white-space:nowrap}.input-group-addon,.input-group-btn{width:1%;vertical-align:middle}.input-group-addon{padding:6px 12px;font-size:14px;font-weight:400;line-height:1;color:rgb(85.425,85.425,85.425);text-align:center;background-color:rgb(238.425,238.425,238.425);border:1px solid #ccc;border-radius:4px}.input-group-addon.input-sm,.form-horizontal .form-group-sm .input-group-addon.form-control,.input-group-sm>.input-group-addon,.input-group-sm>.input-group-btn>.input-group-addon.btn{padding:5px 10px;font-size:12px;border-radius:3px}.input-group-addon.input-lg,.form-horizontal .form-group-lg .input-group-addon.form-control,.input-group-lg>.input-group-addon,.input-group-lg>.input-group-btn>.input-group-addon.btn{padding:10px 16px;font-size:18px;border-radius:6px}.input-group-addon input[type=radio],.input-group-addon input[type=checkbox]{margin-top:0}.input-group .form-control:first-child,.input-group-addon:first-child,.input-group-btn:first-child>.btn,.input-group-btn:first-child>.btn-group>.btn,.input-group-btn:first-child>.dropdown-toggle,.input-group-btn:last-child>.btn:not(:last-child):not(.dropdown-toggle),.input-group-btn:last-child>.btn-group:not(:last-child)>.btn{border-bottom-right-radius:0;border-top-right-radius:0}.input-group-addon:first-child{border-right:0}.input-group .form-control:last-child,.input-group-addon:last-child,.input-group-btn:last-child>.btn,.input-group-btn:last-child>.btn-group>.btn,.input-group-btn:last-child>.dropdown-toggle,.input-group-btn:first-child>.btn:not(:first-child),.input-group-btn:first-child>.btn-group:not(:first-child)>.btn{border-bottom-left-radius:0;border-top-left-radius:0}.input-group-addon:last-child{border-left:0}.input-group-btn{font-size:0;white-space:nowrap}.input-group-btn,.input-group-btn>.btn{position:relative}.input-group-btn>.btn+.btn{margin-left:-1px}.input-group-btn>.btn:hover,.input-group-btn>.btn:focus,.input-group-btn>.btn:active{z-index:2}.input-group-btn:first-child>.btn,.input-group-btn:first-child>.btn-group{margin-right:-1px}.input-group-btn:last-child>.btn,.input-group-btn:last-child>.btn-group{margin-left:-1px}.pagination{display:inline-block;padding-left:0;margin:20px 0;border-radius:4px}.pagination>li{display:inline}.pagination>li>a,.pagination>li>span{position:relative;float:left;padding:6px 12px;line-height:1.428571429;text-decoration:none;color:#428bca;background-color:#fff;border:1px solid #ddd;margin-left:-1px}.pagination>li:first-child>a,.pagination>li:first-child>span{margin-left:0;border-bottom-left-radius:4px;border-top-left-radius:4px}.pagination>li:last-child>a,.pagination>li:last-child>span{border-bottom-right-radius:4px;border-top-right-radius:4px}.pagination>li>a:hover,.pagination>li>a:focus,.pagination>li>span:hover,.pagination>li>span:focus{color:rgb(41.9400826446,99.7066115702,149.5599173554);background-color:rgb(238.425,238.425,238.425);border-color:#ddd}.pagination>.active>a,.pagination>.active>a:hover,.pagination>.active>a:focus,.pagination>.active>span,.pagination>.active>span:hover,.pagination>.active>span:focus{z-index:2;color:#fff;background-color:#428bca;border-color:#428bca;cursor:default}.pagination>.disabled>span,.pagination>.disabled>span:hover,.pagination>.disabled>span:focus,.pagination>.disabled>a,.pagination>.disabled>a:hover,.pagination>.disabled>a:focus{color:rgb(119.085,119.085,119.085);background-color:#fff;border-color:#ddd;cursor:not-allowed}.pagination-lg>li>a,.pagination-lg>li>span{padding:10px 16px;font-size:18px}.pagination-lg>li:first-child>a,.pagination-lg>li:first-child>span{border-bottom-left-radius:6px;border-top-left-radius:6px}.pagination-lg>li:last-child>a,.pagination-lg>li:last-child>span{border-bottom-right-radius:6px;border-top-right-radius:6px}.pagination-sm>li>a,.pagination-sm>li>span{padding:5px 10px;font-size:12px}.pagination-sm>li:first-child>a,.pagination-sm>li:first-child>span{border-bottom-left-radius:3px;border-top-left-radius:3px}.pagination-sm>li:last-child>a,.pagination-sm>li:last-child>span{border-bottom-right-radius:3px;border-top-right-radius:3px}.close{float:right;font-size:21px;font-weight:700;line-height:1;color:#000;text-shadow:0 1px 0 #fff;opacity:.2;filter:alpha(opacity=20)}.close:hover,.close:focus{color:#000;text-decoration:none;cursor:pointer;opacity:.5;filter:alpha(opacity=50)}button.close{padding:0;cursor:pointer;background:0 0;border:0;-webkit-appearance:none}.modal-open,.modal{overflow:hidden}.modal{display:none;position:fixed;top:0;right:0;bottom:0;left:0;z-index:1050;-webkit-overflow-scrolling:touch;outline:0}.modal.fade .modal-dialog{transform:translate3d(0,-25%,0);transition:transform .3s ease-out}.modal.in .modal-dialog{transform:translate3d(0,0,0)}.modal-open .modal{overflow-x:hidden;overflow-y:auto}.modal-dialog{position:relative;width:auto;margin:10px}.modal-content{position:relative;background-color:#fff;border:1px solid #999;border:1px solid rgba(0,0,0,.2);border-radius:6px;box-shadow:0 3px 9px rgba(0,0,0,.5);background-clip:padding-box;outline:0}.modal-backdrop{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1040;background-color:#000}.modal-backdrop.fade{opacity:0;filter:alpha(opacity=0)}.modal-backdrop.in{opacity:.5;filter:alpha(opacity=50)}.modal-header{padding:15px;border-bottom:1px solid #e5e5e5;min-height:16.428571429px}.modal-header .close{margin-top:-2px}.modal-title{margin:0;line-height:1.428571429}.modal-body{position:relative;padding:15px}.modal-footer{padding:15px;text-align:right;border-top:1px solid #e5e5e5}.modal-footer:before,.modal-footer:after{content:" ";display:table}.modal-footer:after{clear:both}.modal-footer .btn+.btn{margin-left:5px;margin-bottom:0}.modal-footer .btn-group .btn+.btn{margin-left:-1px}.modal-footer .btn-block+.btn-block{margin-left:0}.modal-scrollbar-measure{position:absolute;top:-9999px;width:50px;height:50px;overflow:scroll}.clearfix:before,.clearfix:after{content:" ";display:table}.clearfix:after{clear:both}.center-block{display:block;margin-left:auto;margin-right:auto}.pull-right{float:right!important}.pull-left{float:left!important}.hide{display:none!important}.show{display:block!important}.invisible{visibility:hidden}.text-hide{font:0/0 a;color:transparent;text-shadow:none;background-color:transparent;border:0}.hidden{display:none!important;visibility:hidden!important}.affix{position:fixed;transform:translate3d(0,0,0)}.hljs{display:block;overflow-x:auto;padding:.5em;background:#002b36;color:#839496;-webkit-text-size-adjust:none}.hljs-comment,.hljs-template_comment,.diff .hljs-header,.hljs-doctype,.hljs-pi,.lisp .hljs-string,.hljs-javadoc{color:#586e75}.hljs-keyword,.hljs-winutils,.method,.hljs-addition,.css .hljs-tag,.hljs-request,.hljs-status,.nginx .hljs-title{color:#859900}.hljs-number,.hljs-command,.hljs-string,.hljs-tag .hljs-value,.hljs-rules .hljs-value,.hljs-phpdoc,.hljs-dartdoc,.tex .hljs-formula,.hljs-regexp,.hljs-hexcolor,.hljs-link_url{color:#2aa198}.hljs-title,.hljs-localvars,.hljs-chunk,.hljs-decorator,.hljs-built_in,.hljs-identifier,.vhdl .hljs-literal,.hljs-id,.css .hljs-function{color:#268bd2}.hljs-attribute,.hljs-variable,.lisp .hljs-body,.smalltalk .hljs-number,.hljs-constant,.hljs-class .hljs-title,.hljs-parent,.hljs-type,.hljs-link_reference{color:#b58900}.hljs-preprocessor,.hljs-preprocessor .hljs-keyword,.hljs-pragma,.hljs-shebang,.hljs-symbol,.hljs-symbol .hljs-string,.diff .hljs-change,.hljs-special,.hljs-attr_selector,.hljs-subst,.hljs-cdata,.css .hljs-pseudo,.hljs-header{color:#cb4b16}.hljs-deletion,.hljs-important{color:#dc322f}.hljs-link_label{color:#6c71c4}.tex .hljs-formula{background:#073642}*,*:before,*:after{box-sizing:border-box}html{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section,summary{display:block}audio,canvas,progress,video{display:inline-block;vertical-align:baseline}audio:not([controls]){display:none;height:0}[hidden],template{display:none}a{background:0 0}a:active,a:hover{outline:0}abbr[title]{border-bottom:1px dotted}b,strong{font-weight:700}dfn{font-style:italic}h1{margin:.67em 0}mark{background:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sup{top:-.5em}sub{bottom:-.25em}images{border:0}svg:not(:root){overflow:hidden}figure{margin:1em 40px}hr{box-sizing:content-box;height:0}pre{overflow:auto}code,kbd{font-size:1em}code,kbd,pre,samp{font-family:monospace,monospace}samp{font-size:1em}button,input,optgroup,select,textarea{color:inherit;font:inherit;margin:0}button{overflow:visible}button,select{text-transform:none}button,html input[type=button],input[type=reset],input[type=submit]{-webkit-appearance:button;cursor:pointer}button[disabled],html input[disabled]{cursor:default}button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}input{line-height:normal}input[type=checkbox],input[type=radio]{box-sizing:border-box;padding:0;margin-right:5px}input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{height:auto}input[type=search]{-webkit-appearance:textfield;box-sizing:content-box}input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-search-decoration{-webkit-appearance:none}fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}legend{border:0;padding:0}textarea{overflow:auto}optgroup{font-weight:700}table{border-collapse:collapse;border-spacing:0}.debug{background-color:#ffc0cb!important}.ellipsis{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ir{background-color:transparent;border:0;overflow:hidden}.ir::before{content:"";display:block;height:150%;width:0}html{font-size:.875em;background:#fff;color:#373D49}html,body{font-family:Georgia,Cambria,serif;height:100%}body{font-size:1rem;font-weight:400;line-height:2rem}ul,ol{margin-bottom:.83999rem;padding-top:.16001rem}li{font-feature-settings:"kern" 1,"onum" 1,"liga" 1;margin-left:1rem}li>ul,li>ol{margin-bottom:0}p{padding-top:.66001rem;font-feature-settings:"kern" 1,"onum" 1,"liga" 1;margin-top:0}p,pre{margin-bottom:1.33999rem}pre{font-size:1rem;padding:.66001rem 9.5px 9.5px;line-height:2rem;background:linear-gradient(to bottom,#fff 0,#fff .75rem,#f5f7fa .75rem,#f5f7fa 2.75rem,#fff 2.75rem,#fff 4rem);background-size:100% 4rem;border-color:#D3DAEA}blockquote{margin:0}blockquote p{font-size:1rem;margin-bottom:.33999rem;font-style:italic;padding:.66001rem 1rem 1rem;border-left:3px solid #A0AABF}th,td{padding:12px}h1,h2,h3,h4,h5,h6{font-family:"Source Sans Pro","Helvetica Neue",Helvetica,Arial,sans-serif;font-feature-settings:"dlig" 1,"liga" 1,"lnum" 1,"kern" 1;font-style:normal;font-weight:600;margin-top:0}h1{line-height:3rem;font-size:2.0571428571rem;margin-bottom:.21999rem;padding-top:.78001rem}h2{font-size:1.953125rem;margin-bottom:.18358375rem;padding-top:.81641625rem}h2,h3{line-height:3rem}h3{font-size:1.6457142857rem;margin-bottom:.07599rem;padding-top:.92401rem}h4{font-size:1.5625rem;margin-bottom:.546865rem;padding-top:.453135rem}h5{font-size:1.25rem;margin-bottom:-.56251rem;padding-top:.56251rem}h6{font-size:1rem;margin-bottom:-.65001rem;padding-top:.65001rem}a{cursor:pointer;color:#35D7BB;text-decoration:none}a:hover,a:focus{border-bottom-color:#35D7BB;color:rgb(223.2809917355,248.7190082645,244.3223140496)}img{height:auto;max-width:100%}dt{font-style:italic;font-weight:600}.g{display:block}.g:after{clear:both;content:"";display:table}.g-b{float:left;margin:0;width:100%}.g{margin-left:-16px;margin-right:-16px}.g-b{padding-left:16px;padding-right:16px}.g-b--center{display:block;float:none;margin:0 auto}.g-b--right{float:right}.g-b--1of1{width:100%}.g-b--1of2,.g-b--6of12,.g-b--5of10,.g-b--4of8,.g-b--3of6,.g-b--2of4{width:50%}.g-b--1of3,.g-b--4of12,.g-b--2of6{width:33.333%}.g-b--2of3,.g-b--8of12,.g-b--4of6{width:66.666%}.g-b--1of4,.g-b--3of12,.g-b--2of8{width:25%}.g-b--3of4,.g-b--9of12,.g-b--6of8{width:75%}.g-b--1of5,.g-b--2of10{width:20%}.g-b--2of5,.g-b--4of10{width:40%}.g-b--3of5,.g-b--6of10{width:60%}.g-b--4of5,.g-b--8of10{width:80%}.g-b--1of6,.g-b--2of12{width:16.666%}.g-b--5of6,.g-b--10of12{width:83.333%}.g-b--1of8{width:12.5%}.g-b--3of8{width:37.5%}.g-b--5of8{width:62.5%}.g-b--7of8{width:87.5%}.g-b--1of10{width:10%}.g-b--3of10{width:30%}.g-b--7of10{width:70%}.g-b--9of10{width:90%}.g-b--1of12{width:8.333%}.g-b--5of12{width:41.666%}.g-b--7of12{width:58.333%}.g-b--11of12{width:91.666%}.g-b--push--1of1{margin-left:100%}.g-b--push--1of2,.g-b--push--6of12,.g-b--push--5of10,.g-b--push--4of8,.g-b--push--3of6,.g-b--push--2of4{margin-left:50%}.g-b--push--1of3,.g-b--push--4of12,.g-b--push--2of6{margin-left:33.333%}.g-b--push--2of3,.g-b--push--8of12,.g-b--push--4of6{margin-left:66.666%}.g-b--push--1of4,.g-b--push--3of12,.g-b--push--2of8{margin-left:25%}.g-b--push--3of4,.g-b--push--9of12,.g-b--push--6of8{margin-left:75%}.g-b--push--1of5,.g-b--push--2of10{margin-left:20%}.g-b--push--2of5,.g-b--push--4of10{margin-left:40%}.g-b--push--3of5,.g-b--push--6of10{margin-left:60%}.g-b--push--4of5,.g-b--push--8of10{margin-left:80%}.g-b--push--1of6,.g-b--push--2of12{margin-left:16.666%}.g-b--push--5of6,.g-b--push--10of12{margin-left:83.333%}.g-b--push--1of8{margin-left:12.5%}.g-b--push--3of8{margin-left:37.5%}.g-b--push--5of8{margin-left:62.5%}.g-b--push--7of8{margin-left:87.5%}.g-b--push--1of10{margin-left:10%}.g-b--push--3of10{margin-left:30%}.g-b--push--7of10{margin-left:70%}.g-b--push--9of10{margin-left:90%}.g-b--push--1of12{margin-left:8.333%}.g-b--push--5of12{margin-left:41.666%}.g-b--push--7of12{margin-left:58.333%}.g-b--push--11of12{margin-left:91.666%}.g-b--pull--1of1{margin-right:100%}.g-b--pull--1of2,.g-b--pull--6of12,.g-b--pull--5of10,.g-b--pull--4of8,.g-b--pull--3of6,.g-b--pull--2of4{margin-right:50%}.g-b--pull--1of3,.g-b--pull--4of12,.g-b--pull--2of6{margin-right:33.333%}.g-b--pull--2of3,.g-b--pull--8of12,.g-b--pull--4of6{margin-right:66.666%}.g-b--pull--1of4,.g-b--pull--3of12,.g-b--pull--2of8{margin-right:25%}.g-b--pull--3of4,.g-b--pull--9of12,.g-b--pull--6of8{margin-right:75%}.g-b--pull--1of5,.g-b--pull--2of10{margin-right:20%}.g-b--pull--2of5,.g-b--pull--4of10{margin-right:40%}.g-b--pull--3of5,.g-b--pull--6of10{margin-right:60%}.g-b--pull--4of5,.g-b--pull--8of10{margin-right:80%}.g-b--pull--1of6,.g-b--pull--2of12{margin-right:16.666%}.g-b--pull--5of6,.g-b--pull--10of12{margin-right:83.333%}.g-b--pull--1of8{margin-right:12.5%}.g-b--pull--3of8{margin-right:37.5%}.g-b--pull--5of8{margin-right:62.5%}.g-b--pull--7of8{margin-right:87.5%}.g-b--pull--1of10{margin-right:10%}.g-b--pull--3of10{margin-right:30%}.g-b--pull--7of10{margin-right:70%}.g-b--pull--9of10{margin-right:90%}.g-b--pull--1of12{margin-right:8.333%}.g-b--pull--5of12{margin-right:41.666%}.g-b--pull--7of12{margin-right:58.333%}.g-b--pull--11of12{margin-right:91.666%}.splashscreen{position:fixed;top:0;left:0;width:100%;height:100%;background-color:#373D49;z-index:22}.splashscreen-dillinger{width:260px;height:auto;display:block;margin:0 auto;padding-bottom:3rem}.splashscreen p{font-size:1.25rem;padding-top:.56251rem;font-family:"Source Sans Pro","Helvetica Neue",Helvetica,Arial,sans-serif;font-weight:400;text-align:center;max-width:500px;margin:0 auto;color:#FFF}.sp-center{position:relative;transform:translateY(-50%);top:50%}.open-menu>.wrapper{overflow-x:hidden}.page{margin:0 auto;position:relative;top:0;left:0;width:100%;height:100%;z-index:2;transition:all .25s ease-in-out;background-color:#fff;padding-top:51px;will-change:left}.open-menu .page{left:270px}.title{line-height:1rem;font-size:.8rem;margin-bottom:.77999rem;padding-top:.22001rem;font-weight:500;color:#A0AABF;letter-spacing:1px;text-transform:uppercase;padding-left:16px;padding-right:16px;margin-top:1rem}.split-preview .title{padding-left:0}.title-document{line-height:1rem;font-size:1.25rem;margin-bottom:.89999rem;padding-top:.10001rem;font-weight:400;font-family:"Ubuntu Mono",Monaco;color:#373D49;padding-left:16px;padding-right:16px;width:80%;min-width:300px;outline:0;border:none}.icon{display:block;margin:0 auto;width:36px;height:36px;border-radius:3px;text-align:center}.icon svg{display:inline-block;margin-left:auto;margin-right:auto}.icon-preview{background-color:#373D49;line-height:40px}.icon-preview svg{width:19px;height:12px}.icon-settings{background-color:#373D49;line-height:44px}.icon-settings svg{width:18px;height:18px}.icon-link{width:16px;height:16px;line-height:1;margin-right:24px;text-align:right}.navbar:after{content:"";display:table;clear:both}.navbar{background-color:#373D49;height:51px;width:100%;position:fixed;top:0;left:0;z-index:6;transition:all .25s ease-in-out;will-change:left}.open-menu .navbar{left:270px}.navbar-brand{float:left;margin:0 0 0 24px;padding:0;line-height:42px}.navbar-brand svg{width:85px;height:11px}.nav-left{float:left}.nav-right{float:right}.nav-sidebar{width:100%}.menu{list-style:none;margin:0;padding:0}.menu a{border:0;color:#A0AABF;font-family:"Source Sans Pro","Helvetica Neue",Helvetica,Arial,sans-serif;outline:none;text-transform:uppercase}.menu a:hover{color:#35D7BB}.menu .menu-item{border:0;display:none;float:left;margin:0;position:relative}.menu .menu-item>a{display:block;font-size:12px;height:51px;letter-spacing:1px;line-height:51px;padding:0 24px}.menu .menu-item--settings,.menu .menu-item--preview,.menu .menu-item--save-to.in-sidebar,.menu .menu-item--import-from.in-sidebar,.menu .menu-item--link-unlink.in-sidebar,.menu .menu-item--documents.in-sidebar{display:block}.menu .menu-item--documents{padding-bottom:1rem}.menu .menu-item.open>a{background-color:#1D212A}.menu .menu-item-icon>a{height:auto;padding:0}.menu .menu-item-icon:hover>a{background-color:transparent}.menu .menu-link.open i{background-color:#1D212A}.menu .menu-link.open g{fill:#35D7BB}.menu .menu-link-preview,.menu .menu-link-settings{margin-top:8px;width:51px}.menu-sidebar{width:100%}.menu-sidebar .menu-item{float:none;margin-bottom:1px;width:100%}.menu-sidebar .menu-item.open>a{background-color:#373D49}.menu-sidebar .open .caret{transform:rotate(180deg)}.menu-sidebar>.menu-item:hover .dropdown a,.menu-sidebar>.menu-item:hover .settings a{background-color:transparent}.menu-sidebar .menu-link{background-color:#373D49;font-weight:600}.menu-sidebar .menu-link:after{content:"";display:table;clear:both}.menu-sidebar .menu-link>span{float:left}.menu-sidebar .menu-link>.caret{float:right;text-align:right;top:22px}.menu-sidebar .dropdown,.menu-sidebar .settings{background-color:transparent;position:static;width:100%}.dropdown{position:absolute;right:0;top:51px;width:188px}.dropdown,.settings{display:none;background-color:#1D212A}.dropdown{padding:0}.dropdown,.settings,.sidebar-list{list-style:none;margin:0}.sidebar-list{padding:0}.dropdown li{margin:32px 0;padding:0 0 0 32px}.dropdown li,.settings li{line-height:1}.sidebar-list li{line-height:1;margin:32px 0;padding:0 0 0 32px}.dropdown a:after,.settings a:after,.sidebar-list a:after{content:"";display:table;clear:both}.dropdown a{color:#D0D6E2}.dropdown a,.settings a,.sidebar-list a{display:block;text-transform:none}.sidebar-list a{color:#D0D6E2}.dropdown .icon,.settings .icon,.sidebar-list .icon{float:right}.open .dropdown,.open .settings,.open .sidebar-list{display:block}.open .dropdown.collapse,.open .collapse.settings,.open .sidebar-list.collapse{display:none}.open .dropdown.collapse.in,.open .collapse.in.settings,.open .sidebar-list.collapse.in{display:block}.dropdown .unlinked .icon,.settings .unlinked .icon,.sidebar-list .unlinked .icon{opacity:.3}.dropdown.documents li,.documents.settings li,.sidebar-list.documents li{background-image:url("../img/icons/file.svg");background-position:240px center;background-repeat:no-repeat;background-size:14px 16px;padding:3px 32px}.dropdown.documents li.octocat,.documents.settings li.octocat,.sidebar-list.documents li.octocat{background-image:url("../img/icons/octocat.svg");background-position:234px center;background-size:24px 24px}.dropdown.documents li:last-child,.documents.settings li:last-child,.sidebar-list.documents li:last-child{margin-bottom:1rem}.dropdown.documents li.active a,.documents.settings li.active a,.sidebar-list.documents li.active a{color:#35D7BB}.settings{position:fixed;top:67px;right:16px;border-radius:3px;width:288px;background-color:#373D49;padding:16px;z-index:7}.show-settings .settings{display:block}.settings .has-checkbox{float:left}.settings form{display:-ms-flexbox;display:flex;-ms-flex-direction:row;flex-direction:row;-ms-flex-pack:justify;justify-content:space-between}.settings input{width:20%}.settings a:after{content:"";display:table;clear:both}.settings a{font-size:1.25rem;font-family:"Source Sans Pro","Helvetica Neue",Helvetica,Arial,sans-serif;font-weight:400;-webkit-font-smoothing:antialiased;line-height:28px;color:#D0D6E2}.settings a:hover{color:#35D7BB}.settings li{border-bottom:1px solid #4F535B;margin:0;padding:16px 0}.settings li:last-child{border-bottom:none}.brand{border:none;display:block}.brand:hover g{fill:#35D7BB}.toggle{display:block;float:left;height:16px;padding:25px 16px 26px;width:40px}.toggle span:after,.toggle span:before{content:"";left:0;position:absolute;top:-6px}.toggle span:after{top:6px}.toggle span{display:block;position:relative}.toggle span,.toggle span:after,.toggle span:before{backface-visibility:hidden;background-color:#D3DAEA;height:2px;transition:all .3s;width:20px}.open-menu .toggle span{background-color:transparent}.open-menu .toggle span:before{transform:rotate(45deg) translate(3px,3px)}.open-menu .toggle span:after{transform:rotate(-45deg) translate(5px,-6px)}.caret{display:inline-block;width:0;height:0;margin-left:6px;vertical-align:middle;position:relative;top:-1px;border-top:4px solid;border-right:4px solid transparent;border-left:4px solid transparent}.sidebar{overflow:auto;height:100%;padding-right:15px;padding-bottom:15px;width:285px}.sidebar-wrapper{-webkit-overflow-scrolling:touch;background-color:#2B2F36;left:0;height:100%;overflow-y:hidden;position:fixed;top:0;width:285px;z-index:1}.sidebar-branding{width:160px;padding:0;margin:16px auto}.header{border-bottom:1px solid #E8E8E8;position:relative}.words,.characters{line-height:1rem;font-size:.8rem;margin-bottom:.77999rem;padding-top:.22001rem;font-weight:500;font-family:"Source Sans Pro","Helvetica Neue",Helvetica,Arial,sans-serif;letter-spacing:1px;text-transform:uppercase;z-index:5;position:absolute;right:16px;top:0}.words span,.characters span{color:#A0AABF}.words .counter,.characters .counter{color:#000}.words+.characters{top:22px}.mr10{margin-right:10px}.btn{text-align:center;display:inline-block;width:100%;text-transform:uppercase;font-weight:600;font-family:"Source Sans Pro","Helvetica Neue",Helvetica,Arial,sans-serif;font-size:14px;text-shadow:0 1px 0 rgb(27.4380165289,138.5619834711,119.3553719008);padding:16px 24px;background-color:#35D7BB;border-radius:3px;margin:0 auto 16px;line-height:1;color:#fff;transition:all .15s linear;-webkit-font-smoothing:antialiased}.btn--new,.btn--save{display:block;width:238px}.btn--new:hover,.btn--new:focus,.btn--save:hover,.btn--save:focus{color:#fff;border-bottom-color:transparent;box-shadow:0 1px 3px rgb(35.867768595,181.132231405,156.0247933884);text-shadow:0 1px 0 rgb(35.867768595,181.132231405,156.0247933884)}.btn--save{background-color:#4A5261;text-shadow:0 1px 1px rgb(29.8596491228,33.0877192982,39.1403508772)}.btn--save:hover,.btn--save:focus{color:#fff;border-bottom-color:transparent;box-shadow:0 1px 5px rgb(7.7894736842,8.6315789474,10.2105263158);text-shadow:none}.btn--delete{display:block;width:238px;background-color:transparent;font-size:12px;text-shadow:none}.btn--delete:hover,.btn--delete:focus{color:#fff;border-bottom-color:transparent;text-shadow:0 1px 0 rgb(7.7894736842,8.6315789474,10.2105263158);opacity:.8}.btn--delete-modal,.btn--ok,.btn--close{border-top:0;background-color:#4A5261;text-shadow:0 1px 0 rgb(7.7894736842,8.6315789474,10.2105263158);margin:0}.btn--delete-modal:hover,.btn--delete-modal:focus,.btn--ok:hover,.btn--ok:focus,.btn--close:hover,.btn--close:focus{color:#fff;background-color:rgb(40.8947368421,45.3157894737,53.6052631579);text-shadow:none}.btn--delete-modal{display:inline;width:auto}.overlay{position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgba(55,61,73,.8);transition:all .25s ease-in-out;transition-timing-function:ease-out;will-change:left,opacity,visibility;z-index:5;opacity:0;visibility:hidden}.show-settings .overlay{visibility:visible;opacity:1}.switch{float:right;line-height:1}.switch input{display:none}.switch small{display:inline-block;cursor:pointer;padding:0 24px 0 0;transition:all ease .2s;background-color:#2B2F36;border-color:#2B2F36}.switch small,.switch small:before{border-radius:30px;box-shadow:inset 0 0 2px 0 #14171F}.switch small:before{display:block;content:"";width:28px;height:28px;background:#fff}.switch.checked small{padding-right:0;padding-left:24px;background-color:#35D7BB;box-shadow:none}.modal--dillinger.about .modal-dialog{font-size:1.25rem;max-width:500px}.modal--dillinger.scope .modal-dialog{max-width:300px;margin:5rem auto}.modal--dillinger .modal-dialog{max-width:600px;width:auto;margin:5rem auto}.modal--dillinger .modal-content{background:#373D49;border-radius:3px;box-shadow:0 2px 5px 0 #2C3B59;color:#fff;font-family:"Source Sans Pro","Helvetica Neue",Helvetica,Arial,sans-serif;font-weight:400;padding:2rem}.modal--dillinger ul{list-style-type:disc;margin:1rem 0;padding:0 0 0 1rem}.modal--dillinger li{padding:0;margin:0}.modal--dillinger .modal-header{border:0;padding:0}.modal--dillinger .modal-body{padding:0}.modal--dillinger .modal-footer{border:0;padding:0}.modal--dillinger .close{color:#fff;opacity:1}.modal-backdrop{background-color:#373D49}.pagination--dillinger{padding:0!important;margin:1.5rem 0!important;display:-ms-flexbox;display:flex;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-direction:row;flex-direction:row;-ms-flex-align:center;align-items:center;-ms-flex-line-pack:stretch;align-content:stretch}.pagination--dillinger li{display:-ms-flexbox;display:flex;-ms-flex-positive:1;flex-grow:1;text-align:center}.pagination--dillinger li:first-child>a,.pagination--dillinger li.disabled>a,.pagination--dillinger li.disabled>a:hover,.pagination--dillinger li.disabled>a:focus,.pagination--dillinger li>a{background-color:transparent;border-color:#4F535B;border-right-color:transparent}.pagination--dillinger li.active>a,.pagination--dillinger li.active>a:hover,.pagination--dillinger li.active>a:focus{border-color:#4A5261;background-color:#4A5261;color:#fff}.pagination--dillinger li>a{float:none;color:#fff;width:100%;display:block;text-align:center;margin:0;border-right-color:transparent;padding:6px}.pagination--dillinger li>a:hover,.pagination--dillinger li>a:focus{border-color:#35D7BB;background-color:#35D7BB;color:#fff}.pagination--dillinger li:last-child a{border-color:#4F535B}.pagination--dillinger li:first-child a{border-right-color:transparent}.diNotify{position:absolute;z-index:9999;left:0;right:0;top:0;margin:0 auto;max-width:400px;text-align:center;transition:top .5s ease-in-out,opacity .5s ease-in-out;visibility:hidden}.diNotify-body{-webkit-font-smoothing:antialiased;background-color:#35D7BB;background:#666E7F;border-radius:3px;color:#fff;font-family:"Source Sans Pro","Helvetica Neue",Helvetica,Arial,sans-serif;font-weight:400;overflow:hidden;padding:1rem 2rem .5rem;display:-ms-flexbox;display:flex;-ms-flex-align:baseline;align-items:baseline;-ms-flex-pack:center;justify-content:center}.diNotify-icon{display:block;width:16px;height:16px;line-height:16px;position:relative;top:3px}.diNotify-message{padding-left:1rem}.zen-wrapper{position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%;z-index:10;background-color:#FFF;opacity:0;transition:opacity .25s ease-in-out}.zen-wrapper.on{opacity:1}.enter-zen-mode{background-image:url("../img/icons/enter-zen.svg");right:.5rem;top:.313rem;display:none}.enter-zen-mode,.close-zen-mode{font:0/0 a;color:transparent;text-shadow:none;background-color:transparent;border:0;background-repeat:no-repeat;width:32px;height:32px;display:block;position:absolute}.close-zen-mode{background-image:url("../img/icons/exit-zen.svg");right:1rem;top:1rem}.zen-page{position:relative;top:0;bottom:0;z-index:11;height:100%;width:100%}#zen{font-size:1.25rem;width:300px;height:80%;margin:0 auto;position:relative;top:10%}#zen:before,#zen:after{content:"";position:absolute;height:10%;width:100%;z-index:12;pointer-events:none}#preview .table{width:auto}.ui-resizable{position:relative}.ui-resizable-handle{position:absolute;font-size:.1px;z-index:99999;display:block}.ui-resizable-e{background-color:#666;border-right:8px solid #e8e8e8;border-left:1px solid #222;width:10px;z-index:88!important;position:relative}.ui-resizable-e:after{content:"-";display:block;position:absolute;top:calc(50% - 16px);left:0;height:25px;width:2px;background-color:rgba(0,0,0,.4);margin:3px}#editor{cursor:ew-resize;position:relative;z-index:auto}.profile-pic{float:left;width:250px}#_default_ a::before{color:#A0AABF}#_default_ img{display:none}#_default_ #_default_{display:block;float:left;max-width:38%;word-wrap:break-word}#_default_ .default-ad{display:none}#_default_ ._default_{display:block}#_default_ a{color:#35d7bb;text-decoration:none}#_default_ a:hover{color:rgb(138.1404958678,231.8595041322,215.6611570248)}#_default_ .default-image{display:none}#_default_ .default-title:after{content:" — "}#_default_ .default-title,#_default_ .default-text,#_default_ .default-description{display:inline}#_default_ .default-title{position:relative;font-weight:600;display:none}#_default_ a:before{position:relative;top:0;padding:5px;color:#a0aabf;content:"Ad";text-transform:uppercase;font-size:8px;font-family:Verdana,sans-serif}#_default_{display:block;float:left;max-width:38%;word-wrap:break-word}#_default_ ._default_{display:block;font-size:.75rem;height:51px;letter-spacing:1px;line-height:1rem;padding:18px 24px}body{max-width:1024px;margin:0 auto;overflow:auto;padding:2%}.split{overflow:scroll;padding:0!important;-webkit-overflow-scrolling:touch}.split-editor{padding-left:0;padding-right:0;position:relative;z-index:3}.show-preview .split-editor{display:none}.split-preview{background-color:#fff;display:none;top:0;position:relative;z-index:4}.show-preview .split-preview{display:block}#editor{font-size:1rem;font-family:"Ubuntu Mono",Monaco;font-weight:400;line-height:2rem;width:100%;height:100%}#editor .ace_gutter{-webkit-font-smoothing:antialiased}.editor-header{width:50%;float:left;border-bottom:1px solid #E8E8E8;position:relative}.editor-header--first{border-right:1px solid #E8E8E8}.editor-header .title{display:inline-block}.preview-html a{color:#A0AABF;text-decoration:underline}.preview-html{padding:15px}.preview-src{white-space:normal}.preview-mode-toggle-src{background-image:url("../img/icons/code.svg")}.preview-mode-toggle-src,.preview-mode-toggle-html{font:0/0 a;color:transparent;text-shadow:none;background-color:transparent;border:0;background-repeat:no-repeat;width:32px;height:32px;display:block;position:absolute;right:.5rem;top:.5rem;display:none}.preview-mode-toggle-html{background-image:url("../img/icons/eye.svg")}.sr-only{visibility:hidden;text-overflow:110%;overflow:hidden;top:-100px;position:absolute}.mnone{margin:0!important}@media screen and (min-width:27.5em){html{font-size:.875em}body{font-size:1rem}ul,ol{margin-bottom:.83999rem;padding-top:.16001rem}p{padding-top:.66001rem}p,pre{margin-bottom:1.33999rem}pre,blockquote p{font-size:1rem;padding-top:.66001rem}blockquote p{margin-bottom:.33999rem}h1{font-size:2.0571428571rem;margin-bottom:.21999rem;padding-top:.78001rem}h2{font-size:1.953125rem;margin-bottom:.18358375rem;padding-top:.81641625rem}h3{font-size:1.6457142857rem;margin-bottom:.07599rem;padding-top:.92401rem}h4{font-size:1.5625rem;margin-bottom:.546865rem;padding-top:.453135rem}h5{font-size:1.25rem;margin-bottom:-.56251rem;padding-top:.56251rem}h6{font-size:1rem;margin-bottom:-.65001rem;padding-top:.65001rem}.g{margin-left:-16px;margin-right:-16px}.g-b{padding-left:16px;padding-right:16px}.g-b--m1of1{width:100%}.g-b--m1of2,.g-b--m6of12,.g-b--m5of10,.g-b--m4of8,.g-b--m3of6,.g-b--m2of4{width:50%}.g-b--m1of3,.g-b--m4of12,.g-b--m2of6{width:33.333%}.g-b--m2of3,.g-b--m8of12,.g-b--m4of6{width:66.666%}.g-b--m1of4,.g-b--m3of12,.g-b--m2of8{width:25%}.g-b--m3of4,.g-b--m9of12,.g-b--m6of8{width:75%}.g-b--m1of5,.g-b--m2of10{width:20%}.g-b--m2of5,.g-b--m4of10{width:40%}.g-b--m3of5,.g-b--m6of10{width:60%}.g-b--m4of5,.g-b--m8of10{width:80%}.g-b--m1of6,.g-b--m2of12{width:16.666%}.g-b--m5of6,.g-b--m10of12{width:83.333%}.g-b--m1of8{width:12.5%}.g-b--m3of8{width:37.5%}.g-b--m5of8{width:62.5%}.g-b--m7of8{width:87.5%}.g-b--m1of10{width:10%}.g-b--m3of10{width:30%}.g-b--m7of10{width:70%}.g-b--m9of10{width:90%}.g-b--m1of12{width:8.333%}.g-b--m5of12{width:41.666%}.g-b--m7of12{width:58.333%}.g-b--m11of12{width:91.666%}.g-b--push--m1of1{margin-left:100%}.g-b--push--m1of2,.g-b--push--m6of12,.g-b--push--m5of10,.g-b--push--m4of8,.g-b--push--m3of6,.g-b--push--m2of4{margin-left:50%}.g-b--push--m1of3,.g-b--push--m4of12,.g-b--push--m2of6{margin-left:33.333%}.g-b--push--m2of3,.g-b--push--m8of12,.g-b--push--m4of6{margin-left:66.666%}.g-b--push--m1of4,.g-b--push--m3of12,.g-b--push--m2of8{margin-left:25%}.g-b--push--m3of4,.g-b--push--m9of12,.g-b--push--m6of8{margin-left:75%}.g-b--push--m1of5,.g-b--push--m2of10{margin-left:20%}.g-b--push--m2of5,.g-b--push--m4of10{margin-left:40%}.g-b--push--m3of5,.g-b--push--m6of10{margin-left:60%}.g-b--push--m4of5,.g-b--push--m8of10{margin-left:80%}.g-b--push--m1of6,.g-b--push--m2of12{margin-left:16.666%}.g-b--push--m5of6,.g-b--push--m10of12{margin-left:83.333%}.g-b--push--m1of8{margin-left:12.5%}.g-b--push--m3of8{margin-left:37.5%}.g-b--push--m5of8{margin-left:62.5%}.g-b--push--m7of8{margin-left:87.5%}.g-b--push--m1of10{margin-left:10%}.g-b--push--m3of10{margin-left:30%}.g-b--push--m7of10{margin-left:70%}.g-b--push--m9of10{margin-left:90%}.g-b--push--m1of12{margin-left:8.333%}.g-b--push--m5of12{margin-left:41.666%}.g-b--push--m7of12{margin-left:58.333%}.g-b--push--m11of12{margin-left:91.666%}.g-b--pull--m1of1{margin-right:100%}.g-b--pull--m1of2,.g-b--pull--m6of12,.g-b--pull--m5of10,.g-b--pull--m4of8,.g-b--pull--m3of6,.g-b--pull--m2of4{margin-right:50%}.g-b--pull--m1of3,.g-b--pull--m4of12,.g-b--pull--m2of6{margin-right:33.333%}.g-b--pull--m2of3,.g-b--pull--m8of12,.g-b--pull--m4of6{margin-right:66.666%}.g-b--pull--m1of4,.g-b--pull--m3of12,.g-b--pull--m2of8{margin-right:25%}.g-b--pull--m3of4,.g-b--pull--m9of12,.g-b--pull--m6of8{margin-right:75%}.g-b--pull--m1of5,.g-b--pull--m2of10{margin-right:20%}.g-b--pull--m2of5,.g-b--pull--m4of10{margin-right:40%}.g-b--pull--m3of5,.g-b--pull--m6of10{margin-right:60%}.g-b--pull--m4of5,.g-b--pull--m8of10{margin-right:80%}.g-b--pull--m1of6,.g-b--pull--m2of12{margin-right:16.666%}.g-b--pull--m5of6,.g-b--pull--m10of12{margin-right:83.333%}.g-b--pull--m1of8{margin-right:12.5%}.g-b--pull--m3of8{margin-right:37.5%}.g-b--pull--m5of8{margin-right:62.5%}.g-b--pull--m7of8{margin-right:87.5%}.g-b--pull--m1of10{margin-right:10%}.g-b--pull--m3of10{margin-right:30%}.g-b--pull--m7of10{margin-right:70%}.g-b--pull--m9of10{margin-right:90%}.g-b--pull--m1of12{margin-right:8.333%}.g-b--pull--m5of12{margin-right:41.666%}.g-b--pull--m7of12{margin-right:58.333%}.g-b--pull--m11of12{margin-right:91.666%}.splashscreen p{font-size:1.25rem;margin-bottom:1.43749rem;padding-top:.56251rem}.title{font-size:.8rem;margin-bottom:.77999rem;padding-top:.22001rem}.title-document{margin-bottom:.89999rem;padding-top:.10001rem}.title-document,.settings a{font-size:1.25rem}.words,.characters{font-size:.8rem;margin-bottom:.77999rem;padding-top:.22001rem}.modal--dillinger.about .modal-dialog,#zen{font-size:1.25rem}#zen{width:400px}#editor{font-size:1rem}}@media screen and (min-width:46.25em){html{font-size:.875em}body{font-size:1rem}ul,ol{margin-bottom:.83999rem;padding-top:.16001rem}p{padding-top:.66001rem}p,pre{margin-bottom:1.33999rem}pre,blockquote p{font-size:1rem;padding-top:.66001rem}blockquote p{margin-bottom:.33999rem}h1{font-size:2.0571428571rem;margin-bottom:.21999rem;padding-top:.78001rem}h2{font-size:1.953125rem;margin-bottom:.18358375rem;padding-top:.81641625rem}h3{font-size:1.6457142857rem;margin-bottom:.07599rem;padding-top:.92401rem}h4{font-size:1.5625rem;margin-bottom:.546865rem;padding-top:.453135rem}h5{font-size:1.25rem;margin-bottom:-.56251rem;padding-top:.56251rem}h6{font-size:1rem;margin-bottom:-.65001rem;padding-top:.65001rem}.g{margin-left:-16px;margin-right:-16px}.g-b{padding-left:16px;padding-right:16px}.g-b--t1of1{width:100%}.g-b--t1of2,.g-b--t6of12,.g-b--t5of10,.g-b--t4of8,.g-b--t3of6,.g-b--t2of4{width:50%}.g-b--t1of3,.g-b--t4of12,.g-b--t2of6{width:33.333%}.g-b--t2of3,.g-b--t8of12,.g-b--t4of6{width:66.666%}.g-b--t1of4,.g-b--t3of12,.g-b--t2of8{width:25%}.g-b--t3of4,.g-b--t9of12,.g-b--t6of8{width:75%}.g-b--t1of5,.g-b--t2of10{width:20%}.g-b--t2of5,.g-b--t4of10{width:40%}.g-b--t3of5,.g-b--t6of10{width:60%}.g-b--t4of5,.g-b--t8of10{width:80%}.g-b--t1of6,.g-b--t2of12{width:16.666%}.g-b--t5of6,.g-b--t10of12{width:83.333%}.g-b--t1of8{width:12.5%}.g-b--t3of8{width:37.5%}.g-b--t5of8{width:62.5%}.g-b--t7of8{width:87.5%}.g-b--t1of10{width:10%}.g-b--t3of10{width:30%}.g-b--t7of10{width:70%}.g-b--t9of10{width:90%}.g-b--t1of12{width:8.333%}.g-b--t5of12{width:41.666%}.g-b--t7of12{width:58.333%}.g-b--t11of12{width:91.666%}.g-b--push--t1of1{margin-left:100%}.g-b--push--t1of2,.g-b--push--t6of12,.g-b--push--t5of10,.g-b--push--t4of8,.g-b--push--t3of6,.g-b--push--t2of4{margin-left:50%}.g-b--push--t1of3,.g-b--push--t4of12,.g-b--push--t2of6{margin-left:33.333%}.g-b--push--t2of3,.g-b--push--t8of12,.g-b--push--t4of6{margin-left:66.666%}.g-b--push--t1of4,.g-b--push--t3of12,.g-b--push--t2of8{margin-left:25%}.g-b--push--t3of4,.g-b--push--t9of12,.g-b--push--t6of8{margin-left:75%}.g-b--push--t1of5,.g-b--push--t2of10{margin-left:20%}.g-b--push--t2of5,.g-b--push--t4of10{margin-left:40%}.g-b--push--t3of5,.g-b--push--t6of10{margin-left:60%}.g-b--push--t4of5,.g-b--push--t8of10{margin-left:80%}.g-b--push--t1of6,.g-b--push--t2of12{margin-left:16.666%}.g-b--push--t5of6,.g-b--push--t10of12{margin-left:83.333%}.g-b--push--t1of8{margin-left:12.5%}.g-b--push--t3of8{margin-left:37.5%}.g-b--push--t5of8{margin-left:62.5%}.g-b--push--t7of8{margin-left:87.5%}.g-b--push--t1of10{margin-left:10%}.g-b--push--t3of10{margin-left:30%}.g-b--push--t7of10{margin-left:70%}.g-b--push--t9of10{margin-left:90%}.g-b--push--t1of12{margin-left:8.333%}.g-b--push--t5of12{margin-left:41.666%}.g-b--push--t7of12{margin-left:58.333%}.g-b--push--t11of12{margin-left:91.666%}.g-b--pull--t1of1{margin-right:100%}.g-b--pull--t1of2,.g-b--pull--t6of12,.g-b--pull--t5of10,.g-b--pull--t4of8,.g-b--pull--t3of6,.g-b--pull--t2of4{margin-right:50%}.g-b--pull--t1of3,.g-b--pull--t4of12,.g-b--pull--t2of6{margin-right:33.333%}.g-b--pull--t2of3,.g-b--pull--t8of12,.g-b--pull--t4of6{margin-right:66.666%}.g-b--pull--t1of4,.g-b--pull--t3of12,.g-b--pull--t2of8{margin-right:25%}.g-b--pull--t3of4,.g-b--pull--t9of12,.g-b--pull--t6of8{margin-right:75%}.g-b--pull--t1of5,.g-b--pull--t2of10{margin-right:20%}.g-b--pull--t2of5,.g-b--pull--t4of10{margin-right:40%}.g-b--pull--t3of5,.g-b--pull--t6of10{margin-right:60%}.g-b--pull--t4of5,.g-b--pull--t8of10{margin-right:80%}.g-b--pull--t1of6,.g-b--pull--t2of12{margin-right:16.666%}.g-b--pull--t5of6,.g-b--pull--t10of12{margin-right:83.333%}.g-b--pull--t1of8{margin-right:12.5%}.g-b--pull--t3of8{margin-right:37.5%}.g-b--pull--t5of8{margin-right:62.5%}.g-b--pull--t7of8{margin-right:87.5%}.g-b--pull--t1of10{margin-right:10%}.g-b--pull--t3of10{margin-right:30%}.g-b--pull--t7of10{margin-right:70%}.g-b--pull--t9of10{margin-right:90%}.g-b--pull--t1of12{margin-right:8.333%}.g-b--pull--t5of12{margin-right:41.666%}.g-b--pull--t7of12{margin-right:58.333%}.g-b--pull--t11of12{margin-right:91.666%}.splashscreen-dillinger{width:500px}.splashscreen p{font-size:1.25rem;margin-bottom:1.43749rem;padding-top:.56251rem}.title{font-size:.8rem;margin-bottom:.77999rem;padding-top:.22001rem}.title-document{font-size:1.25rem;margin-bottom:.89999rem;padding-top:.10001rem}.menu .menu-item--save-to,.menu .menu-item--import-from{display:block}.menu .menu-item--preview,.menu .menu-item--save-to.in-sidebar,.menu .menu-item--import-from.in-sidebar{display:none}.settings a{font-size:1.25rem}.words,.characters{font-size:.8rem;margin-bottom:.77999rem;padding-top:.22001rem}.modal--dillinger.about .modal-dialog{font-size:1.25rem}.enter-zen-mode{display:block}.close-zen-mode{right:3rem;top:3rem}#zen{font-size:1.25rem;width:500px}.split-editor{border-right:1px solid #E8E8E8;float:left;padding-right:16px;width:50%}.show-preview .split-editor{display:block}.split-preview{display:block;float:right;position:relative;top:0;width:50%}#editor{font-size:1rem}.preview-mode-toggle-src,.preview-mode-toggle-html{display:block}}@media screen and (min-width:62.5em){html{font-size:.875em}body{font-size:1rem}ul,ol{margin-bottom:.83999rem;padding-top:.16001rem}p{padding-top:.66001rem}p,pre{margin-bottom:1.33999rem}pre,blockquote p{font-size:1rem;padding-top:.66001rem}blockquote p{margin-bottom:.33999rem}h1{font-size:2.0571428571rem;margin-bottom:.21999rem;padding-top:.78001rem}h2{font-size:1.953125rem;margin-bottom:.18358375rem;padding-top:.81641625rem}h3{font-size:1.6457142857rem;margin-bottom:.07599rem;padding-top:.92401rem}h4{font-size:1.5625rem;margin-bottom:.546865rem;padding-top:.453135rem}h5{font-size:1.25rem;margin-bottom:-.56251rem;padding-top:.56251rem}h6{font-size:1rem;margin-bottom:-.65001rem;padding-top:.65001rem}.g{margin-left:-16px;margin-right:-16px}.g-b{padding-left:16px;padding-right:16px}.g-b--d1of1{width:100%}.g-b--d1of2,.g-b--d6of12,.g-b--d5of10,.g-b--d4of8,.g-b--d3of6,.g-b--d2of4{width:50%}.g-b--d1of3,.g-b--d4of12,.g-b--d2of6{width:33.333%}.g-b--d2of3,.g-b--d8of12,.g-b--d4of6{width:66.666%}.g-b--d1of4,.g-b--d3of12,.g-b--d2of8{width:25%}.g-b--d3of4,.g-b--d9of12,.g-b--d6of8{width:75%}.g-b--d1of5,.g-b--d2of10{width:20%}.g-b--d2of5,.g-b--d4of10{width:40%}.g-b--d3of5,.g-b--d6of10{width:60%}.g-b--d4of5,.g-b--d8of10{width:80%}.g-b--d1of6,.g-b--d2of12{width:16.666%}.g-b--d5of6,.g-b--d10of12{width:83.333%}.g-b--d1of8{width:12.5%}.g-b--d3of8{width:37.5%}.g-b--d5of8{width:62.5%}.g-b--d7of8{width:87.5%}.g-b--d1of10{width:10%}.g-b--d3of10{width:30%}.g-b--d7of10{width:70%}.g-b--d9of10{width:90%}.g-b--d1of12{width:8.333%}.g-b--d5of12{width:41.666%}.g-b--d7of12{width:58.333%}.g-b--d11of12{width:91.666%}.g-b--push--d1of1{margin-left:100%}.g-b--push--d1of2,.g-b--push--d6of12,.g-b--push--d5of10,.g-b--push--d4of8,.g-b--push--d3of6,.g-b--push--d2of4{margin-left:50%}.g-b--push--d1of3,.g-b--push--d4of12,.g-b--push--d2of6{margin-left:33.333%}.g-b--push--d2of3,.g-b--push--d8of12,.g-b--push--d4of6{margin-left:66.666%}.g-b--push--d1of4,.g-b--push--d3of12,.g-b--push--d2of8{margin-left:25%}.g-b--push--d3of4,.g-b--push--d9of12,.g-b--push--d6of8{margin-left:75%}.g-b--push--d1of5,.g-b--push--d2of10{margin-left:20%}.g-b--push--d2of5,.g-b--push--d4of10{margin-left:40%}.g-b--push--d3of5,.g-b--push--d6of10{margin-left:60%}.g-b--push--d4of5,.g-b--push--d8of10{margin-left:80%}.g-b--push--d1of6,.g-b--push--d2of12{margin-left:16.666%}.g-b--push--d5of6,.g-b--push--d10of12{margin-left:83.333%}.g-b--push--d1of8{margin-left:12.5%}.g-b--push--d3of8{margin-left:37.5%}.g-b--push--d5of8{margin-left:62.5%}.g-b--push--d7of8{margin-left:87.5%}.g-b--push--d1of10{margin-left:10%}.g-b--push--d3of10{margin-left:30%}.g-b--push--d7of10{margin-left:70%}.g-b--push--d9of10{margin-left:90%}.g-b--push--d1of12{margin-left:8.333%}.g-b--push--d5of12{margin-left:41.666%}.g-b--push--d7of12{margin-left:58.333%}.g-b--push--d11of12{margin-left:91.666%}.g-b--pull--d1of1{margin-right:100%}.g-b--pull--d1of2,.g-b--pull--d6of12,.g-b--pull--d5of10,.g-b--pull--d4of8,.g-b--pull--d3of6,.g-b--pull--d2of4{margin-right:50%}.g-b--pull--d1of3,.g-b--pull--d4of12,.g-b--pull--d2of6{margin-right:33.333%}.g-b--pull--d2of3,.g-b--pull--d8of12,.g-b--pull--d4of6{margin-right:66.666%}.g-b--pull--d1of4,.g-b--pull--d3of12,.g-b--pull--d2of8{margin-right:25%}.g-b--pull--d3of4,.g-b--pull--d9of12,.g-b--pull--d6of8{margin-right:75%}.g-b--pull--d1of5,.g-b--pull--d2of10{margin-right:20%}.g-b--pull--d2of5,.g-b--pull--d4of10{margin-right:40%}.g-b--pull--d3of5,.g-b--pull--d6of10{margin-right:60%}.g-b--pull--d4of5,.g-b--pull--d8of10{margin-right:80%}.g-b--pull--d1of6,.g-b--pull--d2of12{margin-right:16.666%}.g-b--pull--d5of6,.g-b--pull--d10of12{margin-right:83.333%}.g-b--pull--d1of8{margin-right:12.5%}.g-b--pull--d3of8{margin-right:37.5%}.g-b--pull--d5of8{margin-right:62.5%}.g-b--pull--d7of8{margin-right:87.5%}.g-b--pull--d1of10{margin-right:10%}.g-b--pull--d3of10{margin-right:30%}.g-b--pull--d7of10{margin-right:70%}.g-b--pull--d9of10{margin-right:90%}.g-b--pull--d1of12{margin-right:8.333%}.g-b--pull--d5of12{margin-right:41.666%}.g-b--pull--d7of12{margin-right:58.333%}.g-b--pull--d11of12{margin-right:91.666%}.splashscreen-dillinger{width:700px}.splashscreen p{font-size:1.25rem;margin-bottom:1.43749rem;padding-top:.56251rem}.title{font-size:.8rem;margin-bottom:.77999rem;padding-top:.22001rem}.title-document{font-size:1.25rem;margin-bottom:.89999rem;padding-top:.10001rem}.menu .menu-item--export-as{display:block}.menu .menu-item--preview{display:none}.settings a{font-size:1.25rem}.words,.characters{font-size:.8rem;margin-bottom:.77999rem;padding-top:.22001rem}.modal--dillinger.about .modal-dialog,#zen{font-size:1.25rem}#zen{width:700px}#editor{font-size:1rem}}@media screen and (min-width:87.5em){html{font-size:.875em}body{font-size:1rem}ul,ol{margin-bottom:.83999rem;padding-top:.16001rem}p{padding-top:.66001rem}p,pre{margin-bottom:1.33999rem}pre,blockquote p{font-size:1rem;padding-top:.66001rem}blockquote p{margin-bottom:.33999rem}h1{font-size:2.0571428571rem;margin-bottom:.21999rem;padding-top:.78001rem}h2{font-size:1.953125rem;margin-bottom:.18358375rem;padding-top:.81641625rem}h3{font-size:1.6457142857rem;margin-bottom:.07599rem;padding-top:.92401rem}h4{font-size:1.5625rem;margin-bottom:.546865rem;padding-top:.453135rem}h5{font-size:1.25rem;margin-bottom:-.56251rem;padding-top:.56251rem}h6{font-size:1rem;margin-bottom:-.65001rem;padding-top:.65001rem}.splashscreen-dillinger{width:800px}.splashscreen p{font-size:1.25rem;margin-bottom:1.43749rem;padding-top:.56251rem}.title{font-size:.8rem;margin-bottom:.77999rem;padding-top:.22001rem}.title-document{margin-bottom:.89999rem;padding-top:.10001rem}.title-document,.settings a{font-size:1.25rem}.words,.characters{font-size:.8rem;margin-bottom:.77999rem;padding-top:.22001rem}.modal--dillinger.about .modal-dialog,#zen{font-size:1.25rem}#editor{font-size:1rem}}@media (min-width:768px){.form-inline .form-group{display:inline-block;margin-bottom:0;vertical-align:middle}.form-inline .form-control{display:inline-block;width:auto;vertical-align:middle}.form-inline .input-group{display:inline-table;vertical-align:middle}.form-inline .input-group .input-group-addon,.form-inline .input-group .input-group-btn,.form-inline .input-group .form-control{width:auto}.form-inline .input-group>.form-control{width:100%}.form-inline .control-label{margin-bottom:0;vertical-align:middle}.form-inline .radio,.form-inline .checkbox{display:inline-block;margin-top:0;margin-bottom:0;vertical-align:middle}.form-inline .radio label,.form-inline .checkbox label{padding-left:0}.form-inline .radio input[type=radio],.form-inline .checkbox input[type=checkbox]{position:relative;margin-left:0}.form-inline .has-feedback .form-control-feedback{top:0}.form-horizontal .control-label{text-align:right;margin-bottom:0;padding-top:7px}.form-horizontal .form-group-lg .control-label{padding-top:14.3px}.form-horizontal .form-group-sm .control-label{padding-top:6px}.modal-dialog{width:600px;margin:30px auto}.modal-content{box-shadow:0 5px 15px rgba(0,0,0,.5)}.modal-sm{width:300px}}@media (min-width:992px){.modal-lg{width:900px}}@media screen and (max-width:1200px){#_default_{max-width:30%}#_default_ ._default_{font-size:.825rem;line-height:.875rem;padding:12px 12px 6px 24px;text-align:justify}}@media screen and (max-width:1100px){#_default_{max-width:27%}#_default_ ._default_{font-size:.8rem;line-height:.85rem;padding:12px 6px 6px 24px;text-align:justify}}@media screen and (max-width:1000px){#_default_{max-width:24%}#_default_ ._default_{font-size:.775rem;line-height:.8rem;padding:12px 6px 6px 24px;text-align:justify}}@media screen and (max-width:900px){#_default_{max-width:30%}}@media screen and (max-width:767px){.table-responsive{width:100%;margin-bottom:15px;overflow-y:hidden;overflow-x:auto;-ms-overflow-style:-ms-autohiding-scrollbar;border:1px solid #ddd;-webkit-overflow-scrolling:touch}.table-responsive>.table{margin-bottom:0}.table-responsive>.table>thead>tr>th,.table-responsive>.table>thead>tr>td,.table-responsive>.table>tbody>tr>th,.table-responsive>.table>tbody>tr>td,.table-responsive>.table>tfoot>tr>th,.table-responsive>.table>tfoot>tr>td{white-space:nowrap}.table-responsive>.table-bordered{border:0}.table-responsive>.table-bordered>thead>tr>th:first-child,.table-responsive>.table-bordered>thead>tr>td:first-child,.table-responsive>.table-bordered>tbody>tr>th:first-child,.table-responsive>.table-bordered>tbody>tr>td:first-child,.table-responsive>.table-bordered>tfoot>tr>th:first-child,.table-responsive>.table-bordered>tfoot>tr>td:first-child{border-left:0}.table-responsive>.table-bordered>thead>tr>th:last-child,.table-responsive>.table-bordered>thead>tr>td:last-child,.table-responsive>.table-bordered>tbody>tr>th:last-child,.table-responsive>.table-bordered>tbody>tr>td:last-child,.table-responsive>.table-bordered>tfoot>tr>th:last-child,.table-responsive>.table-bordered>tfoot>tr>td:last-child{border-right:0}.table-responsive>.table-bordered>tbody>tr:last-child>th,.table-responsive>.table-bordered>tbody>tr:last-child>td,.table-responsive>.table-bordered>tfoot>tr:last-child>th,.table-responsive>.table-bordered>tfoot>tr:last-child>td{border-bottom:0}}@media screen and (max-width:720px){#_default_{max-width:60%}#_default_ ._default_{font-size:.75rem;line-height:1rem;padding:12px 24px}}@media screen and (max-width:620px){#_default_{max-width:50%}#_default_ ._default_{font-size:.66rem;letter-spacing:1px;line-height:1rem;padding:10px 24px}}@media screen and (max-width:520px){#_default_ ._default_{font-size:.4rem;line-height:.875rem;padding:6px 12px 6px 24px;text-align:justify}}@media screen and (max-width:460px){#_default_{display:none}}@media screen and (max-width:46.1875em){.editor-header{display:none}.editor-header--first{display:block;width:100%}}</style></head><body id="preview">
+<h1 class="code-line" data-line-start=0 data-line-end=1 ><a id="Token_Observatory_Studio_0"></a>Token Observatory Studio</h1>
+<h2 class="code-line" data-line-start=1 data-line-end=2 ><a id="Hybrid_Architecture_ServerDriven_Canonical_UI_with_Generative_Rhetorical_OnRamps_1"></a>Hybrid Architecture: Server-Driven Canonical UI with Generative Rhetorical On-Ramps</h2>
+<p class="has-line-data" data-line-start="3" data-line-end="6"><strong>Document Version:</strong> 4.0<br>
+<strong>Date:</strong> December 2025<br>
+<strong>Author:</strong> Sridhar Dhulipala, Principal Design Advisor, UIDAI</p>
+<hr>
+<h2 class="code-line" data-line-start=9 data-line-end=10 ><a id="Executive_Summary_9"></a>Executive Summary</h2>
+<p class="has-line-data" data-line-start="11" data-line-end="12">This document proposes a hybrid architecture that cleanly separates:</p>
+<ol>
+<li class="has-line-data" data-line-start="13" data-line-end="14"><strong>Canonical Layer:</strong> Server-Driven UI (SDUI) — deterministic, auditable, legally certifiable</li>
+<li class="has-line-data" data-line-start="14" data-line-end="16"><strong>Rhetorical Layer:</strong> Generative AI with SLMs — contextual, adaptive, personalized on-ramps</li>
+</ol>
+<p class="has-line-data" data-line-start="16" data-line-end="17">The key insight: <strong>AI doesn’t generate the form; AI generates the journey TO the form.</strong></p>
+<p class="has-line-data" data-line-start="18" data-line-end="19">Users enter through contextually-appropriate rhetorical experiences generated by SLMs, then seamlessly segue into canonical SDUI for formal data collection. This preserves regulatory guarantees while enabling billion-scale personalization.</p>
+<hr>
+<h2 class="code-line" data-line-start=22 data-line-end=23 ><a id="Part_1_The_Architectural_Insight_22"></a>Part 1: The Architectural Insight</h2>
+<h3 class="code-line" data-line-start=24 data-line-end=25 ><a id="11_The_Problem_with_Full_Generative_UI_24"></a>1.1 The Problem with Full Generative UI</h3>
+<p class="has-line-data" data-line-start="26" data-line-end="27">Previous iterations of the Token Observatory architecture proposed AI-generated UI for the entire journey. This creates challenges:</p>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Challenge</th>
+<th>Risk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Auditability</strong></td>
+<td>How do you audit a UI that’s different for every user?</td>
+</tr>
+<tr>
+<td><strong>Certification</strong></td>
+<td>Regulators need to certify a specific UI, not a generative process</td>
+</tr>
+<tr>
+<td><strong>Testing</strong></td>
+<td>Can’t exhaustively test infinite UI variations</td>
+</tr>
+<tr>
+<td><strong>Legal liability</strong></td>
+<td>Which generated variant is the “official” one?</td>
+</tr>
+<tr>
+<td><strong>Reproducibility</strong></td>
+<td>User disputes require reproducing exact UI they saw</td>
+</tr>
+</tbody>
+</table>
+<h3 class="code-line" data-line-start=36 data-line-end=37 ><a id="12_The_Hybrid_Solution_36"></a>1.2 The Hybrid Solution</h3>
+<p class="has-line-data" data-line-start="38" data-line-end="39"><strong>Separate the concerns:</strong></p>
+<pre><code class="has-line-data" data-line-start="41" data-line-end="73">┌─────────────────────────────────────────────────────────────────────────────────┐
+│                                                                                 │
+│   RHETORICAL LAYER (Generative, Adaptive)                                      │
+│   ═══════════════════════════════════════                                      │
+│                                                                                 │
+│   • Context inference          • Personalized guidance                         │
+│   • Language/dialect selection • Error explanation                             │
+│   • Accessibility scaffolding  • Encouragement &amp; reassurance                   │
+│   • Trust building             • Complexity reduction                          │
+│                                                                                 │
+│   Generated by: SLMs (Mistral 7B) at edge/district/state                       │
+│   Audit requirement: Best-effort logging, not certification                    │
+│   Failure mode: Skip to canonical (graceful degradation)                       │
+│                                                                                 │
+│                              ↓ SEGUE POINT ↓                                   │
+│                                                                                 │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                 │
+│   CANONICAL LAYER (Server-Driven UI, Deterministic)                            │
+│   ═════════════════════════════════════════════════                            │
+│                                                                                 │
+│   • Data collection forms      • Field validation                              │
+│   • Authentication flows       • Confirmation screens                          │
+│   • Legal consent capture      • Transaction completion                        │
+│   • Audit trail generation     • Receipt/acknowledgment                        │
+│                                                                                 │
+│   Served by: SDUI protocol from national servers                               │
+│   Audit requirement: Full certification, legally binding                       │
+│   Failure mode: None permitted (must always render)                            │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 class="code-line" data-line-start=74 data-line-end=75 ><a id="13_The_Funnel_Metaphor_74"></a>1.3 The Funnel Metaphor</h3>
+<pre><code class="has-line-data" data-line-start="77" data-line-end="99">                    WIDE: Infinite rhetorical variations
+                    ╱                                    ╲
+                   ╱    AI-generated contextual entry     ╲
+                  ╱     Language, pace, modality adapt     ╲
+                 ╱      Trust-building, guidance            ╲
+                ╱       Error prevention coaching            ╲
+               ╱                                              ╲
+              ╱                                                ╲
+             ╱                 SEGUE POINT                      ╲
+            ╱═══════════════════════════════════════════════════╲
+            ╲                                                   ╱
+             ╲              Canonical SDUI                     ╱
+              ╲             Same form for all                 ╱
+               ╲            Certified, auditable             ╱
+                ╲           Legally binding                  ╱
+                 ╲                                          ╱
+                  ╲         NARROW: One canonical          ╱
+                   ╲        completion path               ╱
+                    ╲                                    ╱
+                     ════════════════════════════════════
+                              TRANSACTION COMPLETE
+</code></pre>
+<p class="has-line-data" data-line-start="100" data-line-end="101"><strong>The insight:</strong> A billion users can have a million different journeys TO the form. But they all complete THE SAME FORM.</p>
+<hr>
+<h2 class="code-line" data-line-start=104 data-line-end=105 ><a id="Part_2_ServerDriven_UI_for_Canonical_104"></a>Part 2: Server-Driven UI for Canonical</h2>
+<h3 class="code-line" data-line-start=106 data-line-end=107 ><a id="21_What_is_ServerDriven_UI_106"></a>2.1 What is Server-Driven UI?</h3>
+<p class="has-line-data" data-line-start="108" data-line-end="109">Server-Driven UI (SDUI) is an architectural pattern where:</p>
+<ul>
+<li class="has-line-data" data-line-start="109" data-line-end="110">The <strong>server</strong> sends a declarative specification of what UI to render</li>
+<li class="has-line-data" data-line-start="110" data-line-end="111">The <strong>client</strong> interprets the specification and renders native components</li>
+<li class="has-line-data" data-line-start="111" data-line-end="113">UI changes require <strong>no app updates</strong> — just server-side changes</li>
+</ul>
+<p class="has-line-data" data-line-start="113" data-line-end="114"><strong>Adopted by:</strong> Netflix, Airbnb, Spotify, Shopify, Lyft</p>
+<h3 class="code-line" data-line-start=115 data-line-end=116 ><a id="22_Why_SDUI_for_Canonical_115"></a>2.2 Why SDUI for Canonical?</h3>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Property</th>
+<th>SDUI Advantage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Deterministic</strong></td>
+<td>Same spec → same UI, always</td>
+</tr>
+<tr>
+<td><strong>Auditable</strong></td>
+<td>Spec is a JSON/protobuf document that can be versioned, signed, logged</td>
+</tr>
+<tr>
+<td><strong>Certifiable</strong></td>
+<td>Regulators can certify a specific spec version</td>
+</tr>
+<tr>
+<td><strong>Reproducible</strong></td>
+<td>Store spec with transaction → can reproduce exact UI user saw</td>
+</tr>
+<tr>
+<td><strong>Cacheable</strong></td>
+<td>Specs can be cached at CDN, CSC, device</td>
+</tr>
+<tr>
+<td><strong>Offline-capable</strong></td>
+<td>Pre-download specs for offline operation</td>
+</tr>
+<tr>
+<td><strong>Testable</strong></td>
+<td>Finite set of specs can be exhaustively tested</td>
+</tr>
+<tr>
+<td><strong>Update without release</strong></td>
+<td>Fix UI issues without app store deployment</td>
+</tr>
+</tbody>
+</table>
+<h3 class="code-line" data-line-start=128 data-line-end=129 ><a id="23_SDUI_Protocol_for_Aadhaar_128"></a>2.3 SDUI Protocol for Aadhaar</h3>
+<p class="has-line-data" data-line-start="130" data-line-end="131"><strong>Canonical UI Specification Format:</strong></p>
+<pre><code class="has-line-data" data-line-start="133" data-line-end="231" class="language-json">{
+  <span class="hljs-attr">&quot;schema_version&quot;</span>: <span class="hljs-string">&quot;1.0.0&quot;</span>,
+  <span class="hljs-attr">&quot;journey_id&quot;</span>: <span class="hljs-string">&quot;address_update_v3&quot;</span>,
+  <span class="hljs-attr">&quot;canonical_version&quot;</span>: <span class="hljs-string">&quot;2025.12.01&quot;</span>,
+  <span class="hljs-attr">&quot;certification_id&quot;</span>: <span class="hljs-string">&quot;UIDAI/CERT/2025/1234&quot;</span>,
+  <span class="hljs-attr">&quot;valid_from&quot;</span>: <span class="hljs-string">&quot;2025-12-01T00:00:00Z&quot;</span>,
+  <span class="hljs-attr">&quot;valid_until&quot;</span>: <span class="hljs-string">&quot;2026-06-01T00:00:00Z&quot;</span>,
+  
+  <span class="hljs-attr">&quot;screens&quot;</span>: [
+    {
+      <span class="hljs-attr">&quot;screen_id&quot;</span>: <span class="hljs-string">&quot;aadhaar_input&quot;</span>,
+      <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;data_collection&quot;</span>,
+      <span class="hljs-attr">&quot;canonical_fields&quot;</span>: [<span class="hljs-string">&quot;aadhaar_number&quot;</span>],
+      
+      <span class="hljs-attr">&quot;components&quot;</span>: [
+        {
+          <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;text_input&quot;</span>,
+          <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-string">&quot;aadhaar_field&quot;</span>,
+          <span class="hljs-attr">&quot;field_mapping&quot;</span>: <span class="hljs-string">&quot;aadhaar_number&quot;</span>,
+          <span class="hljs-attr">&quot;validation&quot;</span>: {
+            <span class="hljs-attr">&quot;pattern&quot;</span>: <span class="hljs-string">&quot;^[0-9]{12}$&quot;</span>,
+            <span class="hljs-attr">&quot;checksum&quot;</span>: <span class="hljs-string">&quot;verhoeff&quot;</span>,
+            <span class="hljs-attr">&quot;required&quot;</span>: <span class="hljs-literal">true</span>
+          },
+          <span class="hljs-attr">&quot;display&quot;</span>: {
+            <span class="hljs-attr">&quot;label&quot;</span>: {
+              <span class="hljs-attr">&quot;en&quot;</span>: <span class="hljs-string">&quot;Aadhaar Number&quot;</span>,
+              <span class="hljs-attr">&quot;hi&quot;</span>: <span class="hljs-string">&quot;आधार संख्या&quot;</span>,
+              <span class="hljs-attr">&quot;ta&quot;</span>: <span class="hljs-string">&quot;ஆதார் எண்&quot;</span>
+            },
+            <span class="hljs-attr">&quot;placeholder&quot;</span>: <span class="hljs-string">&quot;XXXX XXXX XXXX&quot;</span>,
+            <span class="hljs-attr">&quot;keyboard_type&quot;</span>: <span class="hljs-string">&quot;numeric&quot;</span>,
+            <span class="hljs-attr">&quot;max_length&quot;</span>: <span class="hljs-number">12</span>,
+            <span class="hljs-attr">&quot;format_mask&quot;</span>: <span class="hljs-string">&quot;#### #### ####&quot;</span>
+          },
+          <span class="hljs-attr">&quot;accessibility&quot;</span>: {
+            <span class="hljs-attr">&quot;screen_reader_label&quot;</span>: {
+              <span class="hljs-attr">&quot;en&quot;</span>: <span class="hljs-string">&quot;Enter your 12-digit Aadhaar number&quot;</span>,
+              <span class="hljs-attr">&quot;hi&quot;</span>: <span class="hljs-string">&quot;अपना 12 अंकों का आधार नंबर दर्ज करें&quot;</span>
+            },
+            <span class="hljs-attr">&quot;voice_input_enabled&quot;</span>: <span class="hljs-literal">true</span>
+          },
+          <span class="hljs-attr">&quot;error_messages&quot;</span>: {
+            <span class="hljs-attr">&quot;required&quot;</span>: {
+              <span class="hljs-attr">&quot;en&quot;</span>: <span class="hljs-string">&quot;Aadhaar number is required&quot;</span>,
+              <span class="hljs-attr">&quot;hi&quot;</span>: <span class="hljs-string">&quot;आधार संख्या आवश्यक है&quot;</span>
+            },
+            <span class="hljs-attr">&quot;invalid_format&quot;</span>: {
+              <span class="hljs-attr">&quot;en&quot;</span>: <span class="hljs-string">&quot;Please enter a valid 12-digit Aadhaar number&quot;</span>,
+              <span class="hljs-attr">&quot;hi&quot;</span>: <span class="hljs-string">&quot;कृपया मान्य 12 अंकों का आधार नंबर दर्ज करें&quot;</span>
+            },
+            <span class="hljs-attr">&quot;checksum_failed&quot;</span>: {
+              <span class="hljs-attr">&quot;en&quot;</span>: <span class="hljs-string">&quot;This Aadhaar number appears to be invalid&quot;</span>,
+              <span class="hljs-attr">&quot;hi&quot;</span>: <span class="hljs-string">&quot;यह आधार संख्या अमान्य प्रतीत होती है&quot;</span>
+            }
+          }
+        },
+        {
+          <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;button&quot;</span>,
+          <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-string">&quot;submit_aadhaar&quot;</span>,
+          <span class="hljs-attr">&quot;action&quot;</span>: <span class="hljs-string">&quot;next_screen&quot;</span>,
+          <span class="hljs-attr">&quot;target&quot;</span>: <span class="hljs-string">&quot;otp_verification&quot;</span>,
+          <span class="hljs-attr">&quot;display&quot;</span>: {
+            <span class="hljs-attr">&quot;label&quot;</span>: {
+              <span class="hljs-attr">&quot;en&quot;</span>: <span class="hljs-string">&quot;Continue&quot;</span>,
+              <span class="hljs-attr">&quot;hi&quot;</span>: <span class="hljs-string">&quot;आगे बढ़ें&quot;</span>,
+              <span class="hljs-attr">&quot;ta&quot;</span>: <span class="hljs-string">&quot;தொடரவும்&quot;</span>
+            }
+          },
+          <span class="hljs-attr">&quot;enabled_when&quot;</span>: {
+            <span class="hljs-attr">&quot;field&quot;</span>: <span class="hljs-string">&quot;aadhaar_field&quot;</span>,
+            <span class="hljs-attr">&quot;condition&quot;</span>: <span class="hljs-string">&quot;valid&quot;</span>
+          }
+        }
+      ],
+      
+      <span class="hljs-attr">&quot;navigation&quot;</span>: {
+        <span class="hljs-attr">&quot;back&quot;</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">&quot;next&quot;</span>: <span class="hljs-string">&quot;otp_verification&quot;</span>,
+        <span class="hljs-attr">&quot;cancel&quot;</span>: <span class="hljs-string">&quot;confirmation_required&quot;</span>
+      },
+      
+      <span class="hljs-attr">&quot;telemetry&quot;</span>: {
+        <span class="hljs-attr">&quot;screen_view&quot;</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">&quot;field_interactions&quot;</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">&quot;time_spent&quot;</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">&quot;error_encounters&quot;</span>: <span class="hljs-literal">true</span>
+      }
+    }
+  ],
+  
+  <span class="hljs-attr">&quot;signature&quot;</span>: {
+    <span class="hljs-attr">&quot;algorithm&quot;</span>: <span class="hljs-string">&quot;RSA-SHA256&quot;</span>,
+    <span class="hljs-attr">&quot;signed_by&quot;</span>: <span class="hljs-string">&quot;UIDAI Canonical Authority&quot;</span>,
+    <span class="hljs-attr">&quot;signature&quot;</span>: <span class="hljs-string">&quot;base64_encoded_signature&quot;</span>
+  }
+}
+</code></pre>
+<h3 class="code-line" data-line-start=232 data-line-end=233 ><a id="24_SDUI_Rendering_Pipeline_232"></a>2.4 SDUI Rendering Pipeline</h3>
+<pre><code class="has-line-data" data-line-start="235" data-line-end="272">┌─────────────────────────────────────────────────────────────────────────────────┐
+│                        CANONICAL SDUI SERVING INFRASTRUCTURE                     │
+└─────────────────────────────────────────────────────────────────────────────────┘
+                                        │
+                    ┌───────────────────┼───────────────────┐
+                    │                   │                   │
+                    ▼                   ▼                   ▼
+        ┌───────────────────┐ ┌───────────────────┐ ┌───────────────────┐
+        │   CDN Edge Node   │ │   CDN Edge Node   │ │   CDN Edge Node   │
+        │   (Mumbai)        │ │   (Chennai)       │ │   (Delhi)         │
+        │                   │ │                   │ │                   │
+        │  Cached SDUI      │ │  Cached SDUI      │ │  Cached SDUI      │
+        │  Specs (all)      │ │  Specs (all)      │ │  Specs (all)      │
+        └─────────┬─────────┘ └─────────┬─────────┘ └─────────┬─────────┘
+                  │                     │                     │
+                  └──────────┬──────────┴──────────┬──────────┘
+                             │                     │
+                    ┌────────┴────────┐   ┌───────┴────────┐
+                    │                 │   │                │
+                    ▼                 ▼   ▼                ▼
+        ┌───────────────────┐   ┌───────────────────┐   ┌───────────────────┐
+        │   Mobile App      │   │   Web Browser     │   │   CSC Terminal    │
+        │                   │   │                   │   │                   │
+        │  SDUI Renderer    │   │  SDUI Renderer    │   │  SDUI Renderer    │
+        │  (Native)         │   │  (JavaScript)     │   │  (Desktop)        │
+        │                   │   │                   │   │                   │
+        │  Interprets spec  │   │  Interprets spec  │   │  Interprets spec  │
+        │  Renders native   │   │  Renders HTML     │   │  Renders WPF/GTK  │
+        └───────────────────┘   └───────────────────┘   └───────────────────┘
+
+PROPERTIES:
+• Spec is IDENTICAL across all clients
+• Rendering is NATIVE to each platform
+• Updates happen SERVER-SIDE only
+• Specs are SIGNED and VERSIONED
+• Offline: Specs pre-cached on device
+</code></pre>
+<h3 class="code-line" data-line-start=273 data-line-end=274 ><a id="25_Canonical_SDUI_Guarantees_273"></a>2.5 Canonical SDUI Guarantees</h3>
+<pre><code class="has-line-data" data-line-start="276" data-line-end="313">┌─────────────────────────────────────────────────────────────────────────────────┐
+│                          CANONICAL SDUI GUARANTEES                               │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                 │
+│  1. DETERMINISM                                                                 │
+│     Given: User context C, Journey J, Screen S                                 │
+│     Then: SDUI_spec(C, J, S) = constant                                        │
+│     The spec for a given screen is ALWAYS the same                             │
+│                                                                                 │
+│  2. AUDITABILITY                                                                │
+│     Every transaction stores:                                                   │
+│     - Journey ID + version                                                      │
+│     - Screen sequence traversed                                                 │
+│     - SDUI spec hash for each screen                                           │
+│     - Timestamp and duration per screen                                        │
+│     Auditors can reproduce EXACT UI user experienced                           │
+│                                                                                 │
+│  3. CERTIFICATION                                                               │
+│     Each SDUI spec version is:                                                  │
+│     - Reviewed by legal/compliance                                              │
+│     - Tested exhaustively                                                       │
+│     - Signed by UIDAI Canonical Authority                                      │
+│     - Published with validity period                                            │
+│     Regulators certify the SPEC, not the rendering                             │
+│                                                                                 │
+│  4. IMMUTABILITY                                                                │
+│     Once published, a spec version is NEVER modified                           │
+│     Bug fixes create NEW version with NEW certification                        │
+│     Old versions remain valid until expiry                                      │
+│                                                                                 │
+│  5. NON-BYPASSABILITY                                                           │
+│     Transaction cannot complete without traversing canonical SDUI              │
+│     No &quot;shortcut&quot; that skips certified screens                                 │
+│     Backend validates that correct screens were rendered                       │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2 class="code-line" data-line-start=316 data-line-end=317 ><a id="Part_3_Generative_Rhetorical_Layer_316"></a>Part 3: Generative Rhetorical Layer</h2>
+<h3 class="code-line" data-line-start=318 data-line-end=319 ><a id="31_What_the_Rhetorical_Layer_Does_318"></a>3.1 What the Rhetorical Layer Does</h3>
+<p class="has-line-data" data-line-start="320" data-line-end="321">The rhetorical layer is everything BEFORE the canonical SDUI:</p>
+<pre><code class="has-line-data" data-line-start="323" data-line-end="380">USER OPENS APP
+      │
+      ▼
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                         RHETORICAL LAYER (AI-Generated)                          │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                 │
+│  STAGE 1: CONTEXT INFERENCE                                                     │
+│  ─────────────────────────                                                      │
+│  • Device capability detection                                                  │
+│  • Connectivity assessment                                                      │
+│  • Language preference (explicit or inferred)                                   │
+│  • User history (if available)                                                  │
+│  • Time of day, session patterns                                               │
+│                                                                                 │
+│  STAGE 2: INTENT CLARIFICATION                                                  │
+│  ────────────────────────────                                                   │
+│  • &quot;What would you like to do today?&quot;                                          │
+│  • Natural language understanding of user request                              │
+│  • Disambiguation if unclear                                                    │
+│  • Route to appropriate journey                                                 │
+│                                                                                 │
+│  STAGE 3: PREPARATION &amp; GUIDANCE                                                │
+│  ───────────────────────────────                                                │
+│  • &quot;You'll need your Aadhaar number and registered mobile&quot;                     │
+│  • Document checklist                                                           │
+│  • Time estimate                                                                │
+│  • Prerequisites verification                                                   │
+│                                                                                 │
+│  STAGE 4: TRUST BUILDING                                                        │
+│  ────────────────────────                                                       │
+│  • Explanation of what will happen                                             │
+│  • Privacy assurances                                                           │
+│  • What data will be collected and why                                         │
+│  • Who can help if something goes wrong                                        │
+│                                                                                 │
+│  STAGE 5: COMPLEXITY REDUCTION                                                  │
+│  ─────────────────────────────                                                  │
+│  • Break down process into understandable steps                                │
+│  • Visual progress indicator                                                    │
+│  • Encourage and reassure                                                       │
+│  • &quot;Don't worry, we'll guide you through&quot;                                      │
+│                                                                                 │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│                              ↓ SEGUE ↓                                          │
+│         &quot;Great! Let's begin. First, please enter your Aadhaar number.&quot;        │
+└─────────────────────────────────────────────────────────────────────────────────┘
+      │
+      ▼
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                         CANONICAL LAYER (SDUI Rendered)                          │
+│                                                                                 │
+│                    [ Aadhaar Number Input Field ]                              │
+│                           (Certified SDUI)                                      │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 class="code-line" data-line-start=381 data-line-end=382 ><a id="32_Rhetorical_Generation_with_SLMs_381"></a>3.2 Rhetorical Generation with SLMs</h3>
+<p class="has-line-data" data-line-start="383" data-line-end="384"><strong>SLM Task: Generate contextual on-ramp content</strong></p>
+<pre><code class="has-line-data" data-line-start="386" data-line-end="445">PROMPT TO MISTRAL 7B (at CSC/District/State):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+&lt;system&gt;
+You are a helpful guide for the Aadhaar system. Your role is to prepare 
+users for their journey by providing context, guidance, and reassurance.
+
+You do NOT collect any data. You only prepare the user.
+You will hand off to the official form when ready.
+
+Respond in the user's language. Be warm, clear, and reassuring.
+&lt;/system&gt;
+
+&lt;user_context&gt;
+Language: Hindi
+Literacy: Tier 2 (basic literacy)
+Device: Feature phone
+Connectivity: 2G
+Journey: Address update
+User type: First-time user
+Time available: Not rushed
+Previous attempts: None
+&lt;/user_context&gt;
+
+&lt;task&gt;
+Generate a welcoming introduction and preparation message for this user 
+who wants to update their address. Include:
+1. Warm greeting
+2. Brief explanation of what they'll do
+3. What they'll need (Aadhaar number, OTP on mobile)
+4. Time estimate
+5. Reassurance
+6. Segue phrase to begin
+
+Output as JSON with fields: greeting, explanation, requirements, 
+time_estimate, reassurance, segue_phrase
+&lt;/task&gt;
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SLM OUTPUT:
+{
+  &quot;greeting&quot;: &quot;नमस्ते! आधार सेवा में आपका स्वागत है।&quot;,
+  
+  &quot;explanation&quot;: &quot;आज हम आपका पता बदलने में मदद करेंगे। यह बहुत आसान है - 
+                  बस कुछ जानकारी देनी होगी और आपका काम हो जाएगा।&quot;,
+  
+  &quot;requirements&quot;: &quot;आपको चाहिए होगा:\n• आपका 12 अंकों का आधार नंबर\n
+                   • आपका मोबाइल फोन (OTP के लिए)&quot;,
+  
+  &quot;time_estimate&quot;: &quot;इसमें लगभग 5-7 मिनट लगेंगे।&quot;,
+  
+  &quot;reassurance&quot;: &quot;चिंता न करें - अगर कहीं अटक जाएं तो हम मदद करेंगे। 
+                  आपकी जानकारी पूरी तरह सुरक्षित है।&quot;,
+  
+  &quot;segue_phrase&quot;: &quot;तैयार हैं? चलिए शुरू करते हैं। सबसे पहले अपना 
+                   आधार नंबर डालें।&quot;
+}
+</code></pre>
+<h3 class="code-line" data-line-start=446 data-line-end=447 ><a id="33_Rhetorical_Layer_Properties_446"></a>3.3 Rhetorical Layer Properties</h3>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Generated by</strong></td>
+<td>SLMs (Mistral 7B) at edge/district/state</td>
+</tr>
+<tr>
+<td><strong>Cacheability</strong></td>
+<td>Can cache common patterns, regenerate for edge cases</td>
+</tr>
+<tr>
+<td><strong>Failure mode</strong></td>
+<td>Skip directly to canonical SDUI (no data loss)</td>
+</tr>
+<tr>
+<td><strong>Audit requirement</strong></td>
+<td>Best-effort logging (not legally binding)</td>
+</tr>
+<tr>
+<td><strong>Certification</strong></td>
+<td>Not required (no data collection)</td>
+</tr>
+<tr>
+<td><strong>Reproducibility</strong></td>
+<td>Not required (can vary each time)</td>
+</tr>
+<tr>
+<td><strong>Personalization</strong></td>
+<td>Full — language, tone, pace, content</td>
+</tr>
+</tbody>
+</table>
+<h3 class="code-line" data-line-start=458 data-line-end=459 ><a id="34_What_Rhetorical_Layer_CANNOT_Do_458"></a>3.4 What Rhetorical Layer CANNOT Do</h3>
+<pre><code class="has-line-data" data-line-start="461" data-line-end="491">┌─────────────────────────────────────────────────────────────────────────────────┐
+│                    RHETORICAL LAYER HARD CONSTRAINTS                             │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                 │
+│  ✗ CANNOT collect user data                                                     │
+│    Rhetorical content is display-only                                          │
+│    All input fields are in canonical SDUI                                      │
+│                                                                                 │
+│  ✗ CANNOT skip canonical screens                                               │
+│    Must always segue to SDUI for data collection                               │
+│    No &quot;shortcut&quot; completion paths                                              │
+│                                                                                 │
+│  ✗ CANNOT modify canonical flow                                                │
+│    Can reorder rhetorical preparation                                          │
+│    Cannot reorder canonical screens                                            │
+│                                                                                 │
+│  ✗ CANNOT make legally binding statements                                      │
+│    Terms, consents, acknowledgments in canonical only                          │
+│    Rhetorical can explain but not substitute                                   │
+│                                                                                 │
+│  ✗ CANNOT authenticate user                                                    │
+│    OTP, biometric, etc. always in canonical                                    │
+│    Rhetorical can explain authentication but not perform it                    │
+│                                                                                 │
+│  ✗ CANNOT complete transaction                                                 │
+│    Submit, confirm, finalize always in canonical                               │
+│    Rhetorical prepares for completion, doesn't execute                         │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2 class="code-line" data-line-start=494 data-line-end=495 ><a id="Part_4_The_Segue_Architecture_494"></a>Part 4: The Segue Architecture</h2>
+<h3 class="code-line" data-line-start=496 data-line-end=497 ><a id="41_Defining_the_Segue_Point_496"></a>4.1 Defining the Segue Point</h3>
+<p class="has-line-data" data-line-start="498" data-line-end="499">The <strong>segue point</strong> is where rhetorical hands off to canonical:</p>
+<pre><code class="has-line-data" data-line-start="501" data-line-end="530">RHETORICAL (AI-generated, adaptive)
+         │
+         │  User has been:
+         │  • Greeted in their language
+         │  • Informed what they'll do
+         │  • Told what they need
+         │  • Reassured about safety
+         │  • Given time estimate
+         │
+         ▼
+    ╔════════════════════════════════════════════════════════════════╗
+    ║                       SEGUE POINT                               ║
+    ║                                                                 ║
+    ║  &quot;तैयार हैं? चलिए शुरू करते हैं।&quot;                              ║
+    ║  &quot;Ready? Let's begin.&quot;                                          ║
+    ║                                                                 ║
+    ║  [ शुरू करें / Begin ]  ← Button triggers canonical SDUI       ║
+    ║                                                                 ║
+    ╚════════════════════════════════════════════════════════════════╝
+         │
+         │  System actions at segue:
+         │  • Log rhetorical session (optional telemetry)
+         │  • Request canonical SDUI spec from server/cache
+         │  • Initialize SDUI renderer
+         │  • Begin canonical screen sequence
+         │
+         ▼
+CANONICAL (SDUI-rendered, certified)
+</code></pre>
+<h3 class="code-line" data-line-start=531 data-line-end=532 ><a id="42_Segue_Implementation_531"></a>4.2 Segue Implementation</h3>
+<pre><code class="has-line-data" data-line-start="534" data-line-end="596" class="language-typescript"><span class="hljs-keyword">interface</span> SegueController {
+  
+  <span class="hljs-comment">/**
+   * Called when rhetorical preparation is complete.
+   * Transitions user to canonical SDUI flow.
+   */</span>
+  <span class="hljs-keyword">async</span> initiateSegue(
+    rhetoricalContext: RhetoricalContext,
+    <span class="hljs-attr">targetJourney</span>: JourneyId
+  ): <span class="hljs-built_in">Promise</span>&lt;<span class="hljs-built_in">void</span>&gt; {
+    
+    <span class="hljs-comment">// 1. Log rhetorical session (non-blocking, best-effort)</span>
+    <span class="hljs-built_in">this</span>.telemetry.logRhetoricalSession({
+      <span class="hljs-attr">sessionId</span>: rhetoricalContext.sessionId,
+      <span class="hljs-attr">duration</span>: rhetoricalContext.duration,
+      <span class="hljs-attr">language</span>: rhetoricalContext.language,
+      <span class="hljs-attr">slmUsed</span>: rhetoricalContext.slmId,
+      <span class="hljs-attr">contentGenerated</span>: rhetoricalContext.contentHashes
+    });
+    
+    <span class="hljs-comment">// 2. Resolve canonical SDUI spec</span>
+    <span class="hljs-keyword">const</span> sduiSpec = <span class="hljs-keyword">await</span> <span class="hljs-built_in">this</span>.resolveCanonicalSpec(targetJourney, {
+      <span class="hljs-attr">preferredLanguage</span>: rhetoricalContext.language,
+      <span class="hljs-attr">deviceCapabilities</span>: rhetoricalContext.device,
+      <span class="hljs-attr">accessibilityNeeds</span>: rhetoricalContext.accessibility
+    });
+    
+    <span class="hljs-comment">// 3. Validate spec signature and version</span>
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.validateSpec(sduiSpec)) {
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> CanonicalSpecInvalidError();
+    }
+    
+    <span class="hljs-comment">// 4. Initialize canonical renderer</span>
+    <span class="hljs-keyword">const</span> renderer = <span class="hljs-built_in">this</span>.getRenderer(sduiSpec.renderingHints);
+    
+    <span class="hljs-comment">// 5. Begin canonical flow</span>
+    <span class="hljs-keyword">await</span> renderer.renderScreen(sduiSpec.screens[<span class="hljs-number">0</span>]);
+    
+    <span class="hljs-comment">// 6. Transfer control to canonical flow controller</span>
+    <span class="hljs-built_in">this</span>.canonicalController.beginJourney(sduiSpec, {
+      <span class="hljs-attr">rhetoricalSessionId</span>: rhetoricalContext.sessionId,
+      <span class="hljs-attr">entryPoint</span>: <span class="hljs-string">&#x27;rhetorical_segue&#x27;</span>,
+      <span class="hljs-attr">preparedContext</span>: rhetoricalContext.inferredContext
+    });
+  }
+  
+  <span class="hljs-comment">/**
+   * Fallback: Skip rhetorical entirely, go straight to canonical.
+   * Used when SLM unavailable or user opts out of guidance.
+   */</span>
+  <span class="hljs-keyword">async</span> directToCanonical(targetJourney: JourneyId): <span class="hljs-built_in">Promise</span>&lt;<span class="hljs-built_in">void</span>&gt; {
+    <span class="hljs-keyword">const</span> sduiSpec = <span class="hljs-keyword">await</span> <span class="hljs-built_in">this</span>.resolveCanonicalSpec(targetJourney);
+    <span class="hljs-keyword">const</span> renderer = <span class="hljs-built_in">this</span>.getRenderer(sduiSpec.renderingHints);
+    <span class="hljs-keyword">await</span> renderer.renderScreen(sduiSpec.screens[<span class="hljs-number">0</span>]);
+    
+    <span class="hljs-built_in">this</span>.canonicalController.beginJourney(sduiSpec, {
+      <span class="hljs-attr">entryPoint</span>: <span class="hljs-string">&#x27;direct&#x27;</span>,
+      <span class="hljs-attr">preparedContext</span>: <span class="hljs-literal">null</span>
+    });
+  }
+}
+</code></pre>
+<h3 class="code-line" data-line-start=597 data-line-end=598 ><a id="43_Segue_Patterns_597"></a>4.3 Segue Patterns</h3>
+<p class="has-line-data" data-line-start="599" data-line-end="600"><strong>Pattern 1: Full Rhetorical Preparation</strong></p>
+<pre><code class="has-line-data" data-line-start="601" data-line-end="623">User opens app
+     ↓
+[SLM] Context inference
+     ↓
+[SLM] Welcome &amp; explanation
+     ↓
+[SLM] Requirements checklist
+     ↓
+[SLM] Trust building
+     ↓
+[SLM] &quot;Ready? Let's begin&quot;
+     ↓
+════ SEGUE ════
+     ↓
+[SDUI] Canonical form
+     ↓
+[SDUI] OTP verification
+     ↓
+[SDUI] Confirmation
+     ↓
+Complete
+</code></pre>
+<p class="has-line-data" data-line-start="624" data-line-end="625"><strong>Pattern 2: Minimal Rhetorical (Expert User)</strong></p>
+<pre><code class="has-line-data" data-line-start="626" data-line-end="638">User opens app (returning user detected)
+     ↓
+[SLM] &quot;Welcome back! Address update?&quot;
+     ↓
+[SLM] &quot;You know the drill. Ready?&quot;
+     ↓
+════ SEGUE ════
+     ↓
+[SDUI] Canonical form
+     ↓
+Complete
+</code></pre>
+<p class="has-line-data" data-line-start="639" data-line-end="640"><strong>Pattern 3: Skip Rhetorical (SLM Unavailable)</strong></p>
+<pre><code class="has-line-data" data-line-start="641" data-line-end="651">User opens app (offline, no cached SLM)
+     ↓
+[Static] &quot;Address Update Service&quot;
+     ↓
+════ DIRECT ENTRY ════
+     ↓
+[SDUI] Canonical form (with language from device settings)
+     ↓
+Complete
+</code></pre>
+<p class="has-line-data" data-line-start="652" data-line-end="653"><strong>Pattern 4: Error Recovery Re-entry</strong></p>
+<pre><code class="has-line-data" data-line-start="654" data-line-end="669">User encounters error in canonical flow
+     ↓
+════ EXIT TO RHETORICAL ════
+     ↓
+[SLM] Error explanation
+[SLM] Guidance for resolution
+[SLM] Reassurance
+[SLM] &quot;Let's try again&quot;
+     ↓
+════ RE-SEGUE ════
+     ↓
+[SDUI] Resume canonical from appropriate point
+     ↓
+Complete
+</code></pre>
+<hr>
+<h2 class="code-line" data-line-start=672 data-line-end=673 ><a id="Part_5_Error_Handling_Architecture_672"></a>Part 5: Error Handling Architecture</h2>
+<h3 class="code-line" data-line-start=674 data-line-end=675 ><a id="51_Error_in_Rhetorical_Layer_674"></a>5.1 Error in Rhetorical Layer</h3>
+<pre><code class="has-line-data" data-line-start="677" data-line-end="701">ERROR IN RHETORICAL LAYER
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SCENARIO: SLM generates invalid or inappropriate content
+
+DETECTION:
+• Content filter flags problematic output
+• Timeout waiting for SLM response
+• SLM returns parsing error
+
+RESPONSE:
+┌─────────────────────────────────────────────────────────────────┐
+│                                                                 │
+│  1. Log error (telemetry)                                       │
+│  2. Skip remaining rhetorical content                          │
+│  3. Display static fallback message:                           │
+│     &quot;Welcome to Aadhaar Services. Let's get started.&quot;          │
+│  4. Proceed directly to canonical SDUI                         │
+│                                                                 │
+│  IMPACT: User misses personalized guidance but transaction     │
+│          continues normally through certified flow             │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 class="code-line" data-line-start=702 data-line-end=703 ><a id="52_Error_in_Canonical_Layer_702"></a>5.2 Error in Canonical Layer</h3>
+<pre><code class="has-line-data" data-line-start="705" data-line-end="729">ERROR IN CANONICAL LAYER
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+SCENARIO: Validation fails, API error, network timeout
+
+RESPONSE:
+┌─────────────────────────────────────────────────────────────────┐
+│                                                                 │
+│  1. Display canonical error message (from SDUI spec)           │
+│  2. Log error with full context                                │
+│  3. Offer retry within canonical flow                          │
+│                                                                 │
+│  OPTIONAL ENHANCEMENT (with rhetorical layer):                 │
+│                                                                 │
+│  4. EXIT to rhetorical layer                                   │
+│  5. [SLM] Generate contextual error explanation:               │
+│     &quot;The server is busy right now. This happens sometimes.     │
+│      Your information is safe. Let's wait a moment and try     │
+│      again. Would you like me to explain what happened?&quot;       │
+│  6. [SLM] Offer guidance based on error type                   │
+│  7. RE-SEGUE back to canonical when ready                      │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 class="code-line" data-line-start=730 data-line-end=731 ><a id="53_Error_Explanation_Generation_730"></a>5.3 Error Explanation Generation</h3>
+<pre><code class="has-line-data" data-line-start="733" data-line-end="767">SLM PROMPT FOR ERROR EXPLANATION:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+&lt;system&gt;
+You are helping a user who encountered an error in the Aadhaar system.
+Explain the error in simple, reassuring terms in their language.
+Do NOT provide technical details. Do NOT blame the user.
+Focus on: what happened, is their data safe, what to do next.
+&lt;/system&gt;
+
+&lt;error_context&gt;
+Error type: HTTP 503 Service Unavailable
+User language: Hindi
+Literacy tier: 2
+Journey: Address update
+Step: OTP verification
+Retry count: 1
+&lt;/error_context&gt;
+
+&lt;task&gt;
+Generate a compassionate error explanation and guidance.
+&lt;/task&gt;
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SLM OUTPUT:
+{
+  &quot;explanation&quot;: &quot;अभी सर्वर पर बहुत लोग हैं। थोड़ी देर में फिर कोशिश करेंगे।&quot;,
+  &quot;safety_assurance&quot;: &quot;आपकी जानकारी पूरी तरह सुरक्षित है।&quot;,
+  &quot;guidance&quot;: &quot;2 मिनट रुकिए, फिर कोशिश करते हैं।&quot;,
+  &quot;action_prompt&quot;: &quot;फिर से कोशिश करें&quot;,
+  &quot;alternative&quot;: &quot;अगर बार-बार यही हो, तो पास के आधार सेवा केंद्र जाएं।&quot;
+}
+</code></pre>
+<hr>
+<h2 class="code-line" data-line-start=770 data-line-end=771 ><a id="Part_6_Complete_Flow_Architecture_770"></a>Part 6: Complete Flow Architecture</h2>
+<h3 class="code-line" data-line-start=772 data-line-end=773 ><a id="61_EndtoEnd_Journey_Flow_772"></a>6.1 End-to-End Journey Flow</h3>
+<pre><code class="has-line-data" data-line-start="775" data-line-end="885">┌─────────────────────────────────────────────────────────────────────────────────┐
+│                                                                                 │
+│  USER OPENS AADHAAR APP                                                         │
+│                                                                                 │
+└───────────────────────────────────────┬─────────────────────────────────────────┘
+                                        │
+                                        ▼
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                          RHETORICAL ORCHESTRATOR                                 │
+│                                                                                 │
+│  ┌─────────────────────────────────────────────────────────────────────────┐   │
+│  │ 1. CONTEXT INFERENCE                                                     │   │
+│  │    • Detect device, connectivity, time                                   │   │
+│  │    • Check user history (if authenticated)                              │   │
+│  │    • Infer literacy tier from interaction patterns                      │   │
+│  │    • Determine language preference                                       │   │
+│  └───────────────────────────────────────┬─────────────────────────────────┘   │
+│                                          │                                      │
+│  ┌───────────────────────────────────────▼─────────────────────────────────┐   │
+│  │ 2. SLM ROUTING                                                           │   │
+│  │    CSC (local) → District → State → Cloud (fallback)                    │   │
+│  └───────────────────────────────────────┬─────────────────────────────────┘   │
+│                                          │                                      │
+│  ┌───────────────────────────────────────▼─────────────────────────────────┐   │
+│  │ 3. RHETORICAL CONTENT GENERATION (SLM)                                   │   │
+│  │    • Welcome message                                                     │   │
+│  │    • Intent clarification                                               │   │
+│  │    • Requirements explanation                                           │   │
+│  │    • Trust building                                                     │   │
+│  │    • Segue phrase                                                       │   │
+│  └───────────────────────────────────────┬─────────────────────────────────┘   │
+│                                          │                                      │
+│  ┌───────────────────────────────────────▼─────────────────────────────────┐   │
+│  │ 4. CONTENT VALIDATION                                                    │   │
+│  │    • Content filter (safety)                                            │   │
+│  │    • Language verification                                              │   │
+│  │    • Fallback to static if invalid                                      │   │
+│  └───────────────────────────────────────┬─────────────────────────────────┘   │
+│                                          │                                      │
+│  ┌───────────────────────────────────────▼─────────────────────────────────┐   │
+│  │ 5. RHETORICAL RENDERING                                                  │   │
+│  │    • Display generated content                                          │   │
+│  │    • User reads/listens                                                 │   │
+│  │    • &quot;Ready? Let's begin&quot; button                                        │   │
+│  └───────────────────────────────────────┬─────────────────────────────────┘   │
+│                                          │                                      │
+└──────────────────────────────────────────┼──────────────────────────────────────┘
+                                           │
+                    ════════════════ SEGUE POINT ════════════════
+                                           │
+┌──────────────────────────────────────────┼──────────────────────────────────────┐
+│                                          │                                      │
+│                          CANONICAL SDUI CONTROLLER                              │
+│                                          │                                      │
+│  ┌───────────────────────────────────────▼─────────────────────────────────┐   │
+│  │ 6. SDUI SPEC RESOLUTION                                                  │   │
+│  │    • Fetch from cache / CDN / server                                    │   │
+│  │    • Validate signature                                                  │   │
+│  │    • Select language variant                                            │   │
+│  └───────────────────────────────────────┬─────────────────────────────────┘   │
+│                                          │                                      │
+│  ┌───────────────────────────────────────▼─────────────────────────────────┐   │
+│  │ 7. CANONICAL SCREEN RENDERING (SDUI)                                     │   │
+│  │                                                                          │   │
+│  │    SCREEN: Aadhaar Input                                                │   │
+│  │    ┌──────────────────────────────────────────────────────────────┐     │   │
+│  │    │  आधार संख्या दर्ज करें                                       │     │   │
+│  │    │  [ ____ ____ ____ ]                                          │     │   │
+│  │    │                                          [आगे बढ़ें]         │     │   │
+│  │    └──────────────────────────────────────────────────────────────┘     │   │
+│  │                                                                          │   │
+│  │    SCREEN: OTP Verification                                             │   │
+│  │    ┌──────────────────────────────────────────────────────────────┐     │   │
+│  │    │  OTP दर्ज करें (******1234 पर भेजा गया)                      │     │   │
+│  │    │  [ ______ ]                                                   │     │   │
+│  │    │                                          [सत्यापित करें]      │     │   │
+│  │    └──────────────────────────────────────────────────────────────┘     │   │
+│  │                                                                          │   │
+│  │    SCREEN: Address Input                                                │   │
+│  │    ┌──────────────────────────────────────────────────────────────┐     │   │
+│  │    │  नया पता दर्ज करें                                           │     │   │
+│  │    │  पता पंक्ति 1: [ _________________ ]                         │     │   │
+│  │    │  पता पंक्ति 2: [ _________________ ]                         │     │   │
+│  │    │  पिन कोड:      [ ______ ]                                    │     │   │
+│  │    │                                          [जमा करें]          │     │   │
+│  │    └──────────────────────────────────────────────────────────────┘     │   │
+│  │                                                                          │   │
+│  └───────────────────────────────────────┬─────────────────────────────────┘   │
+│                                          │                                      │
+│  ┌───────────────────────────────────────▼─────────────────────────────────┐   │
+│  │ 8. BACKEND SUBMISSION                                                    │   │
+│  │    • Validate all fields                                                │   │
+│  │    • Submit to UIDAI backend                                            │   │
+│  │    • Generate audit record                                              │   │
+│  └───────────────────────────────────────┬─────────────────────────────────┘   │
+│                                          │                                      │
+│  ┌───────────────────────────────────────▼─────────────────────────────────┐   │
+│  │ 9. CONFIRMATION (SDUI)                                                   │   │
+│  │    ┌──────────────────────────────────────────────────────────────┐     │   │
+│  │    │  ✓ आपका अनुरोध सफलतापूर्वक जमा हो गया                       │     │   │
+│  │    │    URN: 1234567890                                            │     │   │
+│  │    │    स्थिति: प्रक्रिया में                                      │     │   │
+│  │    └──────────────────────────────────────────────────────────────┘     │   │
+│  └───────────────────────────────────────┬─────────────────────────────────┘   │
+│                                          │                                      │
+└──────────────────────────────────────────┼──────────────────────────────────────┘
+                                           │
+                                           ▼
+                                    TRANSACTION COMPLETE
+</code></pre>
+<hr>
+<h2 class="code-line" data-line-start=888 data-line-end=889 ><a id="Part_7_Comparative_Analysis_888"></a>Part 7: Comparative Analysis</h2>
+<h3 class="code-line" data-line-start=890 data-line-end=891 ><a id="71_Architecture_Comparison_890"></a>7.1 Architecture Comparison</h3>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Full Generative UI</th>
+<th>Hybrid SDUI + Rhetorical</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Data collection UI</strong></td>
+<td>AI-generated</td>
+<td>SDUI (deterministic)</td>
+</tr>
+<tr>
+<td><strong>Auditability</strong></td>
+<td>Complex (reconstruct from logs)</td>
+<td>Simple (SDUI spec versioned)</td>
+</tr>
+<tr>
+<td><strong>Certification</strong></td>
+<td>Cannot certify generative process</td>
+<td>Certify SDUI spec</td>
+</tr>
+<tr>
+<td><strong>Regulatory compliance</strong></td>
+<td>Requires runtime validation</td>
+<td>Compile-time guarantee</td>
+</tr>
+<tr>
+<td><strong>Testing</strong></td>
+<td>Infinite variations</td>
+<td>Finite SDUI specs</td>
+</tr>
+<tr>
+<td><strong>Failure mode</strong></td>
+<td>Fallback to canonical</td>
+<td>Rhetorical fallback only</td>
+</tr>
+<tr>
+<td><strong>Personalization</strong></td>
+<td>Full stack</td>
+<td>On-ramps only</td>
+</tr>
+<tr>
+<td><strong>Complexity</strong></td>
+<td>High (validate everything)</td>
+<td>Lower (clear boundaries)</td>
+</tr>
+</tbody>
+</table>
+<h3 class="code-line" data-line-start=903 data-line-end=904 ><a id="72_Responsibility_Matrix_903"></a>7.2 Responsibility Matrix</h3>
+<pre><code class="has-line-data" data-line-start="906" data-line-end="929">┌─────────────────────────────────────────────────────────────────────────────────┐
+│                          RESPONSIBILITY MATRIX                                   │
+├───────────────────────────┬─────────────────────────┬───────────────────────────┤
+│        Component          │    Rhetorical (SLM)     │    Canonical (SDUI)       │
+├───────────────────────────┼─────────────────────────┼───────────────────────────┤
+│ Welcome message           │          ✓              │                           │
+│ Language selection        │          ✓              │          ✓*               │
+│ Intent clarification      │          ✓              │                           │
+│ Requirements explanation  │          ✓              │                           │
+│ Trust building           │          ✓              │                           │
+│ Error explanation        │          ✓              │          ✓ (basic)        │
+│ Progress indication      │          ✓              │          ✓                │
+│ Data input fields        │                         │          ✓                │
+│ Field validation         │                         │          ✓                │
+│ OTP/Biometric auth       │                         │          ✓                │
+│ Consent capture          │                         │          ✓                │
+│ Transaction submission   │                         │          ✓                │
+│ Confirmation/receipt     │                         │          ✓                │
+│ Audit trail             │      Best-effort         │          ✓ (mandatory)    │
+├───────────────────────────┴─────────────────────────┴───────────────────────────┤
+│ * SDUI supports language variants in spec, rhetorical can override/enhance      │
+└─────────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3 class="code-line" data-line-start=930 data-line-end=931 ><a id="73_Risk_Mitigation_930"></a>7.3 Risk Mitigation</h3>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Risk</th>
+<th>Full Generative</th>
+<th>Hybrid Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AI generates invalid form</td>
+<td>Runtime validation required</td>
+<td>SDUI spec pre-validated</td>
+</tr>
+<tr>
+<td>AI skips required field</td>
+<td>Analytical Engine catches</td>
+<td>Cannot skip (SDUI hardcoded)</td>
+</tr>
+<tr>
+<td>AI provides wrong legal text</td>
+<td>Must validate generated text</td>
+<td>Legal text in certified SDUI</td>
+</tr>
+<tr>
+<td>Audit shows different UI</td>
+<td>Must reconstruct from logs</td>
+<td>SDUI spec stored with transaction</td>
+</tr>
+<tr>
+<td>Regulator questions UI</td>
+<td>Explain generative process</td>
+<td>Show certified spec</td>
+</tr>
+<tr>
+<td>AI unavailable</td>
+<td>Full fallback to canonical</td>
+<td>Only rhetorical skipped</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 class="code-line" data-line-start=943 data-line-end=944 ><a id="Part_8_Implementation_Roadmap_943"></a>Part 8: Implementation Roadmap</h2>
+<h3 class="code-line" data-line-start=945 data-line-end=946 ><a id="Phase_1_SDUI_Foundation_Months_12_945"></a>Phase 1: SDUI Foundation (Months 1-2)</h3>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Deliverable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SDUI Protocol Specification</td>
+<td>JSON schema for canonical UI specs</td>
+</tr>
+<tr>
+<td>SDUI Renderer (Mobile)</td>
+<td>Android/iOS native renderer</td>
+</tr>
+<tr>
+<td>SDUI Renderer (Web)</td>
+<td>JavaScript renderer</td>
+</tr>
+<tr>
+<td>SDUI Renderer (CSC)</td>
+<td>Desktop renderer</td>
+</tr>
+<tr>
+<td>Canonical Spec: Address Update</td>
+<td>First journey fully specified</td>
+</tr>
+<tr>
+<td>CDN Integration</td>
+<td>Spec serving infrastructure</td>
+</tr>
+</tbody>
+</table>
+<h3 class="code-line" data-line-start=956 data-line-end=957 ><a id="Phase_2_Rhetorical_Layer_Months_24_956"></a>Phase 2: Rhetorical Layer (Months 2-4)</h3>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Deliverable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SLM Deployment (State)</td>
+<td>Mistral 7B at state data centers</td>
+</tr>
+<tr>
+<td>Rhetorical Prompt Templates</td>
+<td>Templates for each journey stage</td>
+</tr>
+<tr>
+<td>Content Validation Pipeline</td>
+<td>Safety filters, language verification</td>
+</tr>
+<tr>
+<td>Segue Controller</td>
+<td>Orchestration logic</td>
+</tr>
+<tr>
+<td>Fallback Handling</td>
+<td>Static content when SLM unavailable</td>
+</tr>
+</tbody>
+</table>
+<h3 class="code-line" data-line-start=966 data-line-end=967 ><a id="Phase_3_Integration__Pilot_Months_46_966"></a>Phase 3: Integration &amp; Pilot (Months 4-6)</h3>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Deliverable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>End-to-End Integration</td>
+<td>Full flow: rhetorical → segue → canonical</td>
+</tr>
+<tr>
+<td>Pilot State Deployment</td>
+<td>One state with full stack</td>
+</tr>
+<tr>
+<td>Telemetry &amp; Monitoring</td>
+<td>Dashboards for both layers</td>
+</tr>
+<tr>
+<td>Performance Optimization</td>
+<td>Latency tuning</td>
+</tr>
+<tr>
+<td>User Testing</td>
+<td>A/B test rhetorical vs. direct entry</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 class="code-line" data-line-start=978 data-line-end=979 ><a id="Part_9_Conclusion_978"></a>Part 9: Conclusion</h2>
+<h3 class="code-line" data-line-start=980 data-line-end=981 ><a id="91_The_Core_Insight_980"></a>9.1 The Core Insight</h3>
+<p class="has-line-data" data-line-start="982" data-line-end="983"><strong>The hybrid architecture separates what MUST be controlled from what CAN be personalized.</strong></p>
+<ul>
+<li class="has-line-data" data-line-start="984" data-line-end="985"><strong>Canonical SDUI:</strong> Must be controlled — deterministic, auditable, certified</li>
+<li class="has-line-data" data-line-start="985" data-line-end="987"><strong>Rhetorical AI:</strong> Can be personalized — adaptive, contextual, forgiving of variation</li>
+</ul>
+<p class="has-line-data" data-line-start="987" data-line-end="988">This separation enables billion-scale personalization without sacrificing regulatory guarantees.</p>
+<h3 class="code-line" data-line-start=989 data-line-end=990 ><a id="92_The_Segue_as_Architectural_Primitive_989"></a>9.2 The Segue as Architectural Primitive</h3>
+<p class="has-line-data" data-line-start="991" data-line-end="992">The <strong>segue point</strong> is the key abstraction:</p>
+<ul>
+<li class="has-line-data" data-line-start="992" data-line-end="993">Clear handoff from adaptive to deterministic</li>
+<li class="has-line-data" data-line-start="993" data-line-end="994">AI prepares, SDUI executes</li>
+<li class="has-line-data" data-line-start="994" data-line-end="995">Personalization on-ramp, standardized completion</li>
+<li class="has-line-data" data-line-start="995" data-line-end="996">Failure in rhetorical doesn’t affect transaction</li>
+<li class="has-line-data" data-line-start="996" data-line-end="998">Audit trail is clean (SDUI spec + user inputs)</li>
+</ul>
+<h3 class="code-line" data-line-start=998 data-line-end=999 ><a id="93_Why_This_Works_for_Aadhaar_998"></a>9.3 Why This Works for Aadhaar</h3>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Aadhaar Requirement</th>
+<th>How Architecture Satisfies</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Serve 1.4B diverse users</td>
+<td>Rhetorical layer adapts to context</td>
+</tr>
+<tr>
+<td>Legal compliance</td>
+<td>Canonical SDUI is certifiable</td>
+</tr>
+<tr>
+<td>Audit requirements</td>
+<td>SDUI spec stored with transaction</td>
+</tr>
+<tr>
+<td>Offline operation</td>
+<td>SDUI specs cacheable; rhetorical optional</td>
+</tr>
+<tr>
+<td>Multiple languages</td>
+<td>Both layers support multi-language</td>
+</tr>
+<tr>
+<td>Accessibility</td>
+<td>Both layers support accessibility features</td>
+</tr>
+<tr>
+<td>Trust building</td>
+<td>Rhetorical layer provides human-centric guidance</td>
+</tr>
+<tr>
+<td>Data integrity</td>
+<td>Canonical SDUI enforces field validation</td>
+</tr>
+</tbody>
+</table>
+<h3 class="code-line" data-line-start=1011 data-line-end=1012 ><a id="94_The_Promise_1011"></a>9.4 The Promise</h3>
+<p class="has-line-data" data-line-start="1013" data-line-end="1014">A user in rural Tamil Nadu opens the Aadhaar app.</p>
+<p class="has-line-data" data-line-start="1015" data-line-end="1016">An SLM generates a warm welcome in Chennai Tamil, explains what they’ll need, reassures them their data is safe, and says “Ready? Let’s begin.”</p>
+<p class="has-line-data" data-line-start="1017" data-line-end="1018">They tap the button.</p>
+<p class="has-line-data" data-line-start="1019" data-line-end="1020">The SDUI renderer displays the exact same certified form that a user in Delhi sees—but localized to Tamil, with the same validation rules, the same fields, producing the same API payload.</p>
+<p class="has-line-data" data-line-start="1021" data-line-end="1022">The rhetorical journey was unique. The canonical completion was universal.</p>
+<p class="has-line-data" data-line-start="1023" data-line-end="1024">That’s the hybrid promise: <strong>personalized approach, standardized completion.</strong></p>
+<hr>
+<p class="has-line-data" data-line-start="1027" data-line-end="1028"><strong>Document End</strong></p>
+
+</body></html>
