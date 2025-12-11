@@ -1,0 +1,1387 @@
+<html lang="en"><head><script>(function(firebaseConfig, initialAuthToken, appId) {
+        window.__firebase_config = firebaseConfig;
+        window.__initial_auth_token = initialAuthToken;
+        window.__app_id = appId;
+            })("\n{\n  \"apiKey\": \"AIzaSyCqyCcs2R2e7AegGjvFAwG98wlamtbHvZY\",\n  \"authDomain\": \"bard-frontend.firebaseapp.com\",\n  \"projectId\": \"bard-frontend\",\n  \"storageBucket\": \"bard-frontend.firebasestorage.app\",\n  \"messagingSenderId\": \"175205271074\",\n  \"appId\": \"1:175205271074:web:2b7bd4d34d33bf38e6ec7b\"\n}\n","eyJhbGciOiJSUzI1NiIsImtpZCI6ImQ4ZWQ3YTU3YzkyMTgwYzk0YjI2MzE3ZjMzYjY5MWE4MWRlNzYzNTEiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJmaXJlYmFzZS1hZG1pbnNkay1mYnN2Y0BiYXJkLWZyb250ZW5kLmlhbS5nc2VydmljZWFjY291bnQuY29tIiwiYXVkIjoiaHR0cHM6Ly9pZGVudGl0eXRvb2xraXQuZ29vZ2xlYXBpcy5jb20vZ29vZ2xlLmlkZW50aXR5LmlkZW50aXR5dG9vbGtpdC52MS5JZGVudGl0eVRvb2xraXQiLCJ1aWQiOiIwNTMzMjU1OTIwNDQ1OTYwNzgxNyIsImlzcyI6ImZpcmViYXNlLWFkbWluc2RrLWZic3ZjQGJhcmQtZnJvbnRlbmQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCJjbGFpbXMiOnsiYXBwSWQiOiJjX2Y1NmM3YzY4MjUzYWUxNjVfVUNBRl9BbmFseXNpc19JbnRlcmFjdGl2ZS5odG1sLTYwOCJ9LCJleHAiOjE3NjU0MzQ5NjIsImlhdCI6MTc2NTQzMTM2MiwiYWxnIjoiUlMyNTYifQ.DkGuFiuWchvZSNUTD0zARIqI6WmssoTY-pt8Wi0ETvxRLOf9q8ZoDRqOX472pLyP3lPk4ms2t0MiIS53D2ZcxZ77gJMXJWFlS_AxThmE0znat3gg4wDhjIPLCLcB4dUuq3KtfMGL9pi59t2SZsm_T15xM0vKcns9XOloG6vS83oQyKHFbuXGqdTgJaoGdAkUIdHxmU3ijhsQurEOu8b8nw1cihDvaaKawLC8l1PuSdmArWNwFQw5kGYhdM5DBwGSocwUEIhcEY7FEWuucAhRwk3Z0QTKntj6Sh1Ks8TF6e23WTFELozoGRMczLdV5mnNK37WIeZoSpdILEu1dKLSRw","c_f56c7c68253ae165_UCAF_Analysis_Interactive.html-608")</script><script>'use strict';var h=typeof Object.defineProperties=="function"?Object.defineProperty:function(a,b,d){if(a==Array.prototype||a==Object.prototype)return a;a[b]=d.value;return a};function l(a){a=["object"==typeof globalThis&&globalThis,a,"object"==typeof window&&window,"object"==typeof self&&self,"object"==typeof global&&global];for(var b=0;b<a.length;++b){var d=a[b];if(d&&d.Math==Math)return d}throw Error("Cannot find global object");}var n=l(this);
+function p(a,b){if(b)a:{var d=n;a=a.split(".");for(var c=0;c<a.length-1;c++){var e=a[c];if(!(e in d))break a;d=d[e]}a=a[a.length-1];c=d[a];b=b(c);b!=c&&b!=null&&h(d,a,{configurable:!0,writable:!0,value:b})}}function r(a){function b(c){return a.next(c)}function d(c){return a.throw(c)}return new Promise(function(c,e){function f(g){g.done?c(g.value):Promise.resolve(g.value).then(b,d).then(f,e)}f(a.next())})}function t(a){return r(a())}
+p("Object.values",function(a){return a?a:function(b){var d=[],c;for(c in b)Object.prototype.hasOwnProperty.call(b,c)&&d.push(b[c]);return d}});p("Array.prototype.includes",function(a){return a?a:function(b,d){var c=this;c instanceof String&&(c=String(c));var e=c.length;d=d||0;for(d<0&&(d=Math.max(d+e,0));d<e;d++){var f=c[d];if(f===b||Object.is(f,b))return!0}return!1}});/*
+
+ MIT License
+
+ Copyright (c) 2017-2023 W.Y.
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+
+*/
+function u(a,b){const d=a.style;b.backgroundColor&&(d.backgroundColor=b.backgroundColor);b.width&&(d.width=`${b.width}px`);b.height&&(d.height=`${b.height}px`);const c=b.style;c!=null&&Object.keys(c).forEach(e=>{d[e]=c[e]})};var v=(()=>{let a=0;return()=>{a+=1;return`u${`0000${(Math.random()*1679616<<0).toString(36)}`.slice(-4)}${a}`}})();function w(a){const b=[];for(let d=0,c=a.length;d<c;d++)b.push(a[d]);return b}let x=null;function y(a={}){return x?x:a.l?x=a.l:x=w(window.getComputedStyle(document.documentElement))}function z(a,b){return(a=(a.ownerDocument.defaultView||window).getComputedStyle(a).getPropertyValue(b))?parseFloat(a.replace("px","")):0}
+function A(a,b={}){var d;if(!(d=b.width)){d=z(a,"border-left-width");var c=z(a,"border-right-width");d=a.clientWidth+d+c}(b=b.height)||(b=z(a,"border-top-width"),c=z(a,"border-bottom-width"),b=a.clientHeight+b+c);return{width:d,height:b}}function B(a){return new Promise((b,d)=>{const c=new Image;c.onload=()=>{c.decode().then(()=>{requestAnimationFrame(()=>b(c))})};c.onerror=d;c.crossOrigin="anonymous";c.decoding="async";c.src=a})}
+function C(a){return t(function*(){return Promise.resolve().then(()=>(new XMLSerializer).serializeToString(a)).then(encodeURIComponent).then(b=>`data:image/svg+xml;charset=utf-8,${b}`)})}
+function D(a,b,d){return t(function*(){const c=document.createElementNS("http://www.w3.org/2000/svg","svg"),e=document.createElementNS("http://www.w3.org/2000/svg","foreignObject");c.setAttribute("width",`${b}`);c.setAttribute("height",`${d}`);c.setAttribute("viewBox",`0 0 ${b} ${d}`);e.setAttribute("width","100%");e.setAttribute("height","100%");e.setAttribute("x","0");e.setAttribute("y","0");e.setAttribute("externalResourcesRequired","true");c.appendChild(e);e.appendChild(a);return C(c)})}
+var E=(a,b)=>{if(a instanceof b)return!0;a=Object.getPrototypeOf(a);return a===null?!1:a.constructor.name===b.name||E(a,b)};function F(a,b){return y(b).map(d=>{const c=a.getPropertyValue(d),e=a.getPropertyPriority(d);return`${d}: ${c}${e?" !important":""};`}).join(" ")}
+function G(a,b,d,c){a=window.getComputedStyle(a,d);var e=a.getPropertyValue("content");if(e!==""&&e!=="none"){var f=v();try{b.className=`${b.className} ${f}`}catch(k){return}e=document.createElement("style");var g=e.appendChild;d=`.${f}:${d}`;a.cssText?(c=a.getPropertyValue("content"),c=`${a.cssText} content: '${c.replace(/'|"/g,"")}';`):c=F(a,c);g.call(e,document.createTextNode(`${d}{${c}}`));b.appendChild(e)}};function H(a){return a.search(/^(data:)/)!==-1}function I(a,b,d){return t(function*(){const c=yield fetch(a,b);if(c.status===404)throw Error(`Resource "${c.url}" not found`);const e=yield c.blob();return new Promise((f,g)=>{const k=new FileReader;k.onerror=g;k.onloadend=()=>{try{f(d({o:c,result:k.result}))}catch(m){g(m)}};k.readAsDataURL(e)})})}const J={};function K(a,b,d){let c=a.replace(/\?.*/,"");d&&(c=a);/ttf|otf|eot|woff2?/i.test(c)&&(c=c.replace(/.*\//,""));return b?`[${b}]${c}`:c}
+function L(a,b,d){return t(function*(){const c=K(a,b,d.C);if(J[c]!=null)return J[c];d.u&&(a+=(/\?/.test(a)?"&":"?")+(new Date).getTime());let e;try{const f=yield I(a,d.i,({o:g,result:k})=>{b||(b=g.headers.get("Content-Type")||"");return k.split(/,/)[1]});e=`data:${b};base64,${f}`}catch(f){e=d.B||""}return J[c]=e})};const M={P:"application/font-woff",R:"application/font-woff",N:"application/font-truetype",v:"application/vnd.ms-fontobject",H:"image/png",F:"image/jpeg",D:"image/jpeg",A:"image/gif",M:"image/tiff",L:"image/svg+xml",O:"image/webp"};function N(a){return(a=/\.([^./]*?)$/g.exec(a))?a[1]:""};function O(a){return t(function*(){const b=a.toDataURL();return b==="data:,"?a.cloneNode(!1):B(b)})}function aa(a,b){return t(function*(){if(a.currentSrc){var d=document.createElement("canvas");const c=d.getContext("2d");d.width=a.clientWidth;d.height=a.clientHeight;c==null||c.drawImage(a,0,0,d.width,d.height);d=d.toDataURL();return B(d)}d=a.poster;d=yield L(d,M[N(d).toLowerCase()]||"",b);return B(d)})}
+function ba(a,b){return t(function*(){try{let d;if(a==null?0:(d=a.contentDocument)==null?0:d.body)return yield P(a.contentDocument.body,b,!0)}catch(d){}return a.cloneNode(!1)})}function ca(a,b){return t(function*(){return E(a,HTMLCanvasElement)?O(a):E(a,HTMLVideoElement)?aa(a,b):E(a,HTMLIFrameElement)?ba(a,b):a.cloneNode(a.tagName!=null&&a.tagName.toUpperCase()==="SVG")})}
+function da(a,b,d){return t(function*(){if(b.tagName!=null&&b.tagName.toUpperCase()==="SVG")return b;let c=[];if(a.tagName!=null&&a.tagName.toUpperCase()==="SLOT"&&a.assignedNodes)c=w(a.assignedNodes());else{let e;if(E(a,HTMLIFrameElement)&&((e=a.contentDocument)==null?0:e.body))c=w(a.contentDocument.body.childNodes);else{let f;c=w(((f=a.shadowRoot)!=null?f:a).childNodes)}}if(c.length===0||E(a,HTMLVideoElement))return b;yield c.reduce((e,f)=>e.then(()=>P(f,d)).then(g=>{g&&b.appendChild(g)}),Promise.resolve());
+return b})}function ea(a,b,d){const c=b.style;if(c){var e=window.getComputedStyle(a);e.cssText?(c.cssText=e.cssText,c.transformOrigin=e.transformOrigin):y(d).forEach(f=>{let g=e.getPropertyValue(f);f==="font-size"&&g.endsWith("px")&&(g=`${Math.floor(parseFloat(g.substring(0,g.length-2)))-.1}px`);E(a,HTMLIFrameElement)&&f==="display"&&g==="inline"&&(g="block");f==="d"&&b.getAttribute("d")&&(g=`path(${b.getAttribute("d")})`);c.setProperty(f,g,e.getPropertyPriority(f))})}}
+function fa(a,b){E(a,HTMLSelectElement)&&(b=Array.from(b.children).find(d=>a.value===d.getAttribute("value")))&&b.setAttribute("selected","")}
+function ha(a,b){return t(function*(){var d=a.querySelectorAll?a.querySelectorAll("use"):[];if(d.length===0)return a;var c={};for(var e=0;e<d.length;e++){var f=d[e].getAttribute("xlink:href");if(f){const g=document.querySelector(f);a.querySelector(f)||!g||c[f]||(c[f]=yield P(g,b,!0))}}d=Object.values(c);if(d.length){c=document.createElementNS("http://www.w3.org/1999/xhtml","svg");c.setAttribute("xmlns","http://www.w3.org/1999/xhtml");c.style.position="absolute";c.style.width="0";c.style.height="0";
+c.style.overflow="hidden";c.style.display="none";e=document.createElementNS("http://www.w3.org/1999/xhtml","defs");c.appendChild(e);for(f=0;f<d.length;f++)e.appendChild(d[f]);a.appendChild(c)}return a})}
+function P(a,b,d){return t(function*(){return d||!b.filter||b.filter(a)?Promise.resolve(a).then(c=>ca(c,b)).then(c=>da(a,c,b)).then(c=>{E(c,Element)&&(ea(a,c,b),G(a,c,":before",b),G(a,c,":after",b),E(a,HTMLTextAreaElement)&&(c.textContent=a.value),E(a,HTMLInputElement)&&c.setAttribute("value",a.value),fa(a,c));return c}).then(c=>ha(c,b)):null})};const Q=/url\((['"]?)([^'"]+?)\1\)/g,ia=/url\([^)]+\)\s*format\((["']?)([^"']+)\1\)/g,ja=/src:\s*(?:url\([^)]+\)\s*format\([^)]+\)[,;]\s*)+/g;function ka(a){const b=[];a.replace(Q,(d,c,e)=>{b.push(e);return d});return b.filter(d=>!H(d))}
+function la(a,b,d,c){return t(function*(){try{const e=d?(new URL(b,d||void 0)).toString():b;let f;f=yield L(e,M[N(b).toLowerCase()]||"",c);return a.replace(new RegExp(`(url\\(['"]?)(${b.replace(/([.*+?^${}()|\[\]\/\\])/g,"\\$1")})(['"]?\\))`,"g"),`$1${f}$3`)}catch(e){}return a})}function ma(a,{I:b}){return b?a.replace(ja,d=>{for(;;){const [c,,e]=ia.exec(d)||[],f=c,g=e;if(!g)return"";if(g===b)return`src: ${f};`}}):a}
+function R(a,b,d){return t(function*(){if(a.search(Q)===-1)return a;const c=ma(a,d);return ka(c).reduce((e,f)=>e.then(g=>la(g,f,b,d)),Promise.resolve(c))})};function S(a,b,d){return t(function*(){var c;const e=(c=b.style)==null?void 0:c.getPropertyValue(a);return e?(c=yield R(e,null,d),b.style.setProperty(a,c,b.style.getPropertyPriority(a)),!0):!1})}function na(a,b){return t(function*(){(yield S("background",a,b))||(yield S("background-image",a,b));(yield S("mask",a,b))||(yield S("-webkit-mask",a,b))||(yield S("mask-image",a,b))||(yield S("-webkit-mask-image",a,b))})}
+function oa(a,b){return t(function*(){const d=E(a,HTMLImageElement);if(d&&!H(a.src)||E(a,SVGImageElement)&&!H(a.href.baseVal)){var c=d?a.src:a.href.baseVal,e=yield L(c,M[N(c).toLowerCase()]||"",b);yield new Promise((f,g)=>{a.onload=f;a.onerror=b.m?(...k)=>{try{f(b.m(...k))}catch(m){g(m)}}:g;a.decode&&(a.decode=f);a.loading==="lazy"&&(a.loading="eager");d?(a.srcset="",a.src=e):a.href.baseVal=e})}})}
+function pa(a,b){return t(function*(){const d=w(a.childNodes).map(c=>T(c,b));yield Promise.all(d).then(()=>a)})}function T(a,b){return t(function*(){E(a,Element)&&(yield na(a,b),yield oa(a,b),yield pa(a,b))})};const U={};function V(a){return t(function*(){var b=U[a];if(b!=null)return b;b=yield(yield fetch(a)).text();b={url:a,cssText:b};return U[a]=b})}function W(a,b){return t(function*(){let d=a.cssText;const c=/url\(["']?([^"')]+)["']?\)/g,e=(d.match(/url\([^)]+\)/g)||[]).map(f=>t(function*(){let g=f.replace(c,"$1");g.startsWith("https://")||(g=(new URL(g,a.url)).href);return I(g,b.i,({result:k})=>{d=d.replace(f,`url(${k})`);return[f,k]})}));return Promise.all(e).then(()=>d)})}
+function X(a){if(a==null)return[];const b=[];a=a.replace(/(\/\*[\s\S]*?\*\/)/gi,"");for(var d=RegExp("((@.*?keyframes [\\s\\S]*?){([\\s\\S]*?}\\s*?)})","gi");;){var c=d.exec(a);if(c===null)break;b.push(c[0])}a=a.replace(d,"");d=/@import[\s\S]*?url\([^)]*\)[\s\S]*?;/gi;for(c=RegExp("((\\s*?(?:\\/\\*[\\s\\S]*?\\*\\/)?\\s*?@media[\\s\\S]*?){([\\s\\S]*?)}\\s*?})|(([\\s\\S]*?){([\\s\\S]*?)})","gi");;){let e=d.exec(a);if(e===null)if(e=c.exec(a),e===null)break;else d.lastIndex=c.lastIndex;else c.lastIndex=
+d.lastIndex;b.push(e[0])}return b}
+function qa(a,b){return t(function*(){const d=[],c=[];a.forEach(e=>{if("cssRules"in e)try{w(e.cssRules||[]).forEach((f,g)=>{if(f.type===CSSRule.IMPORT_RULE){let k=g+1;f=V(f.href).then(m=>W(m,b)).then(m=>X(m).forEach(q=>{try{e.insertRule(q,q.startsWith("@import")?k+=1:e.cssRules.length)}catch(Da){}})).catch(()=>{});c.push(f)}})}catch(f){const g=a.find(k=>k.href==null)||document.styleSheets[0];e.href!=null&&c.push(V(e.href).then(k=>W(k,b)).then(k=>X(k).forEach(m=>{g.insertRule(m,g.cssRules.length)})).catch(()=>
+{}))}});return Promise.all(c).then(()=>{a.forEach(e=>{if("cssRules"in e)try{w(e.cssRules||[]).forEach(f=>{d.push(f)})}catch(f){}});return d})})}function ra(a){return a.filter(b=>b.type===CSSRule.FONT_FACE_RULE).filter(b=>b.style.getPropertyValue("src").search(Q)!==-1)}function sa(a,b){return t(function*(){if(a.ownerDocument==null)throw Error("Provided element is not within a Document");var d=w(a.ownerDocument.styleSheets);d=yield qa(d,b);return ra(d)})}
+function ta(a){function b(c){(c.style.fontFamily||getComputedStyle(c).fontFamily).split(",").forEach(e=>{d.add(e.trim().replace(/["']/g,""))});Array.from(c.children).forEach(e=>{e instanceof HTMLElement&&b(e)})}const d=new Set;b(a);return d}function ua(a,b){return t(function*(){const d=yield sa(a,b),c=ta(a);return(yield Promise.all(d.filter(e=>c.has(e.style.fontFamily.trim().replace(/["']/g,""))).map(e=>R(e.cssText,e.parentStyleSheet?e.parentStyleSheet.href:null,b)))).join("\n")})}
+function va(a,b){return t(function*(){const d=b.j!=null?b.j:b.K?null:yield ua(a,b);if(d){const c=document.createElement("style");c.appendChild(document.createTextNode(d));a.firstChild?a.insertBefore(c,a.firstChild):a.appendChild(c)}})};function wa(a,b={}){return t(function*(){const {width:d,height:c}=A(a,b),e=yield P(a,b,!0);yield va(e,b);yield T(e,b);u(e,b);return yield D(e,d,c)})}
+function xa(a,b={}){return t(function*(){const {width:d,height:c}=A(a,b);var e=yield wa(a,b);e=yield B(e);const f=document.createElement("canvas"),g=f.getContext("2d"),k=b.G||window.devicePixelRatio||1,m=b.h||d,q=b.g||c;f.width=m*k;f.height=q*k;!b.J&&(f.width>16384||f.height>16384)&&(f.width>16384&&f.height>16384?f.width>f.height?(f.height*=16384/f.width,f.width=16384):(f.width*=16384/f.height,f.height=16384):f.width>16384?(f.height*=16384/f.width,f.width=16384):(f.width*=16384/f.height,f.height=
+16384));f.style.width=`${m}`;f.style.height=`${q}`;b.backgroundColor&&(g.fillStyle=b.backgroundColor,g.fillRect(0,0,f.width,f.height));g.drawImage(e,0,0,f.width,f.height);return f})}function ya(a,b={}){return t(function*(){return(yield xa(a,b)).toDataURL()})};const za=["gemini.google.com","corp.google.com","proxy.googlers.com"];function Y(){return document.body.querySelectorAll('[class*="animate"]').length>0}function Z(a){return t(function*(){try{return yield ya(a,{h:a.offsetWidth,g:a.offsetHeight})}catch(d){var b=a.offsetHeight;const c=document.createElement("canvas");c.width=a.offsetWidth;c.height=b;return c.toDataURL("image/png")}})}
+function Aa(){return t(function*(){const a=document.body.offsetWidth,b=document.body.offsetHeight,d=document.body.cloneNode(!0);d.querySelectorAll('[class*="animate"]').forEach(c=>{c.classList.remove(...Array.from(c.classList).filter(e=>e.startsWith("animate")))});d.style.width=`${a}px`;d.style.height=`${b}px`;return d})}
+function Ba(a){return t(function*(){let b=document.body;if(Y()){var d=yield Aa();b=d;document.body.appendChild(d)}d=yield Z(b);Y()&&document.body.removeChild(b);window.parent.postMessage({type:"SEND_SCREENSHOT",image:d,topOffset:document.documentElement.scrollTop},a.origin)})}function Ca(a){return t(function*(){const b={type:"SEND_SCREENSHOT_FOR_DATA_VISUALIZATION",image:yield Z(document.body),topOffset:0};window.parent.postMessage(b,a.origin)})}
+window.addEventListener("message",a=>t(function*(){if(za.some(d=>a.origin.includes(d))){var b=a.data;b&&(b.type==="MAKE_SCREENSHOT"&&(yield Ba(a)),b.type==="MAKE_SCREENSHOT_FOR_DATA_VISUALIZATION"&&(yield Ca(a)))}}));
+</script><script>(function() {
+  // Ensure this script is executed only once
+  if (window.firebaseAuthBridgeScriptLoaded) {
+    return;
+  }
+  window.firebaseAuthBridgeScriptLoaded = true;
+
+  let nextTokenPromiseId = 0;
+
+  // Stores { resolve, reject } for ongoing token requests
+  const pendingTokenPromises = {};
+
+  // Listen for messages from the Host Application
+  window.addEventListener('message', function(event) {
+
+    const messageData = event.data;
+
+  if (messageData && messageData.type === 'RESOLVE_NEW_FIREBASE_TOKEN') {
+      const { success, token, error, promiseId } = messageData ?? {};
+      if (pendingTokenPromises[promiseId]) {
+        if (success) {
+          pendingTokenPromises[promiseId].resolve(token);
+        } else {
+          pendingTokenPromises[promiseId].reject(new Error(error || 'Token refresh failed from host.'));
+        }
+        delete pendingTokenPromises[promiseId];
+      }
+    }
+  });
+
+  // Expose a function for the Generated App to request a new Firebase token
+  window.requestNewFirebaseToken = function() {
+    const currentPromiseId = nextTokenPromiseId++;
+    const promise = new Promise((resolve, reject) => {
+      pendingTokenPromises[currentPromiseId] = { resolve, reject };
+    });
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({
+        type: 'REQUEST_NEW_FIREBASE_TOKEN',
+        promiseId: currentPromiseId
+      }, '*');
+    } else {
+      pendingTokenPromises[currentPromiseId].reject(new Error('No parent window to request token from.'));
+      delete pendingTokenPromises[currentPromiseId];
+    }
+    return promise;
+  };
+})();</script><script>
+let realOriginalGetUserMedia = null;
+if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+  realOriginalGetUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+}
+
+(function() {
+  if (navigator.mediaDevices && navigator.mediaDevices.__proto__) {
+    try {
+      Object.defineProperty(navigator.mediaDevices.__proto__, 'getUserMedia', {
+        get: function() {
+          return undefined; // Or throw an error
+        },
+        configurable: false
+      });
+    } catch (error) {
+      console.error("Error defining prototype getter:", error);
+    }
+  }
+})();
+
+(function() {
+  const pendingMediaResolvers = {};
+  let nextMediaPromiseId = 0;
+
+  function requestMediaPermissions(constraints) {
+    const mediaPromiseId = nextMediaPromiseId++;
+    const promise = new Promise((resolve, reject) => {
+      pendingMediaResolvers[mediaPromiseId] = (granted) => {
+        delete pendingMediaResolvers[mediaPromiseId];
+        resolve(granted);
+      };
+    });
+
+    window.parent.postMessage({
+      type: 'requestMediaPermission',
+      constraints: constraints,
+      promiseId: mediaPromiseId,
+    }, '*');
+
+    return promise;
+  }
+
+  let originalGetUserMedia = realOriginalGetUserMedia;
+
+  function interceptGetUserMedia() {
+    if (navigator.mediaDevices) {
+      Object.defineProperty(navigator.mediaDevices, 'getUserMedia', {
+        value: function(constraints) {
+          return requestMediaPermissions(constraints).then((granted) => {
+            if (granted) {
+              if (originalGetUserMedia) {
+                return originalGetUserMedia(constraints);
+              } else {
+                throw new Error("Original getUserMedia not available.");
+              }
+            } else {
+              throw new DOMException('Permission denied', 'NotAllowedError');
+            }
+          });
+        },
+        writable: false,
+        configurable: false
+      });
+    }
+  }
+
+  interceptGetUserMedia();
+
+  const observer = new MutationObserver(function(mutationsList, observer) {
+    for (const mutation of mutationsList) {
+      if (mutation.type === 'reconfigured' && mutation.name === 'getUserMedia' && mutation.object === navigator.mediaDevices) {
+        interceptGetUserMedia();
+      } else if (mutation.type === 'attributes' && mutation.attributeName === 'getUserMedia' && mutation.target === navigator.mediaDevices) {
+        interceptGetUserMedia();
+      } else if (mutation.type === 'childList' && mutation.addedNodes) {
+        mutation.addedNodes.forEach(node => {
+          if (node === navigator.mediaDevices) {
+            interceptGetUserMedia();
+          }
+        });
+      }
+    }
+  });
+
+  function interceptSpeechRecognition() {
+    if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
+      return;
+    }
+
+    const OriginalSpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    const SpeechRecognitionWrapper = function(...args) {
+      const recognizer = new OriginalSpeechRecognition(...args);
+      const originalStart = recognizer.start.bind(recognizer);
+
+      recognizer.start = function() {
+        requestMediaPermissions({ audio: true }).then(granted => {
+          if (granted) {
+            originalStart();
+          } else {
+            const errorEvent = new SpeechRecognitionErrorEvent('error');
+            errorEvent.error = 'not-allowed'; // This is the standard error for permission denial.
+            recognizer.dispatchEvent(errorEvent);
+          }
+        });
+      };
+
+      return recognizer;
+    };
+
+    SpeechRecognitionWrapper.prototype = OriginalSpeechRecognition.prototype;
+    SpeechRecognitionWrapper.prototype.constructor = SpeechRecognitionWrapper;
+
+    if (window.SpeechRecognition) {
+      window.SpeechRecognition = SpeechRecognitionWrapper;
+    }
+    if (window.webkitSpeechRecognition) {
+      window.webkitSpeechRecognition = SpeechRecognitionWrapper;
+    }
+  }
+
+  interceptSpeechRecognition();
+
+  window.addEventListener('message', function(event) {
+    if (event.data) {
+      if (event.data.type === 'resolveMediaPermission') {
+        const { promiseId, granted } = event.data;
+        if (pendingMediaResolvers[promiseId]) {
+          pendingMediaResolvers[promiseId](granted);
+        }
+      }
+    }
+  });
+
+})();</script><script>((function(modelInformation) {
+  const originalFetch = window.fetch;
+  // TODO: b/421908508 - Move these out of the script and match all generative AI model calls.
+  let googleLlmBaseApiUrls = [
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.textModelName + ':streamGenerateContent',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.textModelName + ':generateContent',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageModelName + ':predict',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageModelName + ':predictLongRunning',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageEditModelName + ':generateContent',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageTransformModelName + ':generateContent',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.videoModelName + ':predict',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.videoModelName + ':predictLongRunning',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.ttsModelName + ':generateContent',
+  ];
+  modelInformation.deprecatedTextModelNames.forEach((modelName) => {
+    googleLlmBaseApiUrls.push(
+      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':streamGenerateContent',
+      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':generateContent',
+    );
+  });
+  modelInformation.deprecatedImageModelNames.forEach((modelName) => {
+    googleLlmBaseApiUrls.push(
+      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':predict',
+      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':predictLongRunning',
+    );
+  });
+
+  const pendingFetchResolvers = {};
+  let nextPromiseId = 0;
+
+  function handleStringInput(input, optionsArgument) {
+    const actualUrl = input;
+    const fetchCallArgs = [actualUrl, optionsArgument];
+    const effectiveOptions = optionsArgument || {};
+    const bodyForApiKeyCheck = effectiveOptions.body;
+    const bodyForPostMessage = effectiveOptions.body;
+    return { actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage };
+  }
+
+  function handleRequestInput(input, optionsArgument) {
+    const actualUrl = input.url;
+    const fetchCallArgs = [input, optionsArgument];
+    const effectiveOptions = { method: input.method, headers: new Headers(input.headers) };
+    let bodyForApiKeyCheck;
+    let bodyForPostMessage;
+
+    if (optionsArgument) {
+      if (optionsArgument.method) effectiveOptions.method = optionsArgument.method;
+      if (optionsArgument.headers) effectiveOptions.headers = new Headers(optionsArgument.headers);
+      if ('body' in optionsArgument) {
+        bodyForApiKeyCheck = optionsArgument.body;
+        bodyForPostMessage = optionsArgument.body;
+      } else {
+        bodyForApiKeyCheck = undefined;
+        bodyForPostMessage = input.body;
+      }
+    } else {
+      bodyForApiKeyCheck = undefined;
+      bodyForPostMessage = input.body;
+    }
+    return { actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage };
+  }
+
+  window.fetch = function(input, optionsArgument) {
+    let actualUrl;
+    let fetchCallArgs;
+    let effectiveOptions = {};
+    let bodyForApiKeyCheck;
+    let bodyForPostMessage;
+
+    if (typeof input === 'string') {
+      ({actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage} = handleStringInput(input, optionsArgument));
+    } else if (input instanceof Request) {
+      ({actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage} = handleRequestInput(input, optionsArgument));
+    } else {
+      return originalFetch.apply(window, [input, optionsArgument]);
+    }
+
+    effectiveOptions.method = effectiveOptions.method || 'GET';
+    if (!effectiveOptions.headers) {
+      effectiveOptions.headers = new Headers();
+    }
+
+
+    if (typeof actualUrl === 'string' && googleLlmBaseApiUrls.some((url) => actualUrl.startsWith(url))) {
+      let apiKeyIsNull = true;
+
+      const regex = new RegExp("models/([^:]+)");
+      const modelNameMatch = actualUrl.match(regex);
+      const modelName = modelNameMatch ? modelNameMatch[1] : 'unspecified';
+
+
+      try {
+        const urlObject = new URL(actualUrl);  // Use URL object for robust parsing
+        const apiKeyParam = urlObject.searchParams.get('key');
+        if (apiKeyParam) {
+          apiKeyIsNull = false;
+        }
+      } catch (e) {
+        // Continue checks even if URL parsing fails
+      }
+
+      if (apiKeyIsNull && effectiveOptions.headers) {
+        const h = new Headers(effectiveOptions.headers);
+        const apiKeyHeaderValue = h.get('X-API-Key') || h.get('x-api-key');
+        if (apiKeyHeaderValue) {
+          apiKeyIsNull = false;
+          return originalFetch.apply(window, fetchCallArgs);
+        }
+      }
+
+      if (apiKeyIsNull && effectiveOptions.method && ['POST', 'PUT', 'PATCH'].includes(effectiveOptions.method.toUpperCase()) && typeof bodyForApiKeyCheck === 'string') {
+        try {
+          const bodyData = JSON.parse(bodyForApiKeyCheck);
+          if (bodyData && bodyData.apiKey) {
+            apiKeyIsNull = false;
+            return originalFetch.apply(window, fetchCallArgs);
+          }
+        } catch (e) {
+          // Ignore JSON parsing errors
+        }
+      }
+
+      if(apiKeyIsNull) {
+        const promiseId = nextPromiseId++;
+        const promise = new Promise((resolve) => {
+          pendingFetchResolvers[promiseId] = (resolvedResponse) => {
+            delete pendingFetchResolvers[promiseId];
+            resolve(resolvedResponse);
+          };
+        });
+
+        let serializedBodyForPostMessage;
+        if (typeof bodyForPostMessage === 'string' || bodyForPostMessage == null) {
+            serializedBodyForPostMessage = bodyForPostMessage;
+        } else if (bodyForPostMessage instanceof ReadableStream) {
+            serializedBodyForPostMessage = null;
+        } else {
+            try {
+                serializedBodyForPostMessage = JSON.stringify(bodyForPostMessage);
+            } catch (e) {
+                serializedBodyForPostMessage = null;
+            }
+        }
+
+        const messageOptions = {
+            method: effectiveOptions.method,
+            headers: Object.fromEntries(new Headers(effectiveOptions.headers).entries()),
+            body: serializedBodyForPostMessage
+        };
+
+        window.parent.postMessage({
+          type: 'requestFetch',
+          url: actualUrl,
+          modelName: modelName,
+          options: messageOptions,
+          promiseId: promiseId,
+        }, '*');
+
+        return promise;
+      }
+      return originalFetch.apply(window, fetchCallArgs);
+    }
+    return originalFetch.apply(window, fetchCallArgs);
+  };
+
+  window.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'resolveFetch') {
+      const { promiseId, response } = event.data;
+      if (pendingFetchResolvers[promiseId]) {
+        try {
+          const reconstructedResponse = new Response(response.body, {
+            status: response.status,
+            statusText: response.statusText,
+            headers: new Headers(response.headers),
+          });
+          pendingFetchResolvers[promiseId](reconstructedResponse);
+        } catch (error) {
+          pendingFetchResolvers[promiseId](new Response(null, { status: 500, statusText: "Interceptor Response Reconstruction Error" }));
+        }
+      }
+    }
+  });
+
+}))({"textModelName":"gemini-2.5-flash-preview-09-2025","imageModelName":"imagen-4.0-generate-001","imageEditModelName":"gemini-2.5-flash-image-preview","imageTransformModelName":"gemini-2.5-flash-image-preview","videoModelName":"veo-2.0-generate-001","ttsModelName":"gemini-2.5-flash-preview-tts","deprecatedTextModelNames":["gemini-2.0-flash","gemini-2.5-flash-preview-04-17","gemini-2.5-flash-preview-05-20"],"deprecatedImageModelNames":["imagen-3.0-generate-001","imagen-3.0-generate-002"]})</script><script>(function() {
+  const originalConsoleLog = console.log;
+  const originalConsoleError = console.error;
+
+    /**
+   * Normalizes an error event or a promise rejection reason into a structured error object.
+   * @param {*} errorEventOrReason The error object or reason.
+   * @return {object} Structured error data { message, name, stack }.
+   */
+  function getErrorObject(errorEventOrReason) {
+    if (errorEventOrReason instanceof Error) {
+      return {
+        message: errorEventOrReason.message,
+        name: errorEventOrReason.name,
+        stack: errorEventOrReason.stack,
+      };
+    }
+    // Fallback for non-Error objects.
+    try {
+      return {
+        message: JSON.stringify(errorEventOrReason),
+        name: 'UnknownErrorType',
+        stack: null,
+      };
+    } catch (e) {
+      return {
+        message: String(errorEventOrReason),
+        name: 'UnknownErrorTypeNonStringifiable',
+        stack: null,
+      };
+    }
+  }
+
+  /**
+   * Converts an array of arguments (from log/error) into a single string.
+   * Handles Error objects specially to include their message and stack.
+   * @param {Array<*>} args - Arguments passed to console methods.
+   * @return {string} A string representation of the arguments.
+   */
+  function stringifyArgs(args) {
+    return args
+      .map((arg) => {
+        if (arg instanceof Error) {
+          const {message, stack} = arg;
+          return `Error: ${message}${stack ? ('\nStack: ' + stack) : ''}`;
+        }
+        if (typeof arg === 'object' && arg !== null) {
+          try {
+            return JSON.stringify(arg);
+          } catch (error) {
+            return '[Circular Object]';
+          }
+        } else {
+          return String(arg);
+        }
+      })
+      .join(' ');
+  }
+
+  console.log = function(...args) {
+    const logString = stringifyArgs(args);
+    window.parent.postMessage({ type: 'log', message: logString }, '*');
+    originalConsoleLog.apply(console, args);
+  };
+
+  console.error = function(...args) {
+    let errorData;
+    if (args.length > 0 && args[0] instanceof Error) {
+      const err = args[0];
+      // If the first arg is an Error, capture its details.
+      errorData = {
+        type: 'error',
+        source: 'CONSOLE_ERROR',
+        ...getErrorObject(err),
+        rawArgsString: stringifyArgs(args.slice(1)),
+        timestamp: new Date().toISOString(),
+      };
+    } else {
+      // If not an Error object, treat all args as a general error message.
+      errorData = {
+        type: 'error',
+        source: 'CONSOLE_ERROR',
+        message: stringifyArgs(args),
+        name: 'ConsoleLoggedError',
+        stack: null,
+        timestamp: new Date().toISOString(),
+      };
+    }
+    window.parent.postMessage(errorData, '*');
+    originalConsoleError.apply(console, args);
+  };
+
+  // Listen for global unhandled synchronous errors.
+  window.addEventListener('error', function(event) {
+    const errorDetails = event.error ? getErrorObject(event.error) : {
+      message: event.message,
+      name: 'GlobalError',
+      stack: null,
+      filename: event.filename,
+      lineno: event.lineno,
+      colno: event.colno,
+    };
+
+    window.parent.postMessage({
+      type: 'error',
+      source: 'global',
+      ...errorDetails,
+      message: errorDetails.message || event.message,
+      timestamp: new Date().toISOString(),
+    }, '*');
+  });
+
+  // Listen for unhandled promise rejections (asynchronous errors).
+  window.addEventListener('unhandledrejection', function(event) {
+    const errorDetails = getErrorObject(event.reason);
+
+    window.parent.postMessage({
+      type: 'error',
+      source: 'unhandledrejection',
+      ...errorDetails,
+      message: errorDetails.message || 'Unhandled Promise Rejection',
+      timestamp: new Date().toISOString(),
+    }, '*');
+  });
+
+})();</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UCAF Framework: Steelman &amp; Critique Visualized</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" crossorigin="anonymous"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Markdown Parser for Gemini Output -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" crossorigin="anonymous"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap');
+
+        :root {
+            --color-bg: #F5F2EB; /* Warm Neutral - Sand */
+            --color-card: #FFFFFF;
+            --color-text: #2D3748;
+            --color-accent: #C05621; /* Burnt Orange */
+            --color-secondary: #2C5282; /* Muted Navy */
+            --color-tertiary: #38B2AC; /* Teal */
+        }
+
+        body {
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            font-family: 'Inter', sans-serif;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ccc; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #aaa; 
+        }
+
+        .matrix-cell {
+            transition: all 0.3s ease;
+        }
+        .matrix-cell:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+
+        .step-card {
+            border-left: 4px solid transparent;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+        }
+        .step-card.active {
+            border-left-color: var(--color-accent);
+            background-color: #FFFBF0;
+        }
+
+        /* Loading Animation for AI */
+        .typing-indicator span {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background-color: #C05621;
+            border-radius: 50%;
+            animation: typing 1s infinite ease-in-out;
+            margin: 0 2px;
+        }
+        .typing-indicator span:nth-child(1) { animation-delay: 0s; }
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.5); opacity: 1; }
+        }
+        
+        /* Markdown Styles for AI Output */
+        .prose ul { list-style-type: disc; padding-left: 1.5em; margin-top: 0.5em; margin-bottom: 0.5em; }
+        .prose li { margin-bottom: 0.25em; }
+        .prose strong { font-weight: 700; color: #2C5282; }
+        .prose p { margin-bottom: 0.75em; }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals (Sand/Beige background) with Burnt Orange and Muted Navy accents. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0px}.-left-12{left:-3rem}.bottom-\[-40px\]{bottom:-40px}.left-1\/2{left:50%}.right-0{right:0px}.top-0{top:0px}.top-1\/2{top:50%}.z-10{z-index:10}.mx-auto{margin-left:auto;margin-right:auto}.mb-1{margin-bottom:0.25rem}.mb-2{margin-bottom:0.5rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.mr-2{margin-right:0.5rem}.mt-12{margin-top:3rem}.mt-2{margin-top:0.5rem}.mt-4{margin-top:1rem}.mt-8{margin-top:2rem}.block{display:block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.aspect-\[4\/3\]{aspect-ratio:4/3}.h-2{height:0.5rem}.h-32{height:8rem}.h-full{height:100%}.min-h-\[150px\]{min-height:150px}.min-h-\[200px\]{min-height:200px}.w-48{width:12rem}.w-64{width:16rem}.w-full{width:100%}.max-w-2xl{max-width:42rem}.max-w-3xl{max-width:48rem}.max-w-4xl{max-width:56rem}.max-w-7xl{max-width:80rem}.-translate-x-1\/2{--tw-translate-x:-50%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.-translate-y-1\/2{--tw-translate-y:-50%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.-rotate-90{--tw-rotate:-90deg;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.cursor-pointer{cursor:pointer}.appearance-none{-webkit-appearance:none;appearance:none}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.grid-rows-2{grid-template-rows:repeat(2, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-end{align-items:flex-end}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:0.25rem}.gap-2{gap:0.5rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.gap-8{gap:2rem}.space-y-12 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(3rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(3rem * var(--tw-space-y-reverse))}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.space-y-3 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.75rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.space-y-6 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem * var(--tw-space-y-reverse))}.rounded{border-radius:0.25rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.rounded-t-xl{border-top-left-radius:0.75rem;border-top-right-radius:0.75rem}.border{border-width:1px}.border-2{border-width:2px}.border-b{border-bottom-width:1px}.border-l-4{border-left-width:4px}.border-t{border-top-width:1px}.border-t-4{border-top-width:4px}.border-blue-200{--tw-border-opacity:1;border-color:rgb(191 219 254 / var(--tw-border-opacity, 1))}.border-gray-100{--tw-border-opacity:1;border-color:rgb(243 244 246 / var(--tw-border-opacity, 1))}.border-gray-200{--tw-border-opacity:1;border-color:rgb(229 231 235 / var(--tw-border-opacity, 1))}.border-gray-300{--tw-border-opacity:1;border-color:rgb(209 213 219 / var(--tw-border-opacity, 1))}.border-gray-700{--tw-border-opacity:1;border-color:rgb(55 65 81 / var(--tw-border-opacity, 1))}.border-gray-800{--tw-border-opacity:1;border-color:rgb(31 41 55 / var(--tw-border-opacity, 1))}.border-green-200{--tw-border-opacity:1;border-color:rgb(187 247 208 / var(--tw-border-opacity, 1))}.border-indigo-100{--tw-border-opacity:1;border-color:rgb(224 231 255 / var(--tw-border-opacity, 1))}.border-indigo-200{--tw-border-opacity:1;border-color:rgb(199 210 254 / var(--tw-border-opacity, 1))}.border-indigo-500{--tw-border-opacity:1;border-color:rgb(99 102 241 / var(--tw-border-opacity, 1))}.border-orange-200{--tw-border-opacity:1;border-color:rgb(254 215 170 / var(--tw-border-opacity, 1))}.border-orange-300{--tw-border-opacity:1;border-color:rgb(253 186 116 / var(--tw-border-opacity, 1))}.border-orange-500{--tw-border-opacity:1;border-color:rgb(249 115 22 / var(--tw-border-opacity, 1))}.border-yellow-200{--tw-border-opacity:1;border-color:rgb(254 240 138 / var(--tw-border-opacity, 1))}.bg-blue-100{--tw-bg-opacity:1;background-color:rgb(219 234 254 / var(--tw-bg-opacity, 1))}.bg-blue-50{--tw-bg-opacity:1;background-color:rgb(239 246 255 / var(--tw-bg-opacity, 1))}.bg-gray-200{--tw-bg-opacity:1;background-color:rgb(229 231 235 / var(--tw-bg-opacity, 1))}.bg-gray-50{--tw-bg-opacity:1;background-color:rgb(249 250 251 / var(--tw-bg-opacity, 1))}.bg-gray-800{--tw-bg-opacity:1;background-color:rgb(31 41 55 / var(--tw-bg-opacity, 1))}.bg-green-100{--tw-bg-opacity:1;background-color:rgb(220 252 231 / var(--tw-bg-opacity, 1))}.bg-green-50{--tw-bg-opacity:1;background-color:rgb(240 253 244 / var(--tw-bg-opacity, 1))}.bg-green-600{--tw-bg-opacity:1;background-color:rgb(22 163 74 / var(--tw-bg-opacity, 1))}.bg-indigo-50{--tw-bg-opacity:1;background-color:rgb(238 242 255 / var(--tw-bg-opacity, 1))}.bg-indigo-600{--tw-bg-opacity:1;background-color:rgb(79 70 229 / var(--tw-bg-opacity, 1))}.bg-orange-100{--tw-bg-opacity:1;background-color:rgb(255 237 213 / var(--tw-bg-opacity, 1))}.bg-orange-50{--tw-bg-opacity:1;background-color:rgb(255 247 237 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-white\/80{background-color:rgb(255 255 255 / 0.8)}.bg-yellow-50{--tw-bg-opacity:1;background-color:rgb(254 252 232 / var(--tw-bg-opacity, 1))}.p-4{padding:1rem}.p-3{padding:0.75rem}.p-6{padding:1.5rem}.p-8{padding:2rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-4{padding-left:1rem;padding-right:1rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-8{padding-top:2rem;padding-bottom:2rem}.pb-2{padding-bottom:0.5rem}.pl-4{padding-left:1rem}.pt-6{padding-top:1.5rem}.pt-8{padding-top:2rem}.text-center{text-align:center}.text-right{text-align:right}.font-serif{font-family:ui-serif, Georgia, Cambria, "Times New Roman", Times, serif}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.font-normal{font-weight:400}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.italic{font-style:italic}.leading-relaxed{line-height:1.625}.tracking-wide{letter-spacing:0.025em}.tracking-widest{letter-spacing:0.1em}.text-blue-300{--tw-text-opacity:1;color:rgb(147 197 253 / var(--tw-text-opacity, 1))}.text-blue-500{--tw-text-opacity:1;color:rgb(59 130 246 / var(--tw-text-opacity, 1))}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.text-blue-700{--tw-text-opacity:1;color:rgb(29 78 216 / var(--tw-text-opacity, 1))}.text-blue-800{--tw-text-opacity:1;color:rgb(30 64 175 / var(--tw-text-opacity, 1))}.text-blue-900{--tw-text-opacity:1;color:rgb(30 58 138 / var(--tw-text-opacity, 1))}.text-gray-300{--tw-text-opacity:1;color:rgb(209 213 219 / var(--tw-text-opacity, 1))}.text-gray-400{--tw-text-opacity:1;color:rgb(156 163 175 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99 / var(--tw-text-opacity, 1))}.text-gray-700{--tw-text-opacity:1;color:rgb(55 65 81 / var(--tw-text-opacity, 1))}.text-gray-800{--tw-text-opacity:1;color:rgb(31 41 55 / var(--tw-text-opacity, 1))}.text-green-300{--tw-text-opacity:1;color:rgb(134 239 172 / var(--tw-text-opacity, 1))}.text-green-500{--tw-text-opacity:1;color:rgb(34 197 94 / var(--tw-text-opacity, 1))}.text-green-700{--tw-text-opacity:1;color:rgb(21 128 61 / var(--tw-text-opacity, 1))}.text-green-800{--tw-text-opacity:1;color:rgb(22 101 52 / var(--tw-text-opacity, 1))}.text-indigo-600{--tw-text-opacity:1;color:rgb(79 70 229 / var(--tw-text-opacity, 1))}.text-indigo-900{--tw-text-opacity:1;color:rgb(49 46 129 / var(--tw-text-opacity, 1))}.text-orange-300{--tw-text-opacity:1;color:rgb(253 186 116 / var(--tw-text-opacity, 1))}.text-orange-500{--tw-text-opacity:1;color:rgb(249 115 22 / var(--tw-text-opacity, 1))}.text-orange-600{--tw-text-opacity:1;color:rgb(234 88 12 / var(--tw-text-opacity, 1))}.text-orange-700{--tw-text-opacity:1;color:rgb(194 65 12 / var(--tw-text-opacity, 1))}.text-orange-800{--tw-text-opacity:1;color:rgb(154 52 18 / var(--tw-text-opacity, 1))}.text-orange-900{--tw-text-opacity:1;color:rgb(124 45 18 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-yellow-300{--tw-text-opacity:1;color:rgb(253 224 71 / var(--tw-text-opacity, 1))}.text-yellow-700{--tw-text-opacity:1;color:rgb(161 98 7 / var(--tw-text-opacity, 1))}.text-yellow-800{--tw-text-opacity:1;color:rgb(133 77 14 / var(--tw-text-opacity, 1))}.accent-orange-600{accent-color:#ea580c}.shadow{--tw-shadow:0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.ring-gray-400{--tw-ring-opacity:1;--tw-ring-color:rgb(156 163 175 / var(--tw-ring-opacity, 1))}.ring-gray-600{--tw-ring-opacity:1;--tw-ring-color:rgb(75 85 99 / var(--tw-ring-opacity, 1))}.ring-offset-1{--tw-ring-offset-width:1px}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.hover\:bg-blue-100:hover{--tw-bg-opacity:1;background-color:rgb(219 234 254 / var(--tw-bg-opacity, 1))}.hover\:bg-gray-100:hover{--tw-bg-opacity:1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1))}.hover\:bg-gray-300:hover{--tw-bg-opacity:1;background-color:rgb(209 213 219 / var(--tw-bg-opacity, 1))}.hover\:bg-gray-50:hover{--tw-bg-opacity:1;background-color:rgb(249 250 251 / var(--tw-bg-opacity, 1))}.hover\:bg-gray-700:hover{--tw-bg-opacity:1;background-color:rgb(55 65 81 / var(--tw-bg-opacity, 1))}.hover\:bg-green-100:hover{--tw-bg-opacity:1;background-color:rgb(220 252 231 / var(--tw-bg-opacity, 1))}.hover\:bg-indigo-700:hover{--tw-bg-opacity:1;background-color:rgb(67 56 202 / var(--tw-bg-opacity, 1))}.hover\:bg-orange-200:hover{--tw-bg-opacity:1;background-color:rgb(254 215 170 / var(--tw-bg-opacity, 1))}.hover\:bg-yellow-100:hover{--tw-bg-opacity:1;background-color:rgb(254 249 195 / var(--tw-bg-opacity, 1))}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.focus\:ring-2:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.focus\:ring-indigo-400:focus{--tw-ring-opacity:1;--tw-ring-color:rgb(129 140 248 / var(--tw-ring-opacity, 1))}.group:hover .group-hover\:text-blue-500{--tw-text-opacity:1;color:rgb(59 130 246 / var(--tw-text-opacity, 1))}.group:hover .group-hover\:text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.group:hover .group-hover\:text-green-500{--tw-text-opacity:1;color:rgb(34 197 94 / var(--tw-text-opacity, 1))}.group:hover .group-hover\:text-yellow-500{--tw-text-opacity:1;color:rgb(234 179 8 / var(--tw-text-opacity, 1))}@media (min-width: 640px){.sm\:flex-row{flex-direction:row}.sm\:pt-0{padding-top:0px}}@media (min-width: 768px){.md\:col-span-1{grid-column:span 1 / span 1}.md\:col-span-2{grid-column:span 2 / span 2}.md\:mt-0{margin-top:0px}.md\:aspect-\[16\/9\]{aspect-ratio:16/9}.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.md\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.md\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}.md\:flex-row{flex-direction:row}.md\:p-8{padding:2rem}.md\:text-5xl{font-size:3rem;line-height:1}.md\:text-sm{font-size:0.875rem;line-height:1.25rem}.md\:text-xl{font-size:1.25rem;line-height:1.75rem}}@media (min-width: 1024px){.lg\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}}</style></head>
+<body class="p-4 md:p-8 relative">
+
+    <div class="max-w-7xl mx-auto space-y-12">
+
+        <!-- Header Section -->
+        <header class="text-center space-y-4 py-8 border-b border-gray-300 relative">
+            <div class="absolute top-0 right-0 flex flex-col sm:flex-row gap-2">
+                <button onclick="downloadPage()" class="text-xs bg-white border border-gray-300 px-3 py-1 rounded hover:bg-gray-50 text-gray-600 flex items-center gap-1 shadow-sm transition-colors" title="Download this report as an HTML file">
+                    <i class="fas fa-download text-blue-500"></i> Download Report
+                </button>
+                <button onclick="promptForKey()" class="text-xs bg-white border border-gray-300 px-3 py-1 rounded hover:bg-gray-50 text-gray-600 flex items-center gap-1 shadow-sm transition-colors" title="Update API Key">
+                    <i class="fas fa-key text-orange-500"></i> API Key
+                </button>
+            </div>
+            <div class="flex justify-center items-center gap-2 mb-2 pt-6 sm:pt-0">
+                 <span class="text-xs font-bold tracking-widest text-orange-600 uppercase border border-orange-200 px-2 py-1 rounded bg-orange-50">Gemini Powered</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-800">UCAF: The Missing Manual</h1>
+            <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+                A visual reconstruction and critique of the PeoplePlus.ai Use Case Adoption Framework.
+                Exploring the gap between high-level coordination and operational reality.
+            </p>
+            <div class="flex justify-center gap-4 mt-4 flex-wrap">
+                <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold">Steelman Analysis</span>
+                <span class="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-sm font-semibold">Critical Gaps</span>
+                <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold">Interactive Tools</span>
+            </div>
+        </header>
+
+        <!-- Section 1: The Steelman (Text & Key Concepts) -->
+        <section class="grid md:grid-cols-2 gap-8 items-center">
+            <div class="space-y-4">
+                <h2 class="text-2xl font-bold text-gray-800">The Strongest Case for UCAF</h2>
+                <p class="text-gray-700 leading-relaxed">
+                    The Use Case Adoption Framework (UCAF) identifies a critical truth: <strong>Scale is not about better models, but better infrastructure.</strong> 
+                    While value is created in vertical domains (like healthcare or agriculture), the friction that prevents scaling is almost always horizontal (compute, data quality, safety).
+                </p>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="font-bold text-lg mb-2 text-indigo-900"><i class="fas fa-check-circle text-green-500 mr-2"></i>Core Strengths</h3>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><span class="font-semibold">Diagnostic Tool:</span> Focuses on navigation and learning rather than a rigid scorecard.</li>
+                        <li><span class="font-semibold">Lived Experience:</span> Validated by 25+ organizations (e.g., Migrasia for migrant worker justice).</li>
+                        <li><span class="font-semibold">The "Value" vs "Scale" Split:</span> Separates domain expertise from infrastructure requirements.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+                <h3 class="font-bold text-lg mb-4 text-center">The Central Thesis</h3>
+                <div class="flex flex-col gap-4">
+                    <div class="flex items-center gap-4 p-4 bg-blue-50 rounded-lg">
+                        <div class="text-3xl text-blue-600"><i class="fas fa-arrow-up"></i></div>
+                        <div>
+                            <h4 class="font-bold text-blue-900">Vertical Depth</h4>
+                            <p class="text-xs text-blue-700">Domain specificity, user trust, local context.</p>
+                        </div>
+                    </div>
+                    <div class="text-center text-gray-400 font-bold">+</div>
+                    <div class="flex items-center gap-4 p-4 bg-orange-50 rounded-lg">
+                        <div class="text-3xl text-orange-600"><i class="fas fa-arrows-alt-h"></i></div>
+                        <div>
+                            <h4 class="font-bold text-orange-900">Horizontal Breadth</h4>
+                            <p class="text-xs text-orange-700">Compute, Data Governance, Safety, Interpretability.</p>
+                        </div>
+                    </div>
+                    <div class="text-center text-gray-400 font-bold">=</div>
+                    <div class="p-3 bg-green-600 text-white text-center rounded-lg font-bold shadow-lg">
+                        Sustainable Scale
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: The Missing Framework (Visualized 2x2 Matrix) -->
+        <section class="space-y-6">
+            <div class="border-l-4 border-orange-500 pl-4">
+                <h2 class="text-2xl font-bold text-gray-800">Critique #1: The Invisible Framework</h2>
+                <p class="text-gray-600 max-w-4xl">
+                    The original critique notes: <em>"We see a 2x2 conceptual framing... but we don't see the map."</em>
+                    Below is a reconstruction of the <strong>Implied UCAF Matrix</strong> based on the critique's description.
+                </p>
+            </div>
+
+            <div class="bg-white p-4 md:p-8 rounded-xl shadow-lg border border-gray-200">
+                <!-- Matrix Container -->
+                <div class="relative w-full aspect-[4/3] md:aspect-[16/9] max-w-4xl mx-auto">
+                    <!-- Y Axis Label -->
+                    <div class="absolute -left-12 top-1/2 -translate-y-1/2 -rotate-90 text-sm font-bold text-gray-500 tracking-widest text-center w-48">
+                        VERTICAL VALUE<br><span class="text-xs font-normal">(Domain Specificity)</span>
+                    </div>
+                    <!-- X Axis Label -->
+                    <div class="absolute bottom-[-40px] left-1/2 -translate-x-1/2 text-sm font-bold text-gray-500 tracking-widest text-center w-64">
+                        HORIZONTAL MATURITY<br><span class="text-xs font-normal">(Infrastructure &amp; Enablers)</span>
+                    </div>
+
+                    <!-- Grid -->
+                    <div class="grid grid-cols-2 grid-rows-2 gap-4 h-full w-full">
+                        
+                        <!-- Q1: High Value, Low Horizontal -->
+                        <div class="matrix-cell bg-yellow-50 border-2 border-yellow-200 rounded-lg p-4 flex flex-col justify-between cursor-pointer group hover:bg-yellow-100 relative">
+                            <div>
+                                <h4 class="font-bold text-yellow-800">The "Boutique" Trap</h4>
+                                <p class="text-xs md:text-sm text-yellow-700 mt-2">High value for a few, but crashes under load. Custom code, manual data cleaning.</p>
+                            </div>
+                            <div class="text-right text-3xl text-yellow-300 group-hover:text-yellow-500"><i class="fas fa-star-half-alt"></i></div>
+                        </div>
+
+                        <!-- Q2: High Value, High Horizontal -->
+                        <div class="matrix-cell bg-green-50 border-2 border-green-200 rounded-lg p-4 flex flex-col justify-between cursor-pointer group hover:bg-green-100 relative">
+                            <div>
+                                <h4 class="font-bold text-green-800">Sustainable Scale</h4>
+                                <p class="text-xs md:text-sm text-green-700 mt-2">The Goal. Domain expertise runs on robust, safe, interoperable rails.</p>
+                            </div>
+                            <div class="text-right text-3xl text-green-300 group-hover:text-green-500"><i class="fas fa-rocket"></i></div>
+                        </div>
+
+                        <!-- Q3: Low Value, Low Horizontal -->
+                        <div class="matrix-cell bg-gray-50 border-2 border-gray-200 rounded-lg p-4 flex flex-col justify-between cursor-pointer group hover:bg-gray-100 relative">
+                            <div>
+                                <h4 class="font-bold text-gray-800">Pilot / Experiment</h4>
+                                <p class="text-xs md:text-sm text-gray-600 mt-2">Testing hypotheses. No scale, value unproven.</p>
+                            </div>
+                            <div class="text-right text-3xl text-gray-300 group-hover:text-gray-500"><i class="fas fa-flask"></i></div>
+                        </div>
+
+                        <!-- Q4: Low Value, High Horizontal -->
+                        <div class="matrix-cell bg-blue-50 border-2 border-blue-200 rounded-lg p-4 flex flex-col justify-between cursor-pointer group hover:bg-blue-100 relative">
+                            <div>
+                                <h4 class="font-bold text-blue-800">Infrastructure Play</h4>
+                                <p class="text-xs md:text-sm text-blue-700 mt-2">Robust tech looking for a problem. "Solution in search of a problem."</p>
+                            </div>
+                            <div class="text-right text-3xl text-blue-300 group-hover:text-blue-500"><i class="fas fa-server"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NEW FEATURE 1: Gemini UCAF Mapper -->
+        <section class="space-y-6">
+            <div class="border-l-4 border-indigo-500 pl-4">
+                <h2 class="text-2xl font-bold text-gray-800">✨ The Vertical-to-Horizontal Mapper</h2>
+                <p class="text-gray-600">
+                    The framework says "Horizontal Enablers unlock Vertical Value." But what does that mean for <em>your</em> project?
+                    Enter a specific use case below, and our AI will generate the missing "Infrastructure Map" tailored to your domain.
+                </p>
+            </div>
+
+            <div class="bg-indigo-50 p-6 rounded-xl border border-indigo-100 shadow-sm">
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="md:col-span-1 space-y-3">
+                        <label class="block text-sm font-bold text-indigo-900 uppercase tracking-wide">Your Vertical Use Case</label>
+                        <textarea id="useCaseInput" class="w-full p-3 rounded border border-indigo-200 focus:ring-2 focus:ring-indigo-400 focus:outline-none text-sm h-32" placeholder="e.g., AI chatbot for maternal health advice in rural Bihar...
+e.g., Drone imagery analysis for pest control in Vietnam rice paddies..."></textarea>
+                        <button onclick="generateHorizontalMap()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded shadow transition-all flex justify-center items-center gap-2">
+                            <span>✨ Map Infrastructure</span>
+                        </button>
+                    </div>
+                    <div class="md:col-span-2 bg-white rounded-lg border border-indigo-100 p-6 relative min-h-[200px]">
+                        <div id="mapper-loader" class="hidden absolute inset-0 bg-white/80 z-10 flex flex-col justify-center items-center">
+                            <div class="typing-indicator"><span></span><span></span><span></span></div>
+                            <p class="text-xs text-indigo-600 font-bold mt-2">Consulting the framework...</p>
+                        </div>
+                        <h4 class="text-indigo-900 font-bold mb-3 border-b border-indigo-100 pb-2">Horizontal Enablers &amp; Barriers</h4>
+                        <div id="mapper-output" class="text-sm text-gray-600 prose">
+                            <p class="italic text-gray-400">Enter a use case on the left to see the breakdown of required Data, Safety, and Compute infrastructure.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: The Missing Artifacts (Interactive Assessment) -->
+        <section class="grid lg:grid-cols-2 gap-8">
+            <div class="space-y-6">
+                <div class="border-l-4 border-orange-500 pl-4">
+                    <h2 class="text-2xl font-bold text-gray-800">Critique #3: Missing Assessment</h2>
+                    <p class="text-gray-600">
+                        The framework lacks decision criteria or assessment methodology. 
+                        <strong>Use this interactive tool</strong> to simulate the "Assessment Logic" that UCAF describes but doesn't visualize.
+                    </p>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow border border-gray-200 space-y-4">
+                    <h4 class="font-bold text-gray-700 border-b pb-2">Rate Your Horizontals (1-10)</h4>
+                    
+                    <div>
+                        <label class="flex justify-between text-sm font-semibold text-gray-600 mb-1">
+                            <span>Data Democratization</span>
+                            <span id="val-data">5</span>
+                        </label>
+                        <input type="range" id="input-data" min="1" max="10" value="5" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-orange-600">
+                        <p class="text-xs text-gray-500">Access to clean, representative datasets.</p>
+                    </div>
+
+                    <div>
+                        <label class="flex justify-between text-sm font-semibold text-gray-600 mb-1">
+                            <span>AI Safety &amp; Testing</span>
+                            <span id="val-safety">3</span>
+                        </label>
+                        <input type="range" id="input-safety" min="1" max="10" value="3" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-orange-600">
+                        <p class="text-xs text-gray-500">Guardrails against hallucinations and bias.</p>
+                    </div>
+
+                    <div>
+                        <label class="flex justify-between text-sm font-semibold text-gray-600 mb-1">
+                            <span>Multilingual Capability</span>
+                            <span id="val-lang">4</span>
+                        </label>
+                        <input type="range" id="input-lang" min="1" max="10" value="4" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-orange-600">
+                        <p class="text-xs text-gray-500">Serving diverse user bases.</p>
+                    </div>
+
+                    <div>
+                        <label class="flex justify-between text-sm font-semibold text-gray-600 mb-1">
+                            <span>Interpretability</span>
+                            <span id="val-interp">2</span>
+                        </label>
+                        <input type="range" id="input-interp" min="1" max="10" value="2" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-orange-600">
+                        <p class="text-xs text-gray-500">Explainability of model decisions.</p>
+                    </div>
+                    
+                    <div>
+                        <label class="flex justify-between text-sm font-semibold text-gray-600 mb-1">
+                            <span>Compute Infrastructure</span>
+                            <span id="val-compute">6</span>
+                        </label>
+                        <input type="range" id="input-compute" min="1" max="10" value="6" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-orange-600">
+                        <p class="text-xs text-gray-500">Availability and cost of processing power.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl shadow-lg border border-gray-200 flex flex-col items-center">
+                <h3 class="font-bold text-lg mb-4 text-center text-gray-800">Horizontal Maturity Visualization</h3>
+                <!-- Chart Container -->
+                <div class="chart-container">
+                    <canvas id="maturityChart" width="1200" height="700" style="display: block; box-sizing: border-box; height: 350px; width: 600px;"></canvas>
+                </div>
+                
+                <!-- NEW FEATURE 2: AI Advisor Button -->
+                <div class="w-full mt-4 px-4">
+                    <button onclick="generateStrategy()" class="w-full py-2 bg-orange-100 hover:bg-orange-200 text-orange-800 border border-orange-300 font-bold rounded shadow-sm transition-all flex justify-center items-center gap-2 mb-2">
+                        <span>✨ Generate Adoption Strategy</span>
+                    </button>
+                    
+                    <div id="advisor-loader" class="hidden w-full flex justify-center py-2">
+                        <div class="typing-indicator"><span></span><span></span><span></span></div>
+                    </div>
+
+                    <div id="advisor-output" class="hidden w-full p-4 bg-gray-50 rounded border border-gray-200 text-sm text-gray-700 prose">
+                        <!-- AI Advice goes here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Theory of Change (Process Flow) -->
+        <section class="space-y-6">
+            <div class="border-l-4 border-orange-500 pl-4">
+                <h2 class="text-2xl font-bold text-gray-800">Critique #6: Missing Theory of Change</h2>
+                <p class="text-gray-600 max-w-4xl">
+                    <em>"Does mapping your use case reveal non-obvious blockers?"</em> 
+                    A true framework must be prescriptive. Here is the operational workflow implied by UCAF.
+                </p>
+            </div>
+
+            <!-- Interactive Process Map -->
+            <div class="grid md:grid-cols-4 gap-4" id="process-flow">
+                <!-- Step 1 -->
+                <div class="step-card bg-white p-4 rounded shadow cursor-pointer active" onclick="updateProcess(0)">
+                    <div class="text-xs font-bold text-gray-400 uppercase mb-1">Stage 1</div>
+                    <h3 class="font-bold text-lg text-gray-800">Vertical Pilot</h3>
+                    <p class="text-xs text-gray-500 mt-2">Value Validation</p>
+                </div>
+                <!-- Step 2 -->
+                <div class="step-card bg-white p-4 rounded shadow cursor-pointer" onclick="updateProcess(1)">
+                    <div class="text-xs font-bold text-gray-400 uppercase mb-1">Stage 2</div>
+                    <h3 class="font-bold text-lg text-gray-800">Horizontal Audit</h3>
+                    <p class="text-xs text-gray-500 mt-2">Identify Dependencies</p>
+                </div>
+                <!-- Step 3 -->
+                <div class="step-card bg-white p-4 rounded shadow cursor-pointer" onclick="updateProcess(2)">
+                    <div class="text-xs font-bold text-gray-400 uppercase mb-1">Stage 3</div>
+                    <h3 class="font-bold text-lg text-gray-800">Co-Creation</h3>
+                    <p class="text-xs text-gray-500 mt-2">Bridge the Gap</p>
+                </div>
+                <!-- Step 4 -->
+                <div class="step-card bg-white p-4 rounded shadow cursor-pointer" onclick="updateProcess(3)">
+                    <div class="text-xs font-bold text-gray-400 uppercase mb-1">Stage 4</div>
+                    <h3 class="font-bold text-lg text-gray-800">Scale Adoption</h3>
+                    <p class="text-xs text-gray-500 mt-2">Sustained Impact</p>
+                </div>
+            </div>
+
+            <!-- Detail View for Process -->
+            <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-gray-800 min-h-[150px] transition-all" id="process-detail">
+                <h3 class="font-bold text-xl mb-2" id="detail-title">Vertical Pilot</h3>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <h4 class="font-bold text-sm text-gray-500 uppercase">Barriers to Address</h4>
+                        <p class="text-gray-700" id="detail-barriers">Proof of concept failure, lack of domain expertise, user rejection.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm text-gray-500 uppercase">Key Action</h4>
+                        <p class="text-gray-700" id="detail-action">Focus solely on the 'Vertical'. Ignore scale constraints. Validate that the AI solves a real human problem (e.g., helping a migrant worker understand a contract).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: The "Unsurprising" Enablers (Data View) -->
+        <section class="space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-end border-b border-gray-300 pb-2">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800">Critique #2: The Usual Suspects</h2>
+                    <p class="text-gray-600 text-sm max-w-2xl">
+                        The critique notes the barriers (Compute, Data, Bias) are "industry consensus." 
+                        However, their <strong>relative impact</strong> shifts as an organization matures.
+                    </p>
+                </div>
+                <div class="flex gap-2 mt-4 md:mt-0">
+                    <button onclick="updateBarChart('startup')" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded text-sm font-bold transition-colors focus:ring-2 ring-offset-1 ring-gray-400">Early Stage</button>
+                    <button onclick="updateBarChart('enterprise')" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded text-sm font-bold transition-colors focus:ring-2 ring-offset-1 ring-gray-600">Scale Stage</button>
+                </div>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl shadow border border-gray-200">
+                <div class="chart-container">
+                    <canvas id="barriersChart" width="1200" height="700" style="display: block; box-sizing: border-box; height: 350px; width: 600px;"></canvas>
+                </div>
+                <p class="text-center text-xs text-gray-500 mt-4">
+                    Hypothetical weighting of barriers based on UCAF logic. <br>
+                    Notice how "Interpretability" and "Safety" spike at scale, whereas "Data Access" is the primary early blocker.
+                </p>
+            </div>
+        </section>
+
+        <!-- Footer / Conclusion -->
+        <footer class="bg-gray-800 text-white p-8 rounded-t-xl mt-12">
+            <div class="max-w-4xl mx-auto text-center space-y-4">
+                <h3 class="text-2xl font-serif">The Verdict</h3>
+                <p class="text-gray-300">
+                    Is UCAF a <span class="text-orange-300 font-bold">Coordination Mechanism</span> or an <span class="text-blue-300 font-bold">Operational Tool</span>?
+                </p>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    The critique reveals that UCAF currently functions best as a <strong>Coordination Mechanism</strong>—a shared language for global stakeholders. 
+                    To become the operational tool it claims to be, it requires the artifacts visualized above: 
+                    explicit maturity models, decision trees, and rigorous assessment criteria.
+                </p>
+                <div class="pt-8 border-t border-gray-700 mt-8 text-xs text-gray-500">
+                    Generated based on "Steelman critique of UCAF". Visualizations are interpretative models of missing framework components.
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Logic Script -->
+    <script>
+        // --- Gemini API Setup ---
+        const apiKey = ""; // Runtime Environment will provide this
+
+        // Helper: Prompt user for key
+        function promptForKey() {
+            const key = prompt("Please enter your Gemini API Key:");
+            if (key) {
+                localStorage.setItem('gemini_api_key', key);
+                alert("API Key saved. Please try using the AI features again.");
+            }
+        }
+
+        async function callGemini(prompt) {
+            // Check global, then local storage
+            let currentKey = apiKey;
+            if (!currentKey) {
+                currentKey = localStorage.getItem('gemini_api_key') || "";
+            }
+
+            // Retry logic config
+            const maxRetries = 3;
+            let attempt = 0;
+            
+            while (attempt < maxRetries) {
+                try {
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${currentKey}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: prompt }] }]
+                        })
+                    });
+
+                    if (response.status === 400 || response.status === 403) {
+                         // Likely invalid key
+                         const userKey = window.prompt("API Key invalid or missing. Please enter a valid Gemini API Key:");
+                         if (userKey) {
+                             localStorage.setItem('gemini_api_key', userKey);
+                             currentKey = userKey;
+                             attempt++;
+                             continue; // Retry with new key
+                         } else {
+                             return "Analysis cancelled: Missing API Key.";
+                         }
+                    }
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    return data.candidates?.[0]?.content?.parts?.[0]?.text || "No analysis generated.";
+                } catch (error) {
+                    console.error("Gemini Error:", error);
+                    return "Error connecting to AI service. Please check your internet connection.";
+                }
+            }
+            return "Failed to connect after multiple attempts.";
+        }
+
+        // --- Feature 1: Horizontal Map Generator ---
+        async function generateHorizontalMap() {
+            const input = document.getElementById('useCaseInput').value;
+            if(!input || input.length < 5) {
+                alert("Please describe a use case first.");
+                return;
+            }
+
+            const loader = document.getElementById('mapper-loader');
+            const output = document.getElementById('mapper-output');
+            
+            loader.classList.remove('hidden');
+            output.innerHTML = ""; // Clear previous output
+            
+            const prompt = `You are an expert solution architect using the UCAF (Use Case Adoption Framework) for AI. 
+            The user has provided this specific Vertical Use Case: "${input}".
+            
+            Your task is to identify the critical "Horizontal Enablers" (Infrastructure) required to scale this specific use case.
+            Focus on these categories:
+            1. Data Democratization (Availability, dialect issues, quality)
+            2. AI Safety (Bias, hallucinations in this specific context)
+            3. Compute (Offline needs, cost, latency)
+            4. Interpretability (Why is explainability crucial here?)
+
+            Be concise. Output formatted in clean Markdown. Do not use H1 or H2 tags. Use bolding for key terms.
+            Start with a short "Vertical Analysis" sentence, then bullet points for the Horizontals.`;
+
+            const result = await callGemini(prompt);
+            
+            loader.classList.add('hidden');
+            output.innerHTML = marked.parse(result);
+        }
+
+        // --- Feature 2: Maturity Strategy Advisor ---
+        async function generateStrategy() {
+            const loader = document.getElementById('advisor-loader');
+            const output = document.getElementById('advisor-output');
+            
+            loader.classList.remove('hidden');
+            output.classList.add('hidden');
+            output.innerHTML = "";
+
+            const maturityData = JSON.stringify(state.maturity);
+
+            const prompt = `You are a UCAF Strategy Consultant. The user has assessed their organization's AI maturity (Scale 1-10): 
+            ${maturityData}.
+            
+            Based on these specific scores:
+            1. Identify the single biggest bottleneck to scaling (lowest scores).
+            2. Provide a 3-step concrete action plan to improve that specific area.
+            3. Give a "Readiness Verdict" (e.g., "Not Ready", "Pilot Phase", "Scale Ready").
+
+            Be encouraging but direct. Output in concise Markdown.`;
+
+            const result = await callGemini(prompt);
+            
+            loader.classList.add('hidden');
+            output.classList.remove('hidden');
+            output.innerHTML = marked.parse(result);
+        }
+
+        // --- State Management (Existing) ---
+        /* STATE_START */
+        const state = {
+    "maturity": {
+        "data": 5,
+        "safety": 3,
+        "lang": 4,
+        "interp": 2,
+        "compute": 6
+    },
+    "processStep": 0,
+    "barrierView": "startup"
+};
+        /* STATE_END */
+
+        // --- Chart Objects ---
+        let maturityChart = null;
+        let barriersChart = null;
+
+        // --- Logic: Process Flow Data ---
+        const processSteps = [
+            {
+                title: "Vertical Pilot (Discovery)",
+                barriers: "Unclear problem definition, lack of domain trust, data unavailability.",
+                action: "Validate the 'Vertical' Value. Ignore scale. Focus on solving ONE specific user problem manually if needed. (e.g. Migrasia pilot)."
+            },
+            {
+                title: "Horizontal Audit (Assessment)",
+                barriers: "Custom spaghetti code, lack of safety guardrails, expensive compute dependency.",
+                action: "Map the pilot against UCAF Horizontals. Identify where the 'technical debt' of the pilot lies (e.g., is it safe? is it explainable?)."
+            },
+            {
+                title: "Co-Creation (Integration)",
+                barriers: "Siloed expertise. Tech team doesn't understand domain; Domain experts don't understand limits.",
+                action: "Bring in 'Horizontal' partners. Connect the vertical app to shared infrastructure (Data exchanges, Safety protocols)."
+            },
+            {
+                title: "Scale Adoption (Execution)",
+                barriers: "Regulatory compliance, cost explosion, model drift, bias at scale.",
+                action: "Deploy using standardized Horizontals. Shift focus from 'does it work?' to 'is it safe and cheap at scale?'. Continuous monitoring."
+            }
+        ];
+
+        // --- Logic: Process Flow Update ---
+        function updateProcess(index) {
+            state.processStep = index;
+            
+            // Visual Update
+            const cards = document.querySelectorAll('.step-card');
+            cards.forEach((c, i) => {
+                if(i === index) c.classList.add('active');
+                else c.classList.remove('active');
+            });
+
+            // Content Update
+            const data = processSteps[index];
+            document.getElementById('detail-title').innerText = data.title;
+            document.getElementById('detail-barriers').innerText = data.barriers;
+            document.getElementById('detail-action').innerText = data.action;
+        }
+
+        // --- Logic: Maturity Radar Chart ---
+        function initMaturityChart() {
+            const ctx = document.getElementById('maturityChart').getContext('2d');
+            maturityChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Data Democratization', 'AI Safety', 'Multilingual AI', 'Interpretability', 'Compute Access'],
+                    datasets: [{
+                        label: 'Your Maturity',
+                        data: [5, 3, 4, 2, 6],
+                        backgroundColor: 'rgba(192, 86, 33, 0.2)', // Burnt Orange
+                        borderColor: 'rgba(192, 86, 33, 1)',
+                        pointBackgroundColor: 'rgba(192, 86, 33, 1)',
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'Scale Ready Benchmark',
+                        data: [8, 9, 7, 8, 8],
+                        backgroundColor: 'rgba(44, 82, 130, 0.1)', // Navy
+                        borderColor: 'rgba(44, 82, 130, 0.4)',
+                        pointBackgroundColor: 'transparent',
+                        pointBorderColor: 'transparent',
+                        borderDash: [5, 5]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: '#ddd' },
+                            grid: { color: '#eee' },
+                            pointLabels: {
+                                font: { size: 11, family: 'Inter' }
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 10
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.raw;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateMaturityChart() {
+            // Update Data
+            maturityChart.data.datasets[0].data = [
+                state.maturity.data,
+                state.maturity.safety,
+                state.maturity.lang,
+                state.maturity.interp,
+                state.maturity.compute
+            ];
+            maturityChart.update();
+
+            // Clear AI advice when data changes
+            document.getElementById('advisor-output').classList.add('hidden');
+        }
+
+        // --- Logic: Barriers Bar Chart ---
+        function initBarriersChart() {
+            const ctx = document.getElementById('barriersChart').getContext('2d');
+            barriersChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Data Quality', 'Talent/Expertise', 'Compute Cost', 'Bias/Safety', 'Testing/Eval'],
+                    datasets: [{
+                        label: 'Barrier Impact Score',
+                        data: [9, 8, 7, 3, 2], // Startup default
+                        backgroundColor: [
+                            'rgba(44, 82, 130, 0.8)',
+                            'rgba(44, 82, 130, 0.7)',
+                            'rgba(44, 82, 130, 0.6)',
+                            'rgba(192, 86, 33, 0.6)',
+                            'rgba(192, 86, 33, 0.5)'
+                        ],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 10,
+                            title: { display: true, text: 'Barrier Intensity' }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        function updateBarChart(view) {
+            state.barrierView = view;
+            
+            let newData = [];
+            // Critique Insight: "Barriers... industry consensus."
+            // Hypothesis: Startups struggle with Access (Data/Talent). Scale-ups struggle with Safety/Bias.
+            if(view === 'startup') {
+                newData = [9, 8, 7, 3, 4]; // High Data/Talent pain, Low Safety concern
+            } else {
+                newData = [4, 5, 8, 9, 9]; // Data resolved, but Bias/Testing become critical at scale
+            }
+
+            barriersChart.data.datasets[0].data = newData;
+            barriersChart.update();
+        }
+
+        // --- Download Functionality ---
+        function downloadPage() {
+            // 1. Snapshot Input Values
+            // Ensure inputs in the downloaded HTML have 'value' attributes matching current user input
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                if (input.type === 'checkbox' || input.type === 'radio') {
+                    if (input.checked) input.setAttribute('checked', 'checked');
+                    else input.removeAttribute('checked');
+                } else {
+                    input.setAttribute('value', input.value);
+                }
+            });
+            
+            const textareas = document.querySelectorAll('textarea');
+            textareas.forEach(ta => {
+                ta.textContent = ta.value;
+            });
+
+            // 2. Serialize State
+            // We need to inject the current 'state' object into the downloaded file so charts render with user data.
+            let htmlContent = document.documentElement.outerHTML;
+            
+            // Replace the state object definition using the markers
+            const stateString = JSON.stringify(state, null, 4);
+            const stateRegex = /\/\* STATE_START \*\/[\s\S]*?\/\* STATE_END \*\//;
+            
+            htmlContent = htmlContent.replace(stateRegex, `/* STATE_START */\n        const state = ${stateString};\n        /* STATE_END */`);
+
+            // 3. Create Blob and Download
+            const blob = new Blob([htmlContent], {type: 'text/html'});
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'UCAF_Interactive_Report.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // --- Event Listeners ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initMaturityChart();
+            initBarriersChart();
+
+            // Inputs
+            ['data', 'safety', 'lang', 'interp', 'compute'].forEach(key => {
+                const el = document.getElementById(`input-${key}`);
+                const display = document.getElementById(`val-${key}`);
+                
+                // Set initial value from state (in case of re-load/download)
+                if(el && display) {
+                    el.value = state.maturity[key];
+                    display.innerText = state.maturity[key];
+                }
+
+                if(el) {
+                    el.addEventListener('input', (e) => {
+                        const val = parseInt(e.target.value);
+                        state.maturity[key] = val;
+                        if(display) display.innerText = val;
+                        updateMaturityChart();
+                    });
+                }
+            });
+        });
+
+    </script>
+
+</body></html>
