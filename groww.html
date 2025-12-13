@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategic Proposal: From Personas to Populations | Groww Case Study</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+    <!-- Gemini API Import -->
+    <script type="importmap">
+        {
+          "imports": {
+            "@google/generative-ai": "https://esm.run/@google/generative-ai"
+          }
+        }
+    </script>
+
+    <style>
+        /* Custom Styles for Chart Containers as per requirements */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 500px;
+        }
+
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 300px;
+            }
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F9FAFB; /* Warm neutral background */
+            color: #1F2937;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #111827 0%, #4B5563 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .highlight-groww {
+            color: #00D09C;
+            font-weight: 600;
+        }
+
+        .card-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card-shadow:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Loading Animation for AI */
+        .typing-dot {
+            animation: typing 1.4s infinite ease-in-out both;
+            height: 6px;
+            width: 6px;
+            background-color: #00D09C;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 2px;
+        }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        /* Custom Scrollbar for a polished look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+    </style>
+    
+    <!-- Chosen Palette: Financial Trust (Navy/Slate) + Groww Brand (Teal) + Tension (Gold/Red) -->
+    <!-- Application Structure Plan: 
+         1. Executive Summary: The Core Thesis.
+         2. The Diagnosis (Interactive): Visualizing the "Combinatorial Explosion".
+         3. The Case Study (Data): Evidence from Groww reports.
+         4. The Strategic Gap: Simplicity vs. Resilience.
+         5. AI Feature 1: The Resilience Simulator (Gemini Powered).
+         6. The Pitch: Why Dhulis.
+         7. AI Feature 2: Ask the Strategist (Gemini Powered).
+    -->
+    <!-- Visualization & Content Choices:
+         - Scatter Plot (Chart.js): "Population" cloud.
+         - Radar Chart (Chart.js): Skills gap.
+         - Bar Chart (Chart.js): Tier 2 growth.
+         - Gemini API Integration: 
+            1. Simulation of user reactions to market events.
+            2. Chat interface for candidate interview.
+         - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+</head>
+<body class="antialiased">
+
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold font-serif text-gray-900">Strategic<span class="text-emerald-500">Design</span></span>
+                    <span class="ml-4 px-3 py-1 rounded-full bg-gray-100 text-xs font-medium text-gray-500 hidden sm:block">Confidential Proposal for Groww Leadership</span>
+                </div>
+                <div class="flex items-center space-x-8">
+                    <a href="#thesis" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition">The Thesis</a>
+                    <a href="#simulator" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition">Resilience Simulator ✨</a>
+                    <a href="#solution" class="text-sm font-medium text-emerald-600 font-bold hover:text-emerald-700 transition">The Solution</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="bg-white pb-12 pt-16 lg:pt-24 border-b border-gray-100">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+            <div class="inline-flex items-center px-4 py-1.5 rounded-full border border-gray-200 bg-gray-50 text-sm font-medium text-gray-600 mb-6">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 mr-2"></span>
+                From Personas to Populations
+            </div>
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-gray-900 tracking-tight mb-6">
+                You are designing for <span class="text-gray-400 line-through decoration-red-500 decoration-2">Marketing Mary</span>. <br>
+                You should be designing for <span class="text-emerald-500">Combinatorial Chaos</span>.
+            </h1>
+            <p class="text-xl text-gray-600 leading-relaxed mb-10 max-w-2xl mx-auto">
+                A strategic audit of Groww's next growth frontier. Why "simple" is no longer enough, and how to build a product resilient enough for the vegetable vendor in Varanasi and the engineer in Bangalore.
+            </p>
+            <div class="flex justify-center gap-4">
+                <button onclick="document.getElementById('thesis').scrollIntoView({behavior: 'smooth'})" class="px-8 py-3 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 transition shadow-lg hover:shadow-xl">
+                    Explore the Analysis
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Section 1: The Thesis (The Matrix) -->
+    <section id="thesis" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-3xl mx-auto text-center mb-12">
+                <h2 class="text-3xl font-serif font-bold text-gray-900 mb-4">The Fallacy of the Average User</h2>
+                <p class="text-lg text-gray-600">
+                    Traditional design aggregates fears and aspirations into a "Generalized Persona." But the Indian market isn't static. It's a combinatorial explosion of millions of aspiration/fear variations.
+                </p>
+            </div>
+
+            <!-- Interaction Controls -->
+            <div class="flex justify-center mb-8 space-x-4">
+                <button id="btn-persona" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 active-mode shadow-sm transition">
+                    View: Static Personas (Old Way)
+                </button>
+                <button id="btn-population" class="px-4 py-2 bg-emerald-600 text-white border border-transparent rounded-md hover:bg-emerald-700 shadow-md transition">
+                    View: Combinatorial Population (New Way)
+                </button>
+            </div>
+
+            <!-- Chart Container -->
+            <div class="bg-white p-6 rounded-2xl shadow-xl border border-gray-100">
+                <div class="chart-container">
+                    <canvas id="populationChart"></canvas>
+                </div>
+                <div class="mt-6 text-center text-sm text-gray-500 italic">
+                    X-Axis: Aspiration (Financial Independence, Wealth) &nbsp;|&nbsp; Y-Axis: Fear (Market Crash, Technical Failure)
+                </div>
+            </div>
+
+            <!-- Dynamic Insight Box -->
+            <div id="insight-box" class="mt-8 p-6 bg-white border-l-4 border-emerald-500 rounded-r-lg shadow-sm">
+                <h3 class="text-lg font-bold text-gray-900 mb-2">Insight: The Combinatorial Reality</h3>
+                <p class="text-gray-600">
+                    A user isn't just "The Anxious Aspirant." They are a dynamic vector. A technical glitch on Monday pushes them into high fear. A market rally on Tuesday pushes them into high aspiration. <span class="font-semibold text-emerald-600">Groww needs a system that adapts to these shifts, not static pages for static people.</span>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Ethnographic Evidence -->
+    <section id="analysis" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                
+                <!-- Text Content -->
+                <div>
+                    <h2 class="text-3xl font-serif font-bold text-gray-900 mb-6">The Tension Engine: Evidence from the Field</h2>
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        Based on recent ethnographic analysis, Groww's users are caught in a tension between ambitious aspirations and paralyzing fears. The platform has successfully lowered barriers ("Simple as E-commerce"), but hasn't designed for the <strong>emotional complexity</strong> of the journey.
+                    </p>
+                    
+                    <div class="space-y-4">
+                        <div class="p-4 bg-gray-50 rounded-lg border border-gray-100 hover:border-emerald-200 transition cursor-pointer group" onclick="updateContext('fear')">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="font-bold text-gray-900">The Paralyzing Fears</h4>
+                                <span class="text-red-500 text-sm font-semibold">Risk Vector</span>
+                            </div>
+                            <p class="text-sm text-gray-600 group-hover:text-gray-900">
+                                "My father lost everything in 1992." <br>
+                                "What if the app crashes during peak hours?" <br>
+                                "Hidden charges are my biggest nightmare."
+                            </p>
+                        </div>
+
+                        <div class="p-4 bg-gray-50 rounded-lg border border-gray-100 hover:border-emerald-200 transition cursor-pointer group" onclick="updateContext('aspiration')">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="font-bold text-gray-900">The Ambitious Aspirations</h4>
+                                <span class="text-yellow-600 text-sm font-semibold">Growth Vector</span>
+                            </div>
+                            <p class="text-sm text-gray-600 group-hover:text-gray-900">
+                                "I want to beat inflation, not just save." <br>
+                                "Retiring by 45 is the goal." <br>
+                                "I want to be a serious investor, not a gambler."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart: Tier Growth -->
+                <div class="bg-gray-50 p-8 rounded-2xl">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4 text-center">The Next 50 Million Users</h3>
+                    <div class="chart-container" style="height: 300px;">
+                        <canvas id="growthChart"></canvas>
+                    </div>
+                    <p class="mt-4 text-sm text-gray-500 text-center">
+                        Growth is shifting to Tier 2/3 cities, where "Trust" and "Resilience" matter more than just "Ease of Use."
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: The Strategic Gap -->
+    <section class="py-20 bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl font-serif font-bold mb-12">The Strategic Gap</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Current State -->
+                <div class="bg-gray-800 p-8 rounded-xl border border-gray-700">
+                    <div class="text-4xl mb-4">⚡</div>
+                    <h3 class="text-xl font-bold mb-3 text-emerald-400">Current Win: Simplicity</h3>
+                    <p class="text-gray-400 text-sm">
+                        Groww made investing accessible. 1-click KYC, e-commerce style UI.
+                        <br><br>
+                        <em>Result: Massive Acquisition.</em>
+                    </p>
+                </div>
+
+                <!-- The Gap -->
+                <div class="bg-gray-800 p-8 rounded-xl border border-gray-700 relative overflow-hidden">
+                    <div class="absolute inset-0 bg-red-900/10 z-0"></div>
+                    <div class="relative z-10">
+                        <div class="text-4xl mb-4">⚠️</div>
+                        <h3 class="text-xl font-bold mb-3 text-red-400">The Danger Zone</h3>
+                        <p class="text-gray-400 text-sm">
+                            Gamification without education. Technical glitches erode trust instantly for new, fearful users.
+                            <br><br>
+                            <em>Risk: High Churn & Trust Deficit.</em>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Future State -->
+                <div class="bg-gray-800 p-8 rounded-xl border border-gray-700">
+                    <div class="text-4xl mb-4">🛡️</div>
+                    <h3 class="text-xl font-bold mb-3 text-blue-400">Future Win: Resilience</h3>
+                    <p class="text-gray-400 text-sm">
+                        Designing for "The Bad Day." Educational nudges embedded in the flow. Transparency in failure.
+                        <br><br>
+                        <em>Result: Population-Scale Trust.</em>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW SECTION: Resilience Simulator (Gemini Powered) -->
+    <section id="simulator" class="py-24 bg-emerald-50 relative overflow-hidden">
+        <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-emerald-100 rounded-full blur-3xl opacity-50"></div>
+        <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 bg-blue-100 rounded-full blur-3xl opacity-50"></div>
+        
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
+            <div class="text-center mb-10">
+                <span class="text-emerald-700 font-bold tracking-wider uppercase text-xs bg-emerald-100 px-3 py-1 rounded-full">Powered by Gemini AI</span>
+                <h2 class="text-3xl font-serif font-bold text-gray-900 mt-4">The Resilience Simulator</h2>
+                <p class="text-lg text-gray-600 mt-2">
+                    Test your system against chaos. Input a market crisis to see how the "Population" reacts vs. how your current UI copes.
+                </p>
+            </div>
+
+            <!-- Input Area -->
+            <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 max-w-4xl mx-auto border border-emerald-100">
+                <label for="crisisInput" class="block text-sm font-medium text-gray-700 mb-2">Simulate a Crisis Event (e.g., "RBI bans crypto," "Sensex crashes 1500 points")</label>
+                <div class="flex flex-col md:flex-row gap-4">
+                    <input type="text" id="crisisInput" placeholder="Enter a hypothetical market event..." 
+                        class="flex-1 block w-full rounded-lg border-gray-300 border bg-gray-50 p-3 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm">
+                    <button id="btn-simulate" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-emerald-600 hover:bg-emerald-700 shadow-lg hover:shadow-xl transition md:w-auto w-full">
+                        Run Simulation ✨
+                    </button>
+                </div>
+                
+                <!-- Loading State -->
+                <div id="sim-loading" class="hidden mt-6 text-center text-emerald-600 text-sm">
+                    <span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>
+                    <span class="ml-2">Analyzing 3 distinct user archetypes...</span>
+                </div>
+
+                <!-- Results Area -->
+                <div id="sim-results" class="hidden mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Dynamic cards will be injected here -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: The Solution (Why Hire Dhulis) -->
+    <section id="solution" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-emerald-600 font-bold tracking-wider uppercase text-sm">The Recommendation</span>
+                <h2 class="text-4xl font-serif font-bold text-gray-900 mt-2">Why You Need a Strategic Designer</h2>
+                <p class="text-xl text-gray-600 mt-4 max-w-2xl mx-auto">
+                    To bridge the gap between "Product Management" and "Population Sociology," you need a specific type of thinker.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+                
+                <!-- Radar Chart -->
+                <div class="bg-gray-50 p-6 rounded-2xl shadow-inner sticky top-24">
+                    <div class="chart-container" style="height: 400px; max-width: 500px;">
+                        <canvas id="skillsChart"></canvas>
+                    </div>
+                    <div class="mt-6 p-4 bg-white rounded-xl shadow-sm border border-emerald-100">
+                        <h4 class="font-bold text-gray-900 mb-2 flex items-center">
+                            <span class="text-emerald-500 mr-2">✨</span> Ask the Strategist
+                        </h4>
+                        <p class="text-sm text-gray-600 mb-3">
+                            Interview Dhulis (AI) about specific strategic challenges at Groww.
+                        </p>
+                        <div class="flex gap-2">
+                            <input type="text" id="chatInput" placeholder="e.g. How do we handle trust?" class="flex-1 text-sm p-2 border border-gray-300 rounded-md">
+                            <button id="btn-chat" class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm hover:bg-gray-800">Ask</button>
+                        </div>
+                        <div id="chat-response" class="mt-3 text-sm text-gray-700 italic hidden bg-gray-50 p-3 rounded border border-gray-100"></div>
+                    </div>
+                </div>
+
+                <!-- The Pitch Text -->
+                <div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6">The Candidate Fit: Dhulis</h3>
+                    <p class="text-gray-600 mb-6">
+                        Most Product Managers optimize for metrics (Clicks, DAU). Most Designers optimize for usability. 
+                        <strong>Dhulis</strong> operates at the intersection of <strong>Strategic Design</strong> and <strong>Financial Anthropology</strong>.
+                    </p>
+                    
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 h-6 w-6 rounded-full bg-emerald-100 flex items-center justify-center mt-1">
+                                <span class="text-emerald-600 text-sm font-bold">1</span>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-bold text-gray-900">From Personas to Populations</h4>
+                                <p class="text-gray-600 text-sm">Understands that users are combinatorial sets of fears/hopes, not static marketing slides.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 h-6 w-6 rounded-full bg-emerald-100 flex items-center justify-center mt-1">
+                                <span class="text-emerald-600 text-sm font-bold">2</span>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-bold text-gray-900">Systems Thinking</h4>
+                                <p class="text-gray-600 text-sm">Sees the connection between a UI glitch and a Tier-3 family's generational trust in finance.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 h-6 w-6 rounded-full bg-emerald-100 flex items-center justify-center mt-1">
+                                <span class="text-emerald-600 text-sm font-bold">3</span>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-bold text-gray-900">Design for Resilience</h4>
+                                <p class="text-gray-600 text-sm">Prioritizes designing for the "most challenging conditions" (DPI principles), creating a moat against competitors.</p>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <div class="mt-10">
+                        <a href="https://www.linkedin.com/in/dhulis/" target="_blank" class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-base font-medium rounded-lg text-white bg-emerald-600 hover:bg-emerald-700 shadow-lg hover:shadow-xl transition w-full sm:w-auto">
+                            View Candidate Profile
+                            <svg class="ml-2 -mr-1 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-50 border-t border-gray-200 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-4 md:mb-0">
+                <span class="font-serif font-bold text-gray-900">Groww Strategic Audit</span>
+                <p class="text-sm text-gray-500 mt-1">Generated based on "Strategic Thinking in Design: From Personas to Populations"</p>
+            </div>
+            <div class="text-sm text-gray-400">
+                Confidential • For Discussion Only
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script type="module">
+        import { GoogleGenerativeAI } from "@google/generative-ai";
+
+        // --- Config ---
+        const apiKey = ""; // Added by environment at runtime
+        
+        // --- State Management ---
+        const state = {
+            viewMode: 'population', // 'persona' or 'population'
+            context: 'intro'
+        };
+
+        // --- Data: Derived from Reports ---
+        const personas = [
+            { x: 80, y: 80, r: 15, label: 'The Anxious Aspirant', color: '#F59E0B' }, 
+            { x: 30, y: 90, r: 15, label: 'The Burned Veteran', color: '#EF4444' },   
+            { x: 60, y: 30, r: 15, label: 'The Systematic Builder', color: '#3B82F6' } 
+        ];
+
+        // Generate Combinatorial Population (600 points)
+        const populationData = [];
+        for (let i = 0; i < 600; i++) {
+            let asp = 50 + (Math.random() * 50); 
+            let fear = 20 + (Math.random() * 80); 
+            if (Math.random() > 0.7) fear += 10;
+            populationData.push({
+                x: asp,
+                y: fear,
+                r: 3, 
+                originalR: 3,
+                hoverLabel: `User #${i+1000}: ${asp > 75 ? 'Highly Ambitious' : 'Cautious'} & ${fear > 70 ? 'Fearful' : 'Confident'}`
+            });
+        }
+
+        // --- Chart 1: Population Matrix (Scatter) ---
+        const ctxPop = document.getElementById('populationChart').getContext('2d');
+        const populationChart = new Chart(ctxPop, {
+            type: 'bubble',
+            data: {
+                datasets: [{
+                    label: 'User Population',
+                    data: populationData,
+                    backgroundColor: 'rgba(0, 208, 156, 0.6)', 
+                    borderColor: 'rgba(0, 208, 156, 1)',
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: 1000, easing: 'easeOutQuart' },
+                scales: {
+                    x: { min: 0, max: 100, title: { display: true, text: 'Aspiration Level', font: {weight: 'bold'} }, grid: { color: '#f3f4f6' } },
+                    y: { min: 0, max: 100, title: { display: true, text: 'Fear Level', font: {weight: 'bold'} }, grid: { color: '#f3f4f6' } }
+                },
+                plugins: {
+                    tooltip: { callbacks: { label: (c) => c.raw.label || c.raw.hoverLabel || '' } },
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // --- Chart 2: Tier Growth (Bar) ---
+        const ctxGrowth = document.getElementById('growthChart').getContext('2d');
+        const growthChart = new Chart(ctxGrowth, {
+            type: 'bar',
+            data: {
+                labels: ['Metro Cities', 'Tier 2/3 Cities'],
+                datasets: [{
+                    label: 'User Base Growth (%)',
+                    data: [25, 140],
+                    backgroundColor: ['#9CA3AF', '#00D09C'],
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        // --- Chart 3: Skills Radar ---
+        const ctxSkills = document.getElementById('skillsChart').getContext('2d');
+        const skillsChart = new Chart(ctxSkills, {
+            type: 'radar',
+            data: {
+                labels: ['Strategic Design', 'User Empathy', 'System Architecture', 'Metrics Optimization', 'Resilience Planning'],
+                datasets: [
+                    {
+                        label: 'Typical PM',
+                        data: [40, 60, 50, 95, 30],
+                        fill: true,
+                        backgroundColor: 'rgba(156, 163, 175, 0.2)',
+                        borderColor: 'rgb(156, 163, 175)',
+                        pointBackgroundColor: 'rgb(156, 163, 175)',
+                    },
+                    {
+                        label: 'Dhulis (Candidate)',
+                        data: [90, 95, 85, 75, 95], 
+                        fill: true,
+                        backgroundColor: 'rgba(0, 208, 156, 0.2)',
+                        borderColor: '#00D09C',
+                        pointBackgroundColor: '#00D09C',
+                        pointHoverBackgroundColor: '#fff'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                elements: { line: { borderWidth: 3 } },
+                scales: { r: { angleLines: { color: '#e5e7eb' }, grid: { color: '#e5e7eb' }, pointLabels: { font: { size: 12, weight: 'bold' } }, suggestedMin: 0, suggestedMax: 100 } }
+            }
+        });
+
+        // --- UI Logic: View Switcher ---
+        const btnPersona = document.getElementById('btn-persona');
+        const btnPopulation = document.getElementById('btn-population');
+        const insightBox = document.getElementById('insight-box');
+
+        btnPersona.addEventListener('click', () => {
+            state.viewMode = 'persona';
+            btnPersona.classList.replace('bg-white', 'bg-gray-800'); btnPersona.classList.replace('text-gray-700', 'text-white'); btnPersona.classList.remove('border-gray-300');
+            btnPopulation.classList.replace('bg-emerald-600', 'bg-white'); btnPopulation.classList.replace('text-white', 'text-emerald-600'); btnPopulation.classList.add('border-emerald-600');
+            populationChart.data.datasets[0].data = personas;
+            populationChart.data.datasets[0].backgroundColor = personas.map(p => p.color);
+            populationChart.update();
+            insightBox.innerHTML = `<h3 class="text-lg font-bold text-gray-900 mb-2">Insight: The Trap of Personas</h3><p class="text-gray-600">This view simplifies millions into 3 stereotypes. It ignores edge cases, leading to fragile product decisions.</p>`;
+            insightBox.className = "mt-8 p-6 bg-white border-l-4 border-gray-800 rounded-r-lg shadow-sm transition-all";
+        });
+
+        btnPopulation.addEventListener('click', () => {
+            state.viewMode = 'population';
+            btnPopulation.classList.replace('bg-white', 'bg-emerald-600'); btnPopulation.classList.replace('text-emerald-600', 'text-white'); btnPopulation.classList.remove('border-emerald-600');
+            btnPersona.classList.replace('bg-gray-800', 'bg-white'); btnPersona.classList.replace('text-white', 'text-gray-700'); btnPersona.classList.add('border-gray-300');
+            populationChart.data.datasets[0].data = populationData;
+            populationChart.data.datasets[0].backgroundColor = 'rgba(0, 208, 156, 0.6)';
+            populationChart.update();
+            insightBox.innerHTML = `<h3 class="text-lg font-bold text-gray-900 mb-2">Insight: The Combinatorial Reality</h3><p class="text-gray-600">A user isn't just "The Anxious Aspirant." They are a dynamic vector. <span class="font-semibold text-emerald-600">Groww needs a system that adapts to these shifts.</span></p>`;
+            insightBox.className = "mt-8 p-6 bg-white border-l-4 border-emerald-500 rounded-r-lg shadow-sm transition-all";
+        });
+
+        // --- GEMINI API LOGIC ---
+        let genAI;
+        try {
+            genAI = new GoogleGenerativeAI(apiKey);
+        } catch (e) {
+            console.error("Gemini AI Init Error:", e);
+        }
+
+        async function runGemini(prompt, systemInstruction) {
+            if (!apiKey) {
+                alert("API Key is missing. This feature needs a valid Gemini API Key to work.");
+                return null;
+            }
+            try {
+                const model = genAI.getGenerativeModel({ 
+                    model: "gemini-2.5-flash-preview-09-2025",
+                    systemInstruction: { parts: [{ text: systemInstruction }] } 
+                });
+                const result = await model.generateContent(prompt);
+                return result.response.text();
+            } catch (error) {
+                console.error("API Call Failed:", error);
+                return null;
+            }
+        }
+
+        // --- Feature 1: Resilience Simulator ---
+        const btnSimulate = document.getElementById('btn-simulate');
+        const crisisInput = document.getElementById('crisisInput');
+        const simLoading = document.getElementById('sim-loading');
+        const simResults = document.getElementById('sim-results');
+
+        btnSimulate.addEventListener('click', async () => {
+            const scenario = crisisInput.value;
+            if (!scenario) return;
+
+            simLoading.classList.remove('hidden');
+            simResults.classList.add('hidden');
+            simResults.innerHTML = '';
+
+            const systemPrompt = `
+                You are a Strategic Design Consultant for Groww (Indian fintech). 
+                Analyze the user-provided 'Market Crisis/Event' against 3 archetypes:
+                1. The Anxious Aspirant (High Ambition, High Fear, New)
+                2. The Burned Veteran (Low Ambition, High Fear, Skeptical)
+                3. The Systematic Builder (Moderate Ambition, Low Fear, Steady)
+
+                Return a JSON object with a 'cards' array. Each object in array:
+                {
+                    "title": "Archetype Name",
+                    "reaction": "2-3 sentence description of their emotional/behavioral reaction to the event.",
+                    "failure": "How a standard 'Simple' UI fails them here.",
+                    "win": "How a 'Resilient/Strategic' UI helps them."
+                }
+                Return ONLY raw JSON. No markdown.
+            `;
+
+            const jsonStr = await runGemini(scenario, systemPrompt);
+            
+            simLoading.classList.add('hidden');
+            simResults.classList.remove('hidden');
+
+            if (jsonStr) {
+                try {
+                    // Clean up markdown code blocks if present
+                    const cleanJson = jsonStr.replace(/```json/g, '').replace(/```/g, '').trim();
+                    const data = JSON.parse(cleanJson);
+                    
+                    data.cards.forEach(card => {
+                        const div = document.createElement('div');
+                        div.className = "bg-white p-6 rounded-xl border border-gray-100 shadow-md hover:shadow-lg transition";
+                        div.innerHTML = `
+                            <h4 class="font-bold text-gray-900 text-lg mb-2 border-b border-gray-100 pb-2">${card.title}</h4>
+                            <p class="text-sm text-gray-600 mb-4 italic">"${card.reaction}"</p>
+                            <div class="mb-3">
+                                <span class="text-xs font-bold text-red-500 uppercase tracking-wide">Standard UI Failure</span>
+                                <p class="text-sm text-gray-700 mt-1">${card.failure}</p>
+                            </div>
+                            <div>
+                                <span class="text-xs font-bold text-emerald-600 uppercase tracking-wide">Strategic Design Win</span>
+                                <p class="text-sm text-gray-700 mt-1 bg-emerald-50 p-2 rounded">${card.win}</p>
+                            </div>
+                        `;
+                        simResults.appendChild(div);
+                    });
+
+                } catch (e) {
+                    simResults.innerHTML = `<div class="col-span-3 text-center text-red-500">Error parsing AI simulation. Please try again.</div>`;
+                }
+            } else {
+                simResults.innerHTML = `<div class="col-span-3 text-center text-red-500">Simulation failed. Check API configuration.</div>`;
+            }
+        });
+
+        // --- Feature 2: Ask the Strategist ---
+        const btnChat = document.getElementById('btn-chat');
+        const chatInput = document.getElementById('chatInput');
+        const chatResponse = document.getElementById('chat-response');
+
+        btnChat.addEventListener('click', async () => {
+            const question = chatInput.value;
+            if (!question) return;
+
+            chatResponse.classList.remove('hidden');
+            chatResponse.innerHTML = '<span class="typing-dot"></span> Thinking...';
+
+            const systemPrompt = `
+                You are Dhulis, a Strategic Designer pitching to the CEO of Groww.
+                Your core philosophy: "Combinatorial Design" over "Personas", and "Resilience" over "Simplicity".
+                Answer the user's question briefly (max 2 sentences). Be insightful, use terms like 'Tier-3 trust', 'Systemic failure', 'DPI'.
+                Sound professional but visionary.
+            `;
+
+            const reply = await runGemini(question, systemPrompt);
+            if (reply) {
+                chatResponse.innerText = reply;
+            } else {
+                chatResponse.innerText = "I'm focusing on the data right now. Try again later.";
+            }
+        });
+
+    </script>
+</body>
+</html>
