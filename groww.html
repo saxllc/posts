@@ -758,6 +758,70 @@ USER PROMPT: ${userPrompt}
             }
         });
 
+        // --- UI Logic: View Switcher (FIXED) ---
+        const btnPersona = document.getElementById('btn-persona');
+        const btnPopulation = document.getElementById('btn-population');
+        const insightBox = document.getElementById('insight-box');
+
+        btnPersona.addEventListener('click', () => {
+            console.log("Switching to Persona View...");
+            state.viewMode = 'persona';
+            
+            // Robust Style Switching
+            btnPersona.classList.remove('bg-white', 'text-gray-700', 'border-gray-300');
+            btnPersona.classList.add('bg-gray-800', 'text-white', 'border-transparent');
+            
+            btnPopulation.classList.remove('bg-emerald-600', 'text-white', 'border-transparent');
+            btnPopulation.classList.add('bg-white', 'text-emerald-600', 'border-emerald-600', 'border');
+
+            // Data Update
+            populationChart.data.datasets[0].data = personas;
+            populationChart.data.datasets[0].backgroundColor = personas.map(p => p.color);
+            populationChart.update('active'); // Force update
+
+            // Insight Box
+            insightBox.innerHTML = `<h3 class="text-lg font-bold text-gray-900 mb-2">Insight: The Trap of Personas</h3><p class="text-gray-600">This view simplifies millions into 3 stereotypes. It ignores edge cases, leading to fragile product decisions.</p>`;
+            insightBox.className = "mt-8 p-6 bg-white border-l-4 border-gray-800 rounded-r-lg shadow-sm transition-all";
+            
+            // Reset Persona Card to default message
+            personaCard.innerHTML = `
+                <div id="persona-card" class="h-full bg-gradient-to-br from-gray-50 to-white p-6 rounded-2xl border border-gray-200 shadow-lg flex flex-col justify-center items-center text-center">
+                    <div class="mb-4 text-4xl">🔒</div>
+                    <h3 class="text-xl font-bold text-gray-500 mb-2">Static View</h3>
+                    <p class="text-gray-400 text-sm mb-4">Gemini AI is disabled in static persona mode. Switch to Population view to explore.</p>
+                </div>`;
+        });
+
+        btnPopulation.addEventListener('click', () => {
+            console.log("Switching to Population View...");
+            state.viewMode = 'population';
+            
+            // Robust Style Switching
+            btnPopulation.classList.remove('bg-white', 'text-emerald-600', 'border-emerald-600', 'border');
+            btnPopulation.classList.add('bg-emerald-600', 'text-white', 'border-transparent');
+            
+            btnPersona.classList.remove('bg-gray-800', 'text-white', 'border-transparent');
+            btnPersona.classList.add('bg-white', 'text-gray-700', 'border-gray-300', 'border');
+
+            // Data Update
+            populationChart.data.datasets[0].data = populationData;
+            populationChart.data.datasets[0].backgroundColor = 'rgba(0, 208, 156, 0.6)';
+            populationChart.update('active'); // Force update
+
+            // Insight Box
+            insightBox.innerHTML = `<h3 class="text-lg font-bold text-gray-900 mb-2">Insight: The Combinatorial Reality</h3><p class="text-gray-600">A user isn't just "The Anxious Aspirant." They are a dynamic vector. <span class="font-semibold text-emerald-600">Groww needs a system that adapts to these shifts.</span></p>`;
+            insightBox.className = "mt-8 p-6 bg-white border-l-4 border-emerald-500 rounded-r-lg shadow-sm transition-all";
+            
+            // Reset Persona Card to active state
+            personaCard.innerHTML = `
+                <div id="persona-card" class="h-full bg-gradient-to-br from-emerald-50 to-white p-6 rounded-2xl border border-emerald-100 shadow-lg flex flex-col justify-center items-center text-center">
+                    <div class="mb-4 text-4xl">👤</div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Select a User</h3>
+                    <p class="text-gray-500 text-sm mb-4">Click any dot on the scatter plot to generate a real-time micro-ethnography using Gemini AI.</p>
+                    <div class="text-xs text-emerald-600 font-mono bg-emerald-100 px-2 py-1 rounded">Waiting for selection...</div>
+                </div>`;
+        });
+
         // --- Feature 1: Resilience Simulator ---
         const btnSimulate = document.getElementById('btn-simulate');
         const crisisInput = document.getElementById('crisisInput');
