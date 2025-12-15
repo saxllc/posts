@@ -14,7 +14,7 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 
-    <!-- Gemini API Import -->
+    <!-- Gemini API Import (ESM) -->
     <script type="importmap">
         {
           "imports": {
@@ -24,7 +24,7 @@
     </script>
 
     <style>
-        /* Custom Styles for Chart Containers as per requirements */
+        /* Custom Styles */
         .chart-container {
             position: relative;
             width: 100%;
@@ -43,7 +43,7 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #F9FAFB; /* Warm neutral background */
+            background-color: #F9FAFB;
             color: #1F2937;
         }
 
@@ -51,28 +51,12 @@
             font-family: 'Playfair Display', serif;
         }
 
-        .gradient-text {
-            background: linear-gradient(135deg, #111827 0%, #4B5563 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
         .highlight-groww {
             color: #00D09C;
             font-weight: 600;
         }
 
-        .card-shadow {
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .card-shadow:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-        
-        /* Loading Animation for AI */
+        /* Loading Animation */
         .typing-dot {
             animation: typing 1.4s infinite ease-in-out both;
             height: 6px;
@@ -90,56 +74,73 @@
             40% { transform: scale(1); }
         }
 
-        /* Custom Scrollbar for a polished look */
-        ::-webkit-scrollbar {
-            width: 8px;
+        /* Utility Button Styles */
+        .nav-icon-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            color: #6B7280;
+            transition: all 0.2s;
+            cursor: pointer;
         }
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
+        .nav-icon-btn:hover {
+            background-color: #F3F4F6;
+            color: #111827;
         }
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1; 
-            border-radius: 4px;
+        
+        .pulse-red {
+            animation: pulse-red 2s infinite;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8; 
+        
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        /* Glassmorphism for Personas */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
     </style>
-    
-    <!-- Chosen Palette: Financial Trust (Navy/Slate) + Groww Brand (Teal) + Tension (Gold/Red) -->
-    <!-- Application Structure Plan: 
-         1. Executive Summary: The Core Thesis.
-         2. The Diagnosis (Interactive): Visualizing the "Combinatorial Explosion".
-         3. The Case Study (Data): Evidence from Groww reports.
-         4. The Strategic Gap: Simplicity vs. Resilience.
-         5. AI Feature 1: The Resilience Simulator (Gemini Powered).
-         6. The Pitch: Why Dhulis.
-         7. AI Feature 2: Ask the Strategist (Gemini Powered).
-    -->
-    <!-- Visualization & Content Choices:
-         - Scatter Plot (Chart.js): "Population" cloud.
-         - Radar Chart (Chart.js): Skills gap.
-         - Bar Chart (Chart.js): Tier 2 growth.
-         - Gemini API Integration: 
-            1. Simulation of user reactions to market events.
-            2. Chat interface for candidate interview.
-         - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
-    -->
 </head>
 <body class="antialiased">
 
     <!-- Navigation -->
-    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
+                <!-- Logo Area -->
                 <div class="flex items-center">
                     <span class="text-xl font-bold font-serif text-gray-900">Strategic<span class="text-emerald-500">Design</span></span>
-                    <span class="ml-4 px-3 py-1 rounded-full bg-gray-100 text-xs font-medium text-gray-500 hidden sm:block">Confidential Proposal for Groww Leadership</span>
+                    <span class="ml-4 px-3 py-1 rounded-full bg-gray-100 text-xs font-medium text-gray-500 hidden md:block">Confidential Proposal</span>
                 </div>
-                <div class="flex items-center space-x-8">
-                    <a href="#thesis" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition">The Thesis</a>
-                    <a href="#simulator" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition">Resilience Simulator ✨</a>
-                    <a href="#solution" class="text-sm font-medium text-emerald-600 font-bold hover:text-emerald-700 transition">The Solution</a>
+
+                <!-- Navigation Links & Tools -->
+                <div class="flex items-center space-x-2 md:space-x-6">
+                    <div class="hidden md:flex space-x-6 mr-4 border-r border-gray-200 pr-6">
+                        <a href="#thesis" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition">Thesis</a>
+                        <a href="#simulator" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition">Simulator ✨</a>
+                        <a href="#solution" class="text-sm font-medium text-emerald-600 font-bold hover:text-emerald-700 transition">Solution</a>
+                    </div>
+                    
+                    <!-- Tool Buttons -->
+                    <button id="btn-api-key" class="nav-icon-btn group relative ring-1 ring-gray-200" title="Set Gemini API Key">
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+                            <span class="text-xs font-medium">API Key</span>
+                        </div>
+                        <span id="key-status-dot" class="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-red-500 border border-white"></span>
+                    </button>
+                    
+                    <button id="btn-download-page" class="nav-icon-btn" title="Download Page as HTML">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        <span class="sr-only">Download</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -168,12 +169,12 @@
     </header>
 
     <!-- Section 1: The Thesis (The Matrix) -->
-    <section id="thesis" class="py-20 bg-gray-50">
+    <section id="thesis" class="py-20 bg-gray-50 relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="max-w-3xl mx-auto text-center mb-12">
                 <h2 class="text-3xl font-serif font-bold text-gray-900 mb-4">The Fallacy of the Average User</h2>
                 <p class="text-lg text-gray-600">
-                    Traditional design aggregates fears and aspirations into a "Generalized Persona." But the Indian market isn't static. It's a combinatorial explosion of millions of aspiration/fear variations.
+                    Traditional design aggregates fears and aspirations into a "Generalized Persona." But the Indian market isn't static. It's a combinatorial explosion. <span class="text-emerald-600 font-semibold">Click any dot below to see the real human story behind the data point.</span>
                 </p>
             </div>
 
@@ -187,13 +188,25 @@
                 </button>
             </div>
 
-            <!-- Chart Container -->
-            <div class="bg-white p-6 rounded-2xl shadow-xl border border-gray-100">
-                <div class="chart-container">
-                    <canvas id="populationChart"></canvas>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Chart Container -->
+                <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-xl border border-gray-100">
+                    <div class="chart-container">
+                        <canvas id="populationChart"></canvas>
+                    </div>
+                    <div class="mt-6 text-center text-sm text-gray-500 italic">
+                        X-Axis: Aspiration (Financial Independence) &nbsp;|&nbsp; Y-Axis: Fear (Market Crash)
+                    </div>
                 </div>
-                <div class="mt-6 text-center text-sm text-gray-500 italic">
-                    X-Axis: Aspiration (Financial Independence, Wealth) &nbsp;|&nbsp; Y-Axis: Fear (Market Crash, Technical Failure)
+
+                <!-- Dynamic Persona Card (Gemini) -->
+                <div class="lg:col-span-1">
+                    <div id="persona-card" class="h-full bg-gradient-to-br from-emerald-50 to-white p-6 rounded-2xl border border-emerald-100 shadow-lg flex flex-col justify-center items-center text-center transition-all duration-300">
+                        <div class="mb-4 text-4xl">👤</div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Select a User</h3>
+                        <p class="text-gray-500 text-sm mb-4">Click any dot on the scatter plot to generate a real-time micro-ethnography using Gemini AI.</p>
+                        <div class="text-xs text-emerald-600 font-mono bg-emerald-100 px-2 py-1 rounded">Waiting for selection...</div>
+                    </div>
                 </div>
             </div>
 
@@ -220,7 +233,7 @@
                     </p>
                     
                     <div class="space-y-4">
-                        <div class="p-4 bg-gray-50 rounded-lg border border-gray-100 hover:border-emerald-200 transition cursor-pointer group" onclick="updateContext('fear')">
+                        <div class="p-4 bg-gray-50 rounded-lg border border-gray-100 hover:border-emerald-200 transition cursor-pointer group" onclick="document.getElementById('simulator').scrollIntoView({behavior:'smooth'})">
                             <div class="flex items-center justify-between mb-2">
                                 <h4 class="font-bold text-gray-900">The Paralyzing Fears</h4>
                                 <span class="text-red-500 text-sm font-semibold">Risk Vector</span>
@@ -232,7 +245,7 @@
                             </p>
                         </div>
 
-                        <div class="p-4 bg-gray-50 rounded-lg border border-gray-100 hover:border-emerald-200 transition cursor-pointer group" onclick="updateContext('aspiration')">
+                        <div class="p-4 bg-gray-50 rounded-lg border border-gray-100 hover:border-emerald-200 transition cursor-pointer group" onclick="document.getElementById('simulator').scrollIntoView({behavior:'smooth'})">
                             <div class="flex items-center justify-between mb-2">
                                 <h4 class="font-bold text-gray-900">The Ambitious Aspirations</h4>
                                 <span class="text-yellow-600 text-sm font-semibold">Growth Vector</span>
@@ -318,6 +331,7 @@
                 <p class="text-lg text-gray-600 mt-2">
                     Test your system against chaos. Input a market crisis to see how the "Population" reacts vs. how your current UI copes.
                 </p>
+                <p id="sim-key-warning" class="text-sm text-red-600 font-bold mt-2 hidden bg-red-100 inline-block px-3 py-1 rounded">⚠️ API Key Missing! Click the 'API Key' button in the top right to enable AI features.</p>
             </div>
 
             <!-- Input Area -->
@@ -334,7 +348,7 @@
                 <!-- Loading State -->
                 <div id="sim-loading" class="hidden mt-6 text-center text-emerald-600 text-sm">
                     <span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>
-                    <span class="ml-2">Analyzing 3 distinct user archetypes...</span>
+                    <span class="ml-2">Analyzing user archetypes (This may take up to 20 seconds)...</span>
                 </div>
 
                 <!-- Results Area -->
@@ -444,36 +458,213 @@
     <script type="module">
         import { GoogleGenerativeAI } from "@google/generative-ai";
 
-        // --- Config ---
-        const apiKey = ""; // Added by environment at runtime
-        
-        // --- State Management ---
-        const state = {
-            viewMode: 'population', // 'persona' or 'population'
-            context: 'intro'
-        };
+        // --- API KEY MANAGEMENT ---
+        let apiKey = localStorage.getItem('gemini_api_key') || "";
+        const statusDot = document.getElementById('key-status-dot');
+        const warningMsg = document.getElementById('sim-key-warning');
+        const btnApiKey = document.getElementById('btn-api-key');
 
-        // --- Data: Derived from Reports ---
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('testkey')) {
+            apiKey = urlParams.get('testkey');
+            localStorage.setItem('gemini_api_key', apiKey);
+            const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+            window.history.pushState({path:newUrl},'',newUrl);
+            console.log("API Key loaded from URL");
+        }
+
+        function updateKeyStatus() {
+            if (apiKey && apiKey.length > 10) {
+                statusDot.classList.remove('bg-red-500');
+                statusDot.classList.add('bg-emerald-500');
+                if(warningMsg) warningMsg.classList.add('hidden');
+                btnApiKey.classList.remove('pulse-red');
+            } else {
+                statusDot.classList.remove('bg-emerald-500');
+                statusDot.classList.add('bg-red-500');
+                btnApiKey.classList.add('pulse-red');
+            }
+        }
+        updateKeyStatus();
+
+        btnApiKey.addEventListener('click', () => {
+            const newKey = prompt("Please enter your Gemini API Key:", apiKey);
+            if (newKey !== null) {
+                apiKey = newKey.trim();
+                localStorage.setItem('gemini_api_key', apiKey);
+                updateKeyStatus();
+                alert("API Key saved locally for this session.");
+            }
+        });
+
+        document.getElementById('btn-download-page').addEventListener('click', () => {
+            const htmlContent = document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], {type: 'text/html'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Groww_Strategic_Pitch_Dhulis.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+
+        // --- APP LOGIC ---
+        const state = { viewMode: 'population', context: 'intro' };
+
         const personas = [
             { x: 80, y: 80, r: 15, label: 'The Anxious Aspirant', color: '#F59E0B' }, 
             { x: 30, y: 90, r: 15, label: 'The Burned Veteran', color: '#EF4444' },   
             { x: 60, y: 30, r: 15, label: 'The Systematic Builder', color: '#3B82F6' } 
         ];
 
-        // Generate Combinatorial Population (600 points)
         const populationData = [];
         for (let i = 0; i < 600; i++) {
             let asp = 50 + (Math.random() * 50); 
             let fear = 20 + (Math.random() * 80); 
             if (Math.random() > 0.7) fear += 10;
             populationData.push({
-                x: asp,
-                y: fear,
-                r: 3, 
-                originalR: 3,
-                hoverLabel: `User #${i+1000}: ${asp > 75 ? 'Highly Ambitious' : 'Cautious'} & ${fear > 70 ? 'Fearful' : 'Confident'}`
+                x: asp, y: fear, r: 3, originalR: 3,
+                hoverLabel: `User #${i+1000}`
             });
         }
+
+        // --- GEMINI LOGIC WRAPPER (ROBUST FIX) ---
+        async function runGemini(userPrompt, systemInstruction) {
+            if (!apiKey) {
+                warningMsg.classList.remove('hidden');
+                btnApiKey.classList.add('pulse-red');
+                alert("API Key is missing. Please click the key icon in the navigation bar to set it.");
+                return { error: "Missing API Key" };
+            }
+
+            try {
+                // Initialize GenAI
+                const genAI = new GoogleGenerativeAI(apiKey);
+                
+                // IMPORTANT: Disable safety filters to allow "Crash" and "Crisis" simulations
+                const model = genAI.getGenerativeModel({ 
+                    model: "gemini-2.5-flash-preview-09-2025",
+                    safetySettings: [
+                        { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
+                        { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
+                        { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
+                        { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" }
+                    ]
+                });
+                
+                const finalPrompt = `
+SYSTEM INSTRUCTION: ${systemInstruction}
+--------------------------------------------------
+USER PROMPT: ${userPrompt}
+                `;
+
+                console.log("Sending request to Gemini...");
+                
+                // 1. Timeout Wrapper (Increased to 30s)
+                const timeoutPromise = new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error("Request timed out (30s)")), 30000)
+                );
+
+                // 2. Call API
+                const apiCallPromise = model.generateContent(finalPrompt);
+
+                // 3. Race
+                const result = await Promise.race([apiCallPromise, timeoutPromise]);
+                
+                // 4. Extract Text
+                const response = await result.response;
+                const text = response.text();
+                
+                return { text: text };
+
+            } catch (error) {
+                console.error("Gemini API Call Failed:", error);
+                return { error: error.message || error.toString() };
+            }
+        }
+
+        // --- FEATURE 3: CLICK CHART TO GENERATE PERSONA ---
+        const personaCard = document.getElementById('persona-card');
+        
+        async function generatePersona(x, y) {
+            personaCard.innerHTML = `
+                <div class="mb-4 text-4xl animate-bounce">🤖</div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Generating Persona...</h3>
+                <p class="text-gray-500 text-sm mb-4">Gemini is imagining a user with <br><b>Aspiration: ${Math.round(x)}</b> & <b>Fear: ${Math.round(y)}</b></p>
+                <div class="text-xs text-emerald-600 font-mono bg-emerald-100 px-2 py-1 rounded">Processing Vector...</div>
+            `;
+            
+            const prompt = `Aspiration Level: ${Math.round(x)}/100. Fear Level: ${Math.round(y)}/100.`;
+            const systemPrompt = `
+                You are a creative ethnographer for an Indian fintech.
+                Create a micro-persona based on the provided stats.
+                Return ONLY a JSON object (no markdown formatting).
+                JSON Structure:
+                {
+                    "name": "Indian Name",
+                    "city": "Specific Indian City (Tier 2/3 focus)",
+                    "job": "Occupation",
+                    "quote": "A single sentence quote capturing their financial anxiety or hope.",
+                    "need": "One specific UI feature they need (e.g. 'One-click Panic Sell', 'SIP Insurance')"
+                }
+            `;
+
+            const result = await runGemini(prompt, systemPrompt);
+            
+            if (result.text) {
+                try {
+                    // Aggressive Clean up of markdown code blocks
+                    let cleanJson = result.text;
+                    // Remove markdown fences
+                    cleanJson = cleanJson.replace(/```json/g, '').replace(/```/g, '');
+                    // Find first { and last }
+                    const firstBracket = cleanJson.indexOf('{');
+                    const lastBracket = cleanJson.lastIndexOf('}');
+                    if (firstBracket !== -1 && lastBracket !== -1) {
+                         cleanJson = cleanJson.substring(firstBracket, lastBracket + 1);
+                    }
+                    
+                    const p = JSON.parse(cleanJson);
+                    personaCard.innerHTML = `
+                        <div class="w-full text-left animate-fade-in">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-xs font-bold uppercase tracking-widest text-emerald-600">Generated Profile</span>
+                                <span class="text-xs text-gray-400">Asp:${Math.round(x)} | Fear:${Math.round(y)}</span>
+                            </div>
+                            <h3 class="text-2xl font-serif font-bold text-gray-900">${p.name}</h3>
+                            <p class="text-sm text-gray-500 mb-4">${p.job} • ${p.city}</p>
+                            
+                            <blockquote class="italic text-gray-600 border-l-4 border-emerald-400 pl-3 mb-4 text-sm">
+                                "${p.quote}"
+                            </blockquote>
+                            
+                            <div class="bg-white p-3 rounded border border-gray-100 shadow-sm">
+                                <span class="text-xs font-bold text-gray-900 block mb-1">Strategic Need:</span>
+                                <span class="text-sm text-emerald-700">${p.need}</span>
+                            </div>
+                        </div>
+                    `;
+                } catch (e) {
+                    console.error("JSON Parse Error:", e);
+                    personaCard.innerHTML = `
+                        <div class="text-center p-4">
+                            <div class="text-2xl mb-2">⚠️</div>
+                            <p class="text-red-500 text-sm">AI Response Format Error.</p>
+                            <p class="text-xs text-gray-400 mt-2">Check console for details.</p>
+                        </div>`;
+                }
+            } else {
+                 personaCard.innerHTML = `
+                    <div id="persona-card" class="h-full bg-gradient-to-br from-emerald-50 to-white p-6 rounded-2xl border border-emerald-100 shadow-lg flex flex-col justify-center items-center text-center">
+                        <div class="mb-4 text-4xl">❌</div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Generation Failed</h3>
+                        <p class="text-gray-500 text-sm mb-4">${result.error}</p>
+                    </div>`;
+            }
+        }
+
 
         // --- Chart 1: Population Matrix (Scatter) ---
         const ctxPop = document.getElementById('populationChart').getContext('2d');
@@ -491,6 +682,15 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                onClick: (e, activeEls) => {
+                    if (activeEls.length > 0 && state.viewMode === 'population') {
+                        const point = populationData[activeEls[0].index];
+                        generatePersona(point.x, point.y);
+                    }
+                },
+                onHover: (event, chartElement) => {
+                    event.native.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
+                },
                 animation: { duration: 1000, easing: 'easeOutQuart' },
                 scales: {
                     x: { min: 0, max: 100, title: { display: true, text: 'Aspiration Level', font: {weight: 'bold'} }, grid: { color: '#f3f4f6' } },
@@ -558,59 +758,6 @@
             }
         });
 
-        // --- UI Logic: View Switcher ---
-        const btnPersona = document.getElementById('btn-persona');
-        const btnPopulation = document.getElementById('btn-population');
-        const insightBox = document.getElementById('insight-box');
-
-        btnPersona.addEventListener('click', () => {
-            state.viewMode = 'persona';
-            btnPersona.classList.replace('bg-white', 'bg-gray-800'); btnPersona.classList.replace('text-gray-700', 'text-white'); btnPersona.classList.remove('border-gray-300');
-            btnPopulation.classList.replace('bg-emerald-600', 'bg-white'); btnPopulation.classList.replace('text-white', 'text-emerald-600'); btnPopulation.classList.add('border-emerald-600');
-            populationChart.data.datasets[0].data = personas;
-            populationChart.data.datasets[0].backgroundColor = personas.map(p => p.color);
-            populationChart.update();
-            insightBox.innerHTML = `<h3 class="text-lg font-bold text-gray-900 mb-2">Insight: The Trap of Personas</h3><p class="text-gray-600">This view simplifies millions into 3 stereotypes. It ignores edge cases, leading to fragile product decisions.</p>`;
-            insightBox.className = "mt-8 p-6 bg-white border-l-4 border-gray-800 rounded-r-lg shadow-sm transition-all";
-        });
-
-        btnPopulation.addEventListener('click', () => {
-            state.viewMode = 'population';
-            btnPopulation.classList.replace('bg-white', 'bg-emerald-600'); btnPopulation.classList.replace('text-emerald-600', 'text-white'); btnPopulation.classList.remove('border-emerald-600');
-            btnPersona.classList.replace('bg-gray-800', 'bg-white'); btnPersona.classList.replace('text-white', 'text-gray-700'); btnPersona.classList.add('border-gray-300');
-            populationChart.data.datasets[0].data = populationData;
-            populationChart.data.datasets[0].backgroundColor = 'rgba(0, 208, 156, 0.6)';
-            populationChart.update();
-            insightBox.innerHTML = `<h3 class="text-lg font-bold text-gray-900 mb-2">Insight: The Combinatorial Reality</h3><p class="text-gray-600">A user isn't just "The Anxious Aspirant." They are a dynamic vector. <span class="font-semibold text-emerald-600">Groww needs a system that adapts to these shifts.</span></p>`;
-            insightBox.className = "mt-8 p-6 bg-white border-l-4 border-emerald-500 rounded-r-lg shadow-sm transition-all";
-        });
-
-        // --- GEMINI API LOGIC ---
-        let genAI;
-        try {
-            genAI = new GoogleGenerativeAI(apiKey);
-        } catch (e) {
-            console.error("Gemini AI Init Error:", e);
-        }
-
-        async function runGemini(prompt, systemInstruction) {
-            if (!apiKey) {
-                alert("API Key is missing. This feature needs a valid Gemini API Key to work.");
-                return null;
-            }
-            try {
-                const model = genAI.getGenerativeModel({ 
-                    model: "gemini-2.5-flash-preview-09-2025",
-                    systemInstruction: { parts: [{ text: systemInstruction }] } 
-                });
-                const result = await model.generateContent(prompt);
-                return result.response.text();
-            } catch (error) {
-                console.error("API Call Failed:", error);
-                return null;
-            }
-        }
-
         // --- Feature 1: Resilience Simulator ---
         const btnSimulate = document.getElementById('btn-simulate');
         const crisisInput = document.getElementById('crisisInput');
@@ -642,20 +789,27 @@
                 Return ONLY raw JSON. No markdown.
             `;
 
-            const jsonStr = await runGemini(scenario, systemPrompt);
+            const result = await runGemini(scenario, systemPrompt);
             
             simLoading.classList.add('hidden');
             simResults.classList.remove('hidden');
 
-            if (jsonStr) {
+            if (result.text) {
                 try {
-                    // Clean up markdown code blocks if present
-                    const cleanJson = jsonStr.replace(/```json/g, '').replace(/```/g, '').trim();
+                    let cleanJson = result.text;
+                    cleanJson = cleanJson.replace(/```json/g, '').replace(/```/g, '');
+                     // Find first { and last }
+                    const firstBracket = cleanJson.indexOf('{');
+                    const lastBracket = cleanJson.lastIndexOf('}');
+                    if (firstBracket !== -1 && lastBracket !== -1) {
+                         cleanJson = cleanJson.substring(firstBracket, lastBracket + 1);
+                    }
+                    
                     const data = JSON.parse(cleanJson);
                     
                     data.cards.forEach(card => {
                         const div = document.createElement('div');
-                        div.className = "bg-white p-6 rounded-xl border border-gray-100 shadow-md hover:shadow-lg transition";
+                        div.className = "bg-white p-6 rounded-xl border border-gray-100 shadow-md hover:shadow-lg transition animate-fade-in";
                         div.innerHTML = `
                             <h4 class="font-bold text-gray-900 text-lg mb-2 border-b border-gray-100 pb-2">${card.title}</h4>
                             <p class="text-sm text-gray-600 mb-4 italic">"${card.reaction}"</p>
@@ -672,10 +826,11 @@
                     });
 
                 } catch (e) {
-                    simResults.innerHTML = `<div class="col-span-3 text-center text-red-500">Error parsing AI simulation. Please try again.</div>`;
+                    console.error(e);
+                    simResults.innerHTML = `<div class="col-span-3 text-center text-red-500">Error parsing AI simulation: ${e.message}</div>`;
                 }
             } else {
-                simResults.innerHTML = `<div class="col-span-3 text-center text-red-500">Simulation failed. Check API configuration.</div>`;
+                simResults.innerHTML = `<div class="col-span-3 text-center text-red-500 font-bold">Error: ${result.error}</div>`;
             }
         });
 
@@ -698,11 +853,11 @@
                 Sound professional but visionary.
             `;
 
-            const reply = await runGemini(question, systemPrompt);
-            if (reply) {
-                chatResponse.innerText = reply;
+            const result = await runGemini(question, systemPrompt);
+            if (result.text) {
+                chatResponse.innerText = result.text;
             } else {
-                chatResponse.innerText = "I'm focusing on the data right now. Try again later.";
+                chatResponse.innerText = `Error: ${result.error}`;
             }
         });
 
