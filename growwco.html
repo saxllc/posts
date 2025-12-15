@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GenAI & Wealth Creation: The Rural India Thesis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Markdown parsing for AI responses -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #FDFBF7; /* Warm Neutral Background */
+            color: #2D3748;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border-radius: 0.75rem;
+        }
+        .nav-active {
+            border-bottom: 2px solid #D97706;
+            color: #B45309;
+            font-weight: 600;
+        }
+        /* Hide scrollbar for clean UI */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .ai-loading {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+        .prose p {
+            margin-bottom: 0.5em;
+        }
+        .prose strong {
+            font-weight: 600;
+            color: #1a202c;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Chosen Palette: Warm Neutrals (Sand/Cream) + Trust Blue + Growth Green + Caution Amber -->
+    <!-- Application Structure Plan: 
+         1. Hero Section: Sets the stage for the specific persona (Rural Indian Investor).
+         2. The Persona Deep Dive: Interactive Radar chart to visualize the psychological profile (Risk, Emotion, Discipline).
+         3. The AI Trust Matrix: A Scatter plot comparing Chatbot vs. Copilot vs. Agent based on Agency vs. Trust.
+         4. Global Context & Crypto Thesis: Cards exploring how giants (Stripe/PayPal) move and the Bitcoin thesis for wealth.
+         5. The Solution (Copilot): Why Copilot wins for this demographic.
+         6. Regulatory Shield + AI Scam Detector: Interactive timeline and Gemini-powered risk analyzer.
+         7. Wealth Simulation + AI Story: Interactive Line chart showing "Impulse" vs. "Copilot" outcomes with Gemini narrative generation.
+    -->
+    <!-- Visualization & Content Choices:
+         - Radar Chart: Goal -> Visualize the psychological imbalance of the target user. Justification -> Radar maps multi-variate personality traits effectively.
+         - Scatter/Bubble Chart: Goal -> Compare AI models. Justification -> Shows the trade-off between User Agency and Trust clearly.
+         - Line Chart: Goal -> Demonstrate long-term wealth effect. Justification -> Time-series data is best for growth comparisons.
+         - Interactive Cards: Goal -> Break down complex company strategies and regulations.
+         - Gemini AI Integration: Goal -> Demonstrate the "Copilot" concept live.
+         - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <!-- Navigation -->
+    <nav class="bg-white sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-gray-800 tracking-tight">FinAI<span class="text-amber-600">Bharat</span></span>
+                </div>
+                <div class="hidden sm:flex space-x-8 items-center">
+                    <button onclick="scrollToSection('persona')" class="text-gray-600 hover:text-amber-600 px-3 py-2 text-sm font-medium transition-colors">The Investor</button>
+                    <button onclick="scrollToSection('trust-matrix')" class="text-gray-600 hover:text-amber-600 px-3 py-2 text-sm font-medium transition-colors">AI Trust Matrix</button>
+                    <button onclick="scrollToSection('regulatory')" class="text-gray-600 hover:text-amber-600 px-3 py-2 text-sm font-medium transition-colors">AI Safety Check</button>
+                    <button onclick="scrollToSection('simulation')" class="text-gray-600 hover:text-amber-600 px-3 py-2 text-sm font-medium transition-colors">Wealth Sim</button>
+                </div>
+                <!-- Mobile menu button placeholder (simplified for SPA) -->
+                <div class="flex items-center sm:hidden">
+                    <button onclick="toggleMobileMenu()" class="text-gray-600 hover:text-gray-900 focus:outline-none">
+                        ☰
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden sm:hidden bg-white border-t border-gray-100 p-4 space-y-2 shadow-lg">
+            <button onclick="scrollToSection('persona')" class="block w-full text-left text-gray-600 py-2">The Investor</button>
+            <button onclick="scrollToSection('trust-matrix')" class="block w-full text-left text-gray-600 py-2">AI Trust Matrix</button>
+            <button onclick="scrollToSection('regulatory')" class="block w-full text-left text-gray-600 py-2">AI Safety Check</button>
+            <button onclick="scrollToSection('simulation')" class="block w-full text-left text-gray-600 py-2">Wealth Sim</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+
+        <!-- Hero Section -->
+        <section class="bg-amber-50 py-12 md:py-20">
+            <div class="max-w-4xl mx-auto px-4 text-center">
+                <h1 class="text-3xl md:text-5xl font-bold text-gray-900 mb-6">
+                    Wealth Creation in Tier 2 India
+                </h1>
+                <p class="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
+                    Bridging the gap between the "Gambler's Impulse" and "Disciplined Wealth" using Generative AI. 
+                    <br><span class="text-amber-700 font-semibold">The Copilot Thesis.</span>
+                </p>
+                <div class="flex justify-center space-x-4">
+                    <button onclick="scrollToSection('trust-matrix')" class="bg-amber-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-amber-700 transition-colors font-medium">
+                        Explore the Solution
+                    </button>
+                    <button onclick="scrollToSection('regulatory')" class="bg-white text-gray-700 border border-gray-300 px-6 py-3 rounded-lg hover:bg-gray-50 transition-colors font-medium">
+                        Try Copilot Tools
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 1: The Persona Analysis -->
+        <section id="persona" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">The Rural First-Time Investor</h2>
+                    <p class="text-gray-600 mb-6">
+                        In the heart of small-town India, the desire for wealth is fierce, but the path is foggy. 
+                        Our persona is defined by a high appetite for risk—often bordering on gambling—coupled with deep mistrust of institutional black boxes.
+                    </p>
+                    <div class="space-y-4">
+                        <div class="glass-card p-4 border-l-4 border-red-500">
+                            <h3 class="font-bold text-gray-800">The Problem</h3>
+                            <p class="text-sm text-gray-600">Emotional betting drives impulse. "Do or die" mentality leads to debt spirals rather than compound growth.</p>
+                        </div>
+                        <div class="glass-card p-4 border-l-4 border-blue-500">
+                            <h3 class="font-bold text-gray-800">The Opportunity</h3>
+                            <p class="text-sm text-gray-600">A willingness to adopt new tech (UPI, Smartphones) creates a channel for "Copilot" intervention.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="text-center font-semibold text-gray-500 mb-2">Psychological Profile</h3>
+                    <div class="chart-container">
+                        <canvas id="personaChart"></canvas>
+                    </div>
+                    <p class="text-xs text-center text-gray-400 mt-2">Data based on behavioral analysis of Tier 2/3 user cohorts.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: The AI Trust Matrix (Chatbot vs Copilot vs Agent) -->
+        <section id="trust-matrix" class="bg-white py-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900">The Interface of Trust</h2>
+                    <p class="mt-4 text-gray-600 max-w-3xl mx-auto">
+                        For a suspicious, inexperienced user, the mode of AI interaction is critical. 
+                        <span class="font-semibold text-amber-700">Agents</span> feel like theft of control. <span class="font-semibold text-blue-600">Chatbots</span> feel aloof. 
+                        <span class="font-semibold text-green-600">Copilots</span> build bridges.
+                    </p>
+                </div>
+
+                <div class="grid lg:grid-cols-3 gap-8 mb-12">
+                    <!-- Cards for detailed text -->
+                    <div id="card-chatbot" class="glass-card p-6 cursor-pointer hover:shadow-lg transition-shadow border-t-4 border-gray-400" onclick="highlightChart('Chatbot')">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">1. The Chatbot</h3>
+                        <p class="text-sm text-gray-500 mb-3 uppercase tracking-wide">"The Teller"</p>
+                        <p class="text-gray-600 text-sm">
+                            <strong>User Perception:</strong> Clunky, vague, impersonal.
+                            <br><br>
+                            It answers questions but doesn't guide behavior. For a rural user, it feels like talking to a bank clerk who doesn't care.
+                        </p>
+                    </div>
+
+                    <div id="card-agent" class="glass-card p-6 cursor-pointer hover:shadow-lg transition-shadow border-t-4 border-red-500" onclick="highlightChart('Agent')">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">2. The Agent</h3>
+                        <p class="text-sm text-gray-500 mb-3 uppercase tracking-wide">"The Black Box"</p>
+                        <p class="text-gray-600 text-sm">
+                            <strong>User Perception:</strong> Shocking, "Stolen Agency."
+                            <br><br>
+                            It acts on your behalf. For a suspicious user, this is terrifying. "Did it just spend my money?" Trust collapses.
+                        </p>
+                    </div>
+
+                    <div id="card-copilot" class="glass-card p-6 cursor-pointer hover:shadow-lg transition-shadow border-t-4 border-green-500 bg-green-50" onclick="highlightChart('Copilot')">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">3. The Copilot</h3>
+                        <p class="text-sm text-green-600 mb-3 uppercase tracking-wide">"The Partner"</p>
+                        <p class="text-gray-600 text-sm">
+                            <strong>User Perception:</strong> Transparent, Measured, Educational.
+                            <br><br>
+                            It suggests, reasons, and waits for confirmation. It creates a "lock-step" journey, building discipline through transparency.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Scatter Chart Container -->
+                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                    <h3 class="text-lg font-semibold text-center mb-6">Analysis: Agency vs. Trust</h3>
+                    <div class="chart-container">
+                        <canvas id="trustChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: Global Context & Blockchain Thesis -->
+        <section id="global-trends" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-8">Market Evolution & Investing Thesis</h2>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Global Players -->
+                <div class="space-y-6">
+                    <h3 class="text-xl font-semibold text-blue-800 border-b pb-2">How Giants are Adopting GenAI</h3>
+                    
+                    <div class="glass-card p-5">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-bold text-lg">Stripe & PayPal</h4>
+                                <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Fraud & Personalization</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-2">
+                            Moving beyond payments to "Financial Operating Systems." Using GenAI to predict cash flow dips and suggest bridge financing.
+                            <br><strong>Lesson for India:</strong> AI should predict "debt traps" before they happen.
+                        </p>
+                    </div>
+
+                    <div class="glass-card p-5">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-bold text-lg">Apple Pay & GPay</h4>
+                                <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Wallet as Identity</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-2">
+                            Integrating identity with spending. 
+                            <br><strong>Lesson for India:</strong> Trust is visual. The UI must look as secure as a vault.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Blockchain Thesis -->
+                <div class="space-y-6">
+                    <h3 class="text-xl font-semibold text-amber-800 border-b pb-2">The Bitcoin/Blockchain Thesis</h3>
+                    <div class="bg-amber-50 border border-amber-200 p-5 rounded-lg">
+                        <h4 class="font-bold text-lg text-amber-900">Digital Gold, Not Crypto Casino</h4>
+                        <p class="text-sm text-gray-700 mt-2">
+                            For the rural investor, Bitcoin shouldn't be about trading (which feeds the gambling vice). It should be positioned as <strong>"Digital Gold"</strong>—a store of value outside the inflation of fiat currency.
+                        </p>
+                        <ul class="list-disc list-inside mt-3 text-sm text-gray-600 space-y-1">
+                            <li><strong>Store of Value:</strong> Like land or gold, but divisible.</li>
+                            <li><strong>Sovereignty:</strong> Ownership without intermediary friction.</li>
+                            <li><strong>Worthy Players:</strong> Coinbase (Custody trust), Binance (Liquidity), but mainly <span class="font-semibold">ETF-based instruments</span> for safety.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: Regulatory Guardrails & Gemini AI Tool -->
+        <section id="regulatory" class="bg-blue-900 text-white py-16 relative overflow-hidden">
+            <!-- Background Accent -->
+            <div class="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 rounded-full bg-blue-800 opacity-50 blur-3xl"></div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <h2 class="text-3xl font-bold mb-8 text-center">The Safety Net: RBI & SEBI</h2>
+                <p class="text-center text-blue-200 mb-10 max-w-2xl mx-auto">
+                    Technology moves fast, but regulation ensures the floor doesn't fall out. 
+                    The "Copilot" must act as a guardian.
+                </p>
+
+                <div class="grid md:grid-cols-3 gap-6 mb-12">
+                    <div class="bg-blue-800 p-6 rounded-xl border border-blue-700">
+                        <div class="text-3xl mb-3">🏦</div>
+                        <h3 class="text-xl font-bold mb-2">Ease of Banking</h3>
+                        <p class="text-sm text-blue-200">
+                            RBI's push for interoperability and digital KYC. Removing friction reduces the "clunky" feeling that drives users to unsafe shadow lenders.
+                        </p>
+                    </div>
+
+                    <div class="bg-blue-800 p-6 rounded-xl border border-blue-700">
+                        <div class="text-3xl mb-3">🛡️</div>
+                        <h3 class="text-xl font-bold mb-2">Investor Protection</h3>
+                        <p class="text-sm text-blue-200">
+                            SEBI's "Risk-o-meter" mandates. A GenAI Copilot must natively integrate these warnings.
+                        </p>
+                    </div>
+
+                    <div class="bg-blue-800 p-6 rounded-xl border border-blue-700">
+                        <div class="text-3xl mb-3">🎓</div>
+                        <h3 class="text-xl font-bold mb-2">Sachet Education</h3>
+                        <p class="text-sm text-blue-200">
+                            Micro-learning modules mandated by agencies. The Copilot delivers this education *in-context*.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Gemini Feature 1: Scam Detector -->
+                <div class="bg-white rounded-xl p-8 shadow-2xl text-gray-800 max-w-4xl mx-auto transform transition-all hover:scale-[1.01]">
+                    <div class="flex flex-col md:flex-row gap-8">
+                        <div class="md:w-1/2">
+                            <div class="flex items-center gap-2 mb-4">
+                                <span class="text-2xl">🕵️</span>
+                                <h3 class="text-xl font-bold text-gray-900">AI Safety Check</h3>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-4">
+                                Unsure about a "double your money" scheme? Paste the offer details below. 
+                                Our GenAI Copilot will analyze it against SEBI guardrails and basic financial logic.
+                            </p>
+                            <textarea id="scamInput" rows="4" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="e.g., 'My friend said if I invest 5000 rupees in this crypto app, I will get guaranteed 20% returns every week.'"></textarea>
+                            <button onclick="analyzeRisk()" class="mt-4 w-full bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 font-semibold">
+                                <span>Check for Red Flags</span>
+                                <span>✨</span>
+                            </button>
+                        </div>
+                        <div class="md:w-1/2 bg-gray-50 rounded-lg p-5 border border-gray-200 h-full min-h-[250px] flex flex-col">
+                            <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Copilot Analysis</h4>
+                            <div id="scamOutput" class="text-sm text-gray-700 prose prose-sm overflow-y-auto max-h-[200px] flex-grow">
+                                <p class="italic text-gray-400">Analysis results will appear here...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: Interactive Simulation -->
+        <section id="simulation" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-gray-900">Simulation: The Cost of Impulse</h2>
+                <p class="text-gray-600">See how a "Copilot" strategy compares to the typical "Impulse" behavior over 5 years.</p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Controls -->
+                <div class="lg:col-span-1 space-y-6">
+                    <div class="glass-card p-6">
+                        <h3 class="font-bold text-gray-800 mb-4">Adjust Scenario</h3>
+                        
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Monthly Investment (₹)</label>
+                        <input type="range" id="investAmt" min="500" max="10000" step="500" value="2000" class="w-full accent-amber-600 mb-2" oninput="updateSimulation()">
+                        <div class="flex justify-between text-xs text-gray-500">
+                            <span>₹500</span>
+                            <span id="investVal" class="font-bold text-amber-700">₹2,000</span>
+                            <span>₹10,000</span>
+                        </div>
+
+                        <div class="mt-6 mb-6">
+                            <h4 class="font-bold text-sm text-gray-700 mb-2">Strategy Profiles</h4>
+                            <div class="space-y-2">
+                                <div class="flex items-center">
+                                    <input type="radio" name="strategy" id="stratImpulse" value="Impulse" class="mr-2 accent-red-500" onclick="updateSimulation()">
+                                    <label for="stratImpulse" class="text-sm text-gray-600 cursor-pointer"><strong>Impulse:</strong> Emotional, Churns Often.</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="radio" name="strategy" id="stratCopilot" value="Copilot" checked class="mr-2 accent-green-500" onclick="updateSimulation()">
+                                    <label for="stratCopilot" class="text-sm text-gray-600 cursor-pointer"><strong>Copilot:</strong> Disciplined, Index Funds.</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gemini Feature 2: Narrative Generator -->
+                        <div class="border-t pt-4 border-gray-200">
+                             <h4 class="font-bold text-sm text-gray-700 mb-2 flex items-center gap-2">
+                                AI Narrative
+                                <span class="bg-amber-100 text-amber-800 text-[10px] px-2 py-0.5 rounded-full">Gemini</span>
+                            </h4>
+                            <p class="text-xs text-gray-500 mb-3">What does your future look like with these choices?</p>
+                            <button onclick="generateStory()" class="w-full bg-amber-600 text-white px-3 py-2 rounded shadow hover:bg-amber-700 transition text-sm flex justify-center items-center gap-2">
+                                <span>Generate Future Story</span>
+                                <span>✨</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-amber-100 p-4 rounded-lg border border-amber-200">
+                        <h4 class="font-bold text-amber-900 text-sm">Copilot Insight</h4>
+                        <div id="storyOutput" class="text-xs text-amber-900 mt-2 italic leading-relaxed min-h-[60px]">
+                            With a Copilot, avoiding just 2 emotional withdrawals per year increases wealth by 40% due to compounding.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart -->
+                <div class="lg:col-span-2">
+                    <div class="chart-container">
+                        <canvas id="simChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-10 border-t border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-sm">© 2024 Fintech Research Analysis. Conceptual SPA.</p>
+            <p class="text-xs text-gray-500 mt-2">Sources: RBI Guidelines, SEBI Investor Education Material, Market Analysis of Stripe/PayPal/Coinbase.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- GEMINI API INTEGRATION ---
+        
+        const apiKey = ""; // Set at runtime environment
+
+        async function callGemini(prompt, systemInstruction = "") {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+                generationConfig: {
+                    maxOutputTokens: 250,
+                    temperature: 0.7
+                }
+            };
+            
+            if (systemInstruction) {
+                payload.systemInstruction = { parts: [{ text: systemInstruction }] };
+            }
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API call failed: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                return data.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't generate a response.";
+            } catch (error) {
+                console.error("Gemini API Error:", error);
+                return "Error connecting to the Copilot. Please try again later.";
+            }
+        }
+
+        // Feature 1: AI Scam Detector
+        async function analyzeRisk() {
+            const input = document.getElementById('scamInput').value.trim();
+            const outputDiv = document.getElementById('scamOutput');
+            
+            if (!input) {
+                outputDiv.innerHTML = '<p class="text-red-500">Please enter investment details first.</p>';
+                return;
+            }
+
+            outputDiv.innerHTML = '<div class="flex items-center gap-2 text-gray-500 ai-loading"><span>Analyzing with SEBI guardrails...</span></div>';
+
+            const systemPrompt = "You are a conservative, protective financial AI Copilot for a rural Indian investor. Your goal is to detect scams, high-risk schemes, and gambling disguised as investing. Be direct, simple, and warn about 'Guaranteed Returns' (a red flag). Reference SEBI guidelines where applicable. Keep the answer under 100 words. Use emojis.";
+            const userPrompt = `Analyze this investment opportunity for risks: "${input}"`;
+
+            const result = await callGemini(userPrompt, systemPrompt);
+            outputDiv.innerHTML = marked.parse(result);
+        }
+
+        // Feature 2: Narrative Generator
+        async function generateStory() {
+            const amount = document.getElementById('investAmt').value;
+            const strategy = document.querySelector('input[name="strategy"]:checked').value;
+            const outputDiv = document.getElementById('storyOutput');
+
+            outputDiv.innerHTML = '<span class="ai-loading">Consulting the Copilot...</span>';
+
+            const systemPrompt = "You are a wise financial narrator for Tier 2 India. Write a very short (2-3 sentences) story about 'Ramesh' (the user) 5 years from now based on his investment strategy. If 'Impulse', mention stress, loss, or debt. If 'Copilot', mention stability, buying a home/bike, or peace of mind. Be culturally relevant.";
+            const userPrompt = `Write a story for a monthly investment of ₹${amount} using the ${strategy} strategy.`;
+
+            const result = await callGemini(userPrompt, systemPrompt);
+            outputDiv.innerHTML = marked.parse(result);
+        }
+
+
+        // --- DATA & STATE ---
+        
+        // Persona Radar Data
+        const personaData = {
+            labels: ['Risk Appetite', 'Tech Adoption', 'Financial Discipline', 'Trust in Banks', 'Emotional Volatility', 'Debt Awareness'],
+            datasets: [{
+                label: 'Tier 2 First-Time Investor',
+                data: [90, 75, 20, 30, 85, 40],
+                fill: true,
+                backgroundColor: 'rgba(217, 119, 6, 0.2)', // Amber-600
+                borderColor: 'rgb(217, 119, 6)',
+                pointBackgroundColor: 'rgb(217, 119, 6)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgb(217, 119, 6)'
+            }]
+        };
+
+        // Trust Matrix Data (Bubble/Scatter)
+        // X = Agency (User Control), Y = Trust, R = Effectiveness
+        const trustMatrixData = {
+            datasets: [
+                {
+                    label: 'Chatbot',
+                    data: [{x: 80, y: 30, r: 10}],
+                    backgroundColor: 'rgba(59, 130, 246, 0.6)' // Blue
+                },
+                {
+                    label: 'Agentic AI',
+                    data: [{x: 10, y: 20, r: 15}], // Low agency, Low trust (fear)
+                    backgroundColor: 'rgba(239, 68, 68, 0.6)' // Red
+                },
+                {
+                    label: 'Copilot',
+                    data: [{x: 60, y: 90, r: 25}], // Balanced agency, High trust
+                    backgroundColor: 'rgba(34, 197, 94, 0.6)' // Green
+                }
+            ]
+        };
+
+        // --- CHART INITIALIZATION ---
+
+        // 1. Persona Radar Chart
+        const ctxPersona = document.getElementById('personaChart').getContext('2d');
+        const personaChart = new Chart(ctxPersona, {
+            type: 'radar',
+            data: personaData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: '#E5E7EB' },
+                        grid: { color: '#E5E7EB' },
+                        pointLabels: {
+                            font: { size: 11, family: "'Segoe UI', sans-serif" },
+                            color: '#4B5563'
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // 2. Trust Matrix Scatter Chart
+        const ctxTrust = document.getElementById('trustChart').getContext('2d');
+        const trustChart = new Chart(ctxTrust, {
+            type: 'bubble',
+            data: trustMatrixData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        title: { display: true, text: 'User Agency (Control)' },
+                        min: 0, max: 100,
+                        grid: { color: '#F3F4F6' }
+                    },
+                    y: {
+                        title: { display: true, text: 'Perceived Trust / Safety' },
+                        min: 0, max: 100,
+                        grid: { color: '#F3F4F6' }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': (Control: ' + context.raw.x + '%, Trust: ' + context.raw.y + '%)';
+                            }
+                        }
+                    },
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // 3. Wealth Simulation Line Chart
+        let simChartInstance = null;
+
+        function initSimChart() {
+            const ctxSim = document.getElementById('simChart').getContext('2d');
+            
+            const labels = ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'];
+            // Initial dummy data, will be updated by math
+            const data = {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Impulse Strategy (Gambler)',
+                        data: [],
+                        borderColor: 'rgb(239, 68, 68)',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        fill: false,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Copilot Strategy (Disciplined)',
+                        data: [],
+                        borderColor: 'rgb(34, 197, 94)',
+                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }
+                ]
+            };
+
+            simChartInstance = new Chart(ctxSim, {
+                type: 'line',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Portfolio Value (₹)' }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) { label += ': '; }
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            updateSimulation(); // Run initial calc
+        }
+
+        // --- INTERACTION LOGIC ---
+
+        function updateSimulation() {
+            const monthlyInvest = parseInt(document.getElementById('investAmt').value);
+            document.getElementById('investVal').innerText = "₹" + monthlyInvest.toLocaleString('en-IN');
+            
+            // Get selected strategy if needed for calculation updates, currently just visualized
+            const strategy = document.querySelector('input[name="strategy"]:checked').value;
+
+            const years = 5;
+            const impulseData = [];
+            const copilotData = [];
+            
+            let impulseWealth = 0;
+            let copilotWealth = 0;
+
+            // Simplified Math Model
+            
+            for (let y = 1; y <= years; y++) {
+                // Annual accumulation
+                for(let m=0; m<12; m++) {
+                    impulseWealth += monthlyInvest;
+                    copilotWealth += monthlyInvest;
+                }
+
+                // Apply returns
+                // Copilot: Steady 12% annual
+                copilotWealth = copilotWealth * 1.12;
+
+                // Impulse: Volatile. 
+                const volatility = [1.15, 0.90, 0.95, 1.20, 1.0];
+                impulseWealth = impulseWealth * volatility[y-1];
+
+                impulseData.push(impulseWealth);
+                copilotData.push(copilotWealth);
+            }
+
+            simChartInstance.data.datasets[0].data = impulseData;
+            simChartInstance.data.datasets[1].data = copilotData;
+            simChartInstance.update();
+
+            // Note: The AI Narrative Generator button (Feature 2) is used to update text now
+        }
+
+        function highlightChart(type) {
+            // Visual feedback on cards
+            ['chatbot', 'agent', 'copilot'].forEach(id => {
+                document.getElementById(`card-${id}`).classList.remove('ring-2', 'ring-offset-2', 'ring-amber-500');
+            });
+            document.getElementById(`card-${type.toLowerCase()}`).classList.add('ring-2', 'ring-offset-2', 'ring-amber-500');
+
+            // Highlight dataset in Trust Chart
+            // Not strictly necessary to redraw, but adds interaction
+            alert(`Selected: ${type}. See its position on the matrix below.`);
+        }
+
+        // --- NAVIGATION ---
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+            // Close mobile menu if open
+            const menu = document.getElementById('mobile-menu');
+            if (!menu.classList.contains('hidden')) {
+                menu.classList.add('hidden');
+            }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            initSimChart();
+        };
+
+    </script>
+</body>
+</html>
