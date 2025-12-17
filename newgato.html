@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GATO & Designness Architecture | Intelligent UX for DPI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Sora:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0e17;
+            --bg-secondary: #111827;
+            --bg-tertiary: #1a2234;
+            --bg-card: #1e293b;
+            --accent-cyan: #00d9ff;
+            --accent-orange: #ff6b35;
+            --accent-yellow: #f4d35e;
+            --accent-purple: #a855f7;
+            --accent-green: #10b981;
+            --accent-blue: #2563eb;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border: rgba(148, 163, 184, 0.2);
+            --glow-cyan: rgba(0, 217, 255, 0.3);
+            --glow-orange: rgba(255, 107, 53, 0.3);
+            --glow-purple: rgba(168, 85, 247, 0.3);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Sora', sans-serif;
+            color: var(--text-primary);
+            line-height: 1.7;
+            background: var(--bg-primary);
+            overflow-x: hidden;
+        }
+
+        /* SCROLL PROGRESS BAR */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple), var(--accent-orange));
+            z-index: 1000;
+            width: 0%;
+            transition: width 0.1s ease-out;
+        }
+
+        /* FLOATING NAV */
+        .floating-nav {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            border: 2px solid var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-dot:hover,
+        .nav-dot.active {
+            background: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 20px var(--glow-cyan);
+            transform: scale(1.3);
+        }
+
+        .nav-dot::after {
+            content: attr(data-label);
+            position: absolute;
+            right: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            white-space: nowrap;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            background: var(--bg-card);
+            padding: 4px 12px;
+            border-radius: 4px;
+        }
+
+        .nav-dot:hover::after {
+            opacity: 1;
+            right: 30px;
+        }
+
+        /* BACKGROUND EFFECTS */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(0, 217, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(255, 107, 53, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* HEADER */
+        .header {
+            text-align: center;
+            margin-bottom: 100px;
+            padding: 100px 0;
+            position: relative;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .header.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 217, 255, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-cyan) 50%, var(--accent-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -2px;
+            line-height: 1.1;
+            position: relative;
+        }
+
+        .header p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .scroll-indicator svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--accent-cyan);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        /* SECTION STYLING */
+        .section {
+            margin-bottom: 120px;
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            color: var(--text-primary);
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+            border-radius: 2px;
+        }
+
+        .section-number {
+            color: var(--accent-cyan);
+            font-family: 'Space Mono', monospace;
+            font-size: 1rem;
+            display: block;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        /* SECTION DIVIDER */
+        .section-divider {
+            margin: 100px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-purple), var(--accent-cyan), var(--accent-purple), transparent);
+        }
+
+        .section-divider span {
+            background: var(--bg-primary);
+            padding: 0 40px;
+            position: relative;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--accent-cyan);
+            letter-spacing: 4px;
+        }
+
+        /* CONTENT BOX */
+        .content-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 30px 0;
+            transition: all 0.3s ease;
+        }
+
+        .content-box:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-5px);
+        }
+
+        .content-box.highlight {
+            background: rgba(0, 217, 255, 0.1);
+            border-color: var(--accent-cyan);
+        }
+
+        /* IMAGE CONTAINER */
+        .image-container {
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            margin: 40px 0;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .image-caption {
+            padding: 15px 20px;
+            background: var(--bg-card);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* GRID LAYOUT */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin: 40px 0;
+        }
+
+        /* FEATURE CARD */
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.4s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-8px);
+            box-shadow: 0 30px 60px -20px rgba(0, 217, 255, 0.2);
+        }
+
+        .feature-card .icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 1.75rem;
+        }
+
+        .feature-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .feature-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* DEMO PHONE */
+        .phone-frame {
+            background: #1f2937;
+            border-radius: 36px;
+            padding: 8px;
+            max-width: 340px;
+            margin: 0 auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .phone-screen {
+            background: #f8fafc;
+            border-radius: 28px;
+            overflow: hidden;
+            min-height: 600px;
+        }
+
+        .phone-notch {
+            background: #1f2937;
+            height: 24px;
+            width: 120px;
+            margin: 0 auto;
+            border-radius: 0 0 16px 16px;
+        }
+
+        /* CODE BLOCK */
+        .code-block {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--accent-cyan);
+            overflow-x: auto;
+            white-space: pre;
+            margin: 30px 0;
+        }
+
+        /* TABLE STYLING */
+        .dark-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .dark-table th {
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+            color: var(--bg-primary);
+            padding: 16px 20px;
+            text-align: left;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .dark-table td {
+            background: var(--bg-card);
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .dark-table tr:hover td {
+            background: var(--bg-tertiary);
+        }
+
+        /* LIST STYLING */
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+
+        .feature-list .check {
+            color: var(--accent-green);
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        /* SIMULATOR SECTION */
+        .simulator-section {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            border-radius: 24px;
+            padding: 60px 40px;
+            margin: 60px 0;
+            border: 1px solid var(--border);
+        }
+
+        .simulator-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .sim-btn {
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .sim-btn:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-2px);
+        }
+
+        .sim-btn.active {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            border-color: transparent;
+            color: var(--bg-primary);
+        }
+
+        /* AI INPUT */
+        .ai-input-container {
+            display: flex;
+            gap: 12px;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            background: var(--bg-card);
+            border-radius: 50px;
+            padding: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .ai-input-container input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 12px 20px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .ai-input-container input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .ai-input-container button {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .ai-input-container button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px -10px var(--glow-purple);
+        }
+
+        /* MOCK DEVICE */
+        .mock-device {
+            background: white;
+            max-width: 320px;
+            border-radius: 32px;
+            border: 6px solid #1c1b1f;
+            overflow: hidden;
+            margin: 0 auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .mock-device-header {
+            background: #1c1b1f;
+            height: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mock-device-notch {
+            width: 80px;
+            height: 16px;
+            background: #000;
+            border-radius: 0 0 12px 12px;
+        }
+
+        .mock-device-body {
+            min-height: 500px;
+            padding: 16px;
+            background: #fffbfe;
+        }
+
+        .mock-device-footer {
+            height: 48px;
+            background: #f3edf7;
+            border-top: 1px solid #e7e0ec;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        /* FOOTER */
+        .footer {
+            margin-top: 120px;
+            padding-top: 50px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .footer p {
+            margin: 8px 0;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .floating-nav {
+                display: none;
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .grid-2,
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 40px 20px;
+            }
+        }
+
+        /* ANIMATIONS */
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .sparkle-loader {
+            display: inline-block;
+            animation: pulse-sparkle 1.5s infinite;
+        }
+
+        @keyframes pulse-sparkle {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* M3 Elevation for Simulator */
+        .m3-elevation-1 { box-shadow: 0px 1px 2px rgba(0,0,0,0.3), 0px 1px 3px 1px rgba(0,0,0,0.15); }
+        .m3-elevation-2 { box-shadow: 0px 1px 2px rgba(0,0,0,0.3), 0px 2px 6px 2px rgba(0,0,0,0.15); }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="bg-gradient"></div>
+
+    <nav class="floating-nav">
+        <div class="nav-dot" data-section="header" data-label="Introduction"></div>
+        <div class="nav-dot" data-section="gato-story" data-label="GATO Story"></div>
+        <div class="nav-dot" data-section="gato-demo" data-label="GATO Demo"></div>
+        <div class="nav-dot" data-section="gato-tech" data-label="How It Works"></div>
+        <div class="nav-dot" data-section="designness" data-label="Designness"></div>
+        <div class="nav-dot" data-section="sdui-part1" data-label="Architecture"></div>
+        <div class="nav-dot" data-section="sdui-part2" data-label="SDUI"></div>
+        <div class="nav-dot" data-section="sdui-part3" data-label="Rhetorical Layer"></div>
+        <div class="nav-dot" data-section="journey-sim" data-label="Journey Simulator"></div>
+    </nav>
+
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header" id="header">
+            <h1>GATO & Designness<br>Architecture</h1>
+            <p>Generative Audio-Tooltip Overlay meets Server-Driven UI: Building Intelligent Interfaces for the Next Billion Users</p>
+            <div class="scroll-indicator">
+                <span>Scroll to explore</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- ==================== GATO SECTION ==================== -->
+        
+        <!-- GATO HERO -->
+        <div class="section" id="gato-story">
+            <span class="section-number">PART 01</span>
+            <h2 class="section-title">The Voice of the Interface</h2>
+            
+            <p style="font-size: 1.25rem; color: var(--text-secondary); font-style: italic; margin-bottom: 40px; max-width: 800px;">
+                How "Generative Audio-Tooltip Overlay" (GATO) is redesigning digital accessibility for the next billion users.
+            </p>
+
+            <div class="image-container">
+                <img src="mock.jpg" alt="GATO UI Concept Mockup showing onboarding and language selection">
+                <div class="image-caption">Figure 1.0: The GATO Workflow — From default view to localized audio guidance in three taps</div>
+            </div>
+
+            <div class="grid-2" style="margin-top: 60px;">
+                <div class="content-box">
+                    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 20px; color: var(--text-primary);">The Problem</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 20px;">
+                        Digital Public Infrastructure often assumes literacy, technical familiarity, and language proficiency. For hundreds of millions of users—elderly populations, those with limited formal education, or speakers of regional dialects—standard form interfaces create insurmountable barriers.
+                    </p>
+                    <p style="color: var(--text-secondary);">
+                        The "last mile" of digital inclusion isn't about connectivity—it's about <strong style="color: var(--accent-cyan);">comprehension</strong>.
+                    </p>
+                </div>
+                
+                <div class="content-box highlight">
+                    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 20px; color: var(--text-primary);">The GATO Solution</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 20px;">
+                        GATO layers <strong style="color: var(--accent-cyan);">contextual audio explanations</strong> on top of any existing UI without requiring redesign. Users tap speaker icons to hear AI-generated explanations in their preferred language and dialect.
+                    </p>
+                    <ul class="feature-list">
+                        <li><span class="check">✓</span> <span style="color: var(--text-secondary);">Zero UI modification required</span></li>
+                        <li><span class="check">✓</span> <span style="color: var(--text-secondary);">22+ languages supported</span></li>
+                        <li><span class="check">✓</span> <span style="color: var(--text-secondary);">Context-aware explanations</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- GATO DEMO -->
+        <div class="section" id="gato-demo">
+            <span class="section-number">PART 02</span>
+            <h2 class="section-title">Experience GATO Live</h2>
+            
+            <p style="color: var(--text-secondary); max-width: 700px; margin-bottom: 40px;">
+                Interact with the demo below. Enable GATO mode and click the speaker icons to hear context-aware AI explanations in different languages.
+            </p>
+
+            <div class="grid-2">
+                <!-- Controls -->
+                <div>
+                    <div class="content-box">
+                        <h3 style="color: var(--text-primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                            <span class="material-symbols-outlined" style="color: var(--accent-cyan);">tune</span>
+                            Configuration
+                        </h3>
+                        
+                        <!-- GATO Toggle -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: var(--bg-secondary); border-radius: 12px; margin-bottom: 20px;">
+                            <div>
+                                <div style="font-weight: 600; color: var(--text-primary);">GATO Mode</div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted);">Show audio tooltips</div>
+                            </div>
+                            <label style="position: relative; display: inline-block; width: 48px; height: 24px;">
+                                <input type="checkbox" id="gato-toggle" checked style="opacity: 0; width: 0; height: 0;">
+                                <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: var(--accent-cyan); border-radius: 24px; transition: 0.3s;"></span>
+                            </label>
+                        </div>
+
+                        <!-- Language Selector -->
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">User Language</label>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                                <button onclick="setLanguage('en')" id="btn-en" class="lang-btn" style="padding: 10px; border-radius: 8px; border: none; background: var(--accent-cyan); color: var(--bg-primary); font-weight: 600; cursor: pointer;">English</button>
+                                <button onclick="setLanguage('es')" id="btn-es" class="lang-btn" style="padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-secondary); color: var(--text-secondary); cursor: pointer;">Español</button>
+                                <button onclick="setLanguage('hi')" id="btn-hi" class="lang-btn" style="padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-secondary); color: var(--text-secondary); cursor: pointer;">हिन्दी</button>
+                            </div>
+                        </div>
+
+                        <!-- Context Level -->
+                        <div>
+                            <label style="display: block; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">AI Context Level</label>
+                            <select id="context-level" style="width: 100%; padding: 12px; border-radius: 8px; background: var(--bg-secondary); border: 1px solid var(--border); color: var(--text-primary); cursor: pointer;">
+                                <option value="standard">Standard (Label Reading)</option>
+                                <option value="generative" selected>Generative (Context & Help)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Visual Feedback -->
+                    <div class="content-box" style="margin-top: 20px; min-height: 120px;">
+                        <h4 style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 12px;">System Output</h4>
+                        <div id="visual-feedback" style="color: var(--accent-cyan); font-family: 'Space Mono', monospace; font-size: 0.85rem;">
+                            <span style="opacity: 0.5;">[11:10:18]</span> System: Language switched to EN
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phone Demo -->
+                <div style="display: flex; justify-content: center;">
+                    <div class="phone-frame">
+                        <div class="phone-screen">
+                            <div class="phone-notch"></div>
+                            
+                            <!-- App Header -->
+                            <div style="padding: 16px 20px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center;">
+                                <span class="material-symbols-outlined" style="color: #64748b;">arrow_back</span>
+                                <span style="font-weight: 700; color: #1e293b;">New Account</span>
+                                <span class="material-symbols-outlined" style="color: #64748b;">more_vert</span>
+                            </div>
+                            
+                            <!-- App Content -->
+                            <div style="padding: 20px; overflow-y: auto; max-height: 480px;">
+                                <!-- Intro Card -->
+                                <div style="background: #eff6ff; padding: 16px; border-radius: 12px; border: 1px solid #bfdbfe; margin-bottom: 20px; display: flex; gap: 12px;">
+                                    <span class="material-symbols-outlined" style="color: #2563eb;">info</span>
+                                    <div style="flex: 1;">
+                                        <h5 id="lbl-intro-title" style="font-size: 0.9rem; font-weight: 700; color: #1e3a8a; margin-bottom: 4px;">Welcome</h5>
+                                        <p id="lbl-intro-desc" style="font-size: 0.75rem; color: #1e40af; line-height: 1.4;">Please complete your registration to access government services.</p>
+                                    </div>
+                                    <button class="gato-trigger" data-field="intro" style="width: 32px; height: 32px; border-radius: 50%; background: #2563eb; border: none; color: white; cursor: pointer; flex-shrink: 0;">
+                                        <span class="material-symbols-outlined" style="font-size: 16px;">volume_up</span>
+                                    </button>
+                                </div>
+
+                                <!-- Form Fields -->
+                                <div style="margin-bottom: 20px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                        <label id="lbl-name" style="font-size: 0.85rem; font-weight: 600; color: #334155;">Full Legal Name</label>
+                                        <button class="gato-trigger" data-field="fullname" style="width: 24px; height: 24px; border-radius: 50%; background: #e2e8f0; border: none; color: #64748b; cursor: pointer;">
+                                            <span class="material-symbols-outlined" style="font-size: 12px;">volume_up</span>
+                                        </button>
+                                    </div>
+                                    <input type="text" placeholder="e.g. Jane Doe" style="width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 0.9rem;">
+                                </div>
+
+                                <div style="margin-bottom: 20px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                        <label id="lbl-id" style="font-size: 0.85rem; font-weight: 600; color: #334155;">National ID Number</label>
+                                        <button class="gato-trigger" data-field="nationalid" style="width: 24px; height: 24px; border-radius: 50%; background: #e2e8f0; border: none; color: #64748b; cursor: pointer;">
+                                            <span class="material-symbols-outlined" style="font-size: 12px;">volume_up</span>
+                                        </button>
+                                    </div>
+                                    <input type="text" placeholder="XXXX-XXXX-XXXX" style="width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 0.9rem;">
+                                </div>
+
+                                <div style="margin-bottom: 20px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                        <label id="lbl-address" style="font-size: 0.85rem; font-weight: 600; color: #334155;">Current Address</label>
+                                        <button class="gato-trigger" data-field="address" style="width: 24px; height: 24px; border-radius: 50%; background: #e2e8f0; border: none; color: #64748b; cursor: pointer;">
+                                            <span class="material-symbols-outlined" style="font-size: 12px;">volume_up</span>
+                                        </button>
+                                    </div>
+                                    <textarea placeholder="Street, City..." style="width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 0.9rem; height: 70px; resize: none;"></textarea>
+                                </div>
+
+                                <button id="lbl-submit" style="width: 100%; padding: 14px; background: #0f172a; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">
+                                    Submit Application
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GATO TECH -->
+        <div class="section" id="gato-tech">
+            <span class="section-number">PART 03</span>
+            <h2 class="section-title">Under the Hood</h2>
+            
+            <p style="color: var(--text-secondary); max-width: 700px; margin-bottom: 40px;">
+                GATO combines client-side DOM observation with edge-cached Generative AI to deliver near-instant, context-aware audio.
+            </p>
+
+            <div class="grid-3">
+                <div class="feature-card">
+                    <div class="icon" style="background: rgba(0, 217, 255, 0.2);">
+                        <span class="material-symbols-outlined" style="color: var(--accent-cyan);">touch_app</span>
+                    </div>
+                    <h3>1. Context Capture</h3>
+                    <p>When a user interacts with a UI element, GATO captures the label, placeholder, and surrounding DOM metadata to understand the <em>purpose</em> of the field.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon" style="background: rgba(168, 85, 247, 0.2);">
+                        <span class="material-symbols-outlined" style="color: var(--accent-purple);">psychology</span>
+                    </div>
+                    <h3>2. Generative Synthesis</h3>
+                    <p>The metadata is passed to a lightweight LLM at the edge. The model generates conversational explanations, expanding "CVV" to "The 3-digit security code on the back of your card."</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon" style="background: rgba(16, 185, 129, 0.2);">
+                        <span class="material-symbols-outlined" style="color: var(--accent-green);">record_voice_over</span>
+                    </div>
+                    <h3>3. Audio Overlay</h3>
+                    <p>The explanation is converted to speech using neural TTS and played immediately. The visual UI remains uncluttered while adding an invisible layer of accessibility.</p>
+                </div>
+            </div>
+
+            <div class="image-container" style="margin-top: 60px;">
+                <img src="arch1.jpg" alt="GATO Architecture Diagram">
+                <div class="image-caption">GATO Architecture: From DOM observation to audio delivery</div>
+            </div>
+
+            <!-- Social Impact -->
+            <div class="grid-2" style="margin-top: 60px; align-items: center;">
+                <div class="image-container" style="margin: 0;">
+                    <img src="senior.jpg" alt="User benefiting from GATO technology">
+                </div>
+                <div>
+                    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.75rem; color: var(--text-primary); margin-bottom: 20px;">Building for the Next Billion</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 24px;">
+                        Technology often leaves behind those who cannot read complex interfaces. GATO is more than a tooltip; it is an invitation to participate in the digital economy.
+                    </p>
+                    <ul class="feature-list">
+                        <li><span class="check">✓</span> <span style="color: var(--text-secondary);"><strong style="color: var(--text-primary);">Significant reduction</strong> in form abandonment rates among non-native speakers</span></li>
+                        <li><span class="check">✓</span> <span style="color: var(--text-secondary);"><strong style="color: var(--text-primary);">Zero-UI impact</strong> implementation — no redesign needed</span></li>
+                        <li><span class="check">✓</span> <span style="color: var(--text-secondary);">Supports <strong style="color: var(--text-primary);">22+ languages</strong> out of the box</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SECTION DIVIDER ==================== -->
+        <div class="section-divider" id="designness">
+            <span>DESIGNNESS ARCHITECTURE</span>
+        </div>
+
+        <!-- ==================== SDUI SECTION ==================== -->
+
+        <!-- SDUI Part 1 -->
+        <div class="section" id="sdui-part1">
+            <span class="section-number">PART 04</span>
+            <h2 class="section-title">The Architectural Insight</h2>
+            
+            <div class="content-box highlight" style="margin-bottom: 40px;">
+                <p style="font-size: 1.1rem; font-style: italic; color: var(--accent-cyan); margin: 0;">
+                    "The key insight: AI doesn't generate the form; AI generates the journey TO the form."
+                </p>
+            </div>
+
+            <p style="color: var(--text-secondary); max-width: 900px; margin-bottom: 40px;">
+                This architecture proposes a hybrid approach that cleanly separates <strong style="color: var(--accent-cyan);">Canonical Layer</strong> (Server-Driven UI — deterministic, auditable, legally certifiable) from the <strong style="color: var(--accent-purple);">Rhetorical Layer</strong> (Generative AI — contextual, adaptive, personalized on-ramps).
+            </p>
+
+            <h3 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--text-primary); margin-bottom: 30px;">The Problem with Full Generative UI</h3>
+
+            <table class="dark-table">
+                <thead>
+                    <tr>
+                        <th>Challenge</th>
+                        <th>Risk</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Auditability</strong></td><td>How do you audit a UI that's different for every user?</td></tr>
+                    <tr><td><strong>Certification</strong></td><td>Regulators need to certify a specific UI, not a generative process</td></tr>
+                    <tr><td><strong>Testing</strong></td><td>Can't exhaustively test infinite UI variations</td></tr>
+                    <tr><td><strong>Legal liability</strong></td><td>Which generated variant is the "official" one?</td></tr>
+                    <tr><td><strong>Reproducibility</strong></td><td>User disputes require reproducing exact UI they saw</td></tr>
+                </tbody>
+            </table>
+
+            <h3 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--text-primary); margin: 50px 0 30px;">The Hybrid Solution</h3>
+
+            <div class="code-block">┌─────────────────────────────────────────────────────────────────────────────────┐
+│                                                                                 │
+│   RHETORICAL LAYER (Generative, Adaptive)                                      │
+│   ═══════════════════════════════════════                                      │
+│                                                                                 │
+│   • Context inference          • Personalized guidance                         │
+│   • Language/dialect selection • Error explanation                             │
+│   • Accessibility scaffolding  • Encouragement & Reassurance                   │
+│   • Trust building             • Complexity reduction                          │
+│                                                                                 │
+│   Generated by: SLMs (Mistral 7B) at edge/district/state                       │
+│   Audit requirement: Best-effort logging, not certification                    │
+│   Failure mode: Skip to canonical (graceful degradation)                       │
+│                                                                                 │
+│                              ↓ SEGUE POINT ↓                                   │
+│                                                                                 │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                 │
+│   CANONICAL LAYER (Server-Driven UI, Deterministic)                            │
+│   ═════════════════════════════════════════════════                            │
+│                                                                                 │
+│   • Data collection forms      • Field validation                              │
+│   • Authentication flows       • Confirmation screens                          │
+│   • Legal consent capture      • Transaction completion                        │
+│   • Audit trail generation     • Receipt/acknowledgment                        │
+│                                                                                 │
+│   Served by: SDUI protocol from national servers                               │
+│   Audit requirement: Full certification, legally binding                       │
+│   Failure mode: None permitted (must always render)                            │
+│                                                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘</div>
+
+            <p style="color: var(--text-secondary); font-style: italic; text-align: center; margin-top: 30px;">
+                <strong style="color: var(--text-primary);">The insight:</strong> A billion users can have a million different journeys TO the form. But they all complete THE SAME FORM.
+            </p>
+        </div>
+
+        <!-- SDUI Part 2 -->
+        <div class="section" id="sdui-part2">
+            <span class="section-number">PART 05</span>
+            <h2 class="section-title">Server-Driven UI for Canonical</h2>
+            
+            <p style="color: var(--text-secondary); max-width: 900px; margin-bottom: 40px;">
+                Server-Driven UI (SDUI) is an architectural pattern where the <strong style="color: var(--accent-cyan);">server</strong> sends a declarative specification of what UI to render, and the <strong style="color: var(--accent-cyan);">client</strong> interprets and renders native components. UI changes require no app updates.
+            </p>
+
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 40px;">
+                <strong>Adopted by:</strong> Netflix, Airbnb, Spotify, Shopify, Lyft
+            </p>
+
+            <table class="dark-table">
+                <thead>
+                    <tr>
+                        <th>Property</th>
+                        <th>Benefit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Deterministic</strong></td><td>Same spec = same UI, always</td></tr>
+                    <tr><td><strong>Auditable</strong></td><td>Specs can be logged, versioned, certified</td></tr>
+                    <tr><td><strong>Cacheable</strong></td><td>Specs can be cached at CDN, CSC, device</td></tr>
+                    <tr><td><strong>Offline-capable</strong></td><td>Pre-download specs for offline operation</td></tr>
+                    <tr><td><strong>Testable</strong></td><td>Finite set of specs can be exhaustively tested</td></tr>
+                    <tr><td><strong>Update without release</strong></td><td>Fix UI issues without app store deployment</td></tr>
+                </tbody>
+            </table>
+
+            <h3 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--text-primary); margin: 50px 0 30px;">SDUI Protocol Specification</h3>
+
+            <div class="code-block" style="color: var(--accent-green);">{
+  "schema_version": "1.0.0",
+  "journey_id": "address_update_v3",
+  "canonical_version": "2025.12.01",
+  "certification_id": "UIDAI/CERT/2025/1234",
+  "valid_from": "2025-12-01T00:00:00Z",
+  
+  "screens": [
+    {
+      "screen_id": "aadhaar_input",
+      "type": "data_collection",
+      "components": [
+        {
+          "type": "text_input",
+          "id": "aadhaar_field",
+          "validation": {
+            "pattern": "^[0-9]{12}$",
+            "checksum": "verhoeff"
+          },
+          "display": {
+            "label": {
+              "en": "Aadhaar Number",
+              "hi": "आधार संख्या"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}</div>
+        </div>
+
+        <!-- SDUI Part 3 -->
+        <div class="section" id="sdui-part3">
+            <span class="section-number">PART 06</span>
+            <h2 class="section-title">Generative Rhetorical Layer</h2>
+            
+            <p style="color: var(--text-secondary); max-width: 900px; margin-bottom: 40px;">
+                The rhetorical layer is everything BEFORE the canonical SDUI — context inference, intent clarification, preparation guidance, trust building, and complexity reduction.
+            </p>
+
+            <div class="code-block">USER OPENS APP
+      │
+      ▼
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                         RHETORICAL LAYER (AI-Generated)                          │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│  STAGE 1: CONTEXT INFERENCE (Device, Language, Literacy)                        │
+│  STAGE 2: INTENT CLARIFICATION ("What would you like to do?")                   │
+│  STAGE 3: PREPARATION ("You'll need your Aadhaar number")                       │
+│  STAGE 4: TRUST BUILDING (Privacy assurances)                                   │
+│  STAGE 5: COMPLEXITY REDUCTION (Visual progress indicator)                      │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│                              ↓ SEGUE ↓                                          │
+│         "Great! Let's begin. First, please enter your Aadhaar number."        │
+└─────────────────────────────────────────────────────────────────────────────────┘
+      │
+      ▼
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                         CANONICAL LAYER (SDUI Rendered)                          │
+│                    [ Aadhaar Number Input Field ]                              │
+└─────────────────────────────────────────────────────────────────────────────────┘</div>
+
+            <div class="grid-2" style="margin-top: 50px;">
+                <div class="content-box" style="border-left: 4px solid var(--accent-green);">
+                    <h4 style="color: var(--text-primary); margin-bottom: 16px;">What Rhetorical Layer CAN Do</h4>
+                    <ul class="feature-list">
+                        <li><span class="check">✓</span> <span style="color: var(--text-secondary);">Generate contextual greetings</span></li>
+                        <li><span class="check">✓</span> <span style="color: var(--text-secondary);">Provide personalized guidance</span></li>
+                        <li><span class="check">✓</span> <span style="color: var(--text-secondary);">Explain errors in plain language</span></li>
+                        <li><span class="check">✓</span> <span style="color: var(--text-secondary);">Build trust through reassurance</span></li>
+                    </ul>
+                </div>
+                
+                <div class="content-box" style="border-left: 4px solid var(--accent-orange);">
+                    <h4 style="color: var(--text-primary); margin-bottom: 16px;">What Rhetorical Layer CANNOT Do</h4>
+                    <ul class="feature-list">
+                        <li><span style="color: var(--accent-orange);">✗</span> <span style="color: var(--text-secondary);">Collect user data (all inputs in SDUI)</span></li>
+                        <li><span style="color: var(--accent-orange);">✗</span> <span style="color: var(--text-secondary);">Skip canonical screens</span></li>
+                        <li><span style="color: var(--accent-orange);">✗</span> <span style="color: var(--text-secondary);">Modify validation rules</span></li>
+                        <li><span style="color: var(--accent-orange);">✗</span> <span style="color: var(--text-secondary);">Generate legal consent text</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== JOURNEY VARIATION SIMULATOR ==================== -->
+        <div class="section simulator-section" id="journey-sim">
+            <div style="text-align: center; margin-bottom: 40px;">
+                <span class="section-number">PART 07</span>
+                <h2 class="section-title" style="display: block; text-align: center;">Journey Variation Simulator</h2>
+                <p style="color: var(--text-secondary); max-width: 700px; margin: 20px auto 0;">
+                    See how the <strong style="color: var(--accent-cyan);">Rhetorical Engine</strong> alters M3 Design Tokens to generate different UI variations based on user context.
+                </p>
+            </div>
+
+            <!-- AI Input -->
+            <div class="ai-input-container">
+                <input type="text" id="ai-scenario-input" placeholder="Describe a user situation (e.g., 'A frustrated user trying to dispute a charge')">
+                <button onclick="generateCustomJourney()" id="btn-generate-ai">
+                    <span class="sparkle-loader">✨</span> Generate
+                </button>
+            </div>
+
+            <!-- Preset Buttons -->
+            <div class="simulator-controls">
+                <button onclick="setJourney('standard')" id="btn-standard" class="sim-btn active">Variation A: Standard</button>
+                <button onclick="setJourney('urgent')" id="btn-urgent" class="sim-btn">Variation B: Urgent/Error</button>
+                <button onclick="setJourney('simplified')" id="btn-simplified" class="sim-btn">Variation C: Simplified</button>
+                <button onclick="setJourney('detailed')" id="btn-detailed" class="sim-btn">Variation D: Educational</button>
+                <button id="btn-custom" class="sim-btn" style="display: none;">✨ AI Generated</button>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 40px; align-items: start;">
+                <!-- Context Panel -->
+                <div>
+                    <div class="content-box">
+                        <h4 style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-purple); margin-bottom: 16px;">Context Vector Inputs</h4>
+                        <ul id="sim-context-list" style="list-style: none; padding: 0; color: var(--text-secondary); font-size: 0.9rem; line-height: 2;"></ul>
+                    </div>
+                    
+                    <div class="content-box" style="margin-top: 20px;">
+                        <h4 style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-purple); margin-bottom: 16px;">Active M3 Tokens</h4>
+                        <div id="sim-token-list" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+                    </div>
+
+                    <div id="ai-reasoning-box" class="content-box" style="margin-top: 20px; display: none; background: rgba(168, 85, 247, 0.1); border-color: var(--accent-purple);">
+                        <h4 style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-purple); margin-bottom: 12px;">🤖 AI Reasoning</h4>
+                        <p id="ai-reasoning-text" style="font-size: 0.85rem; color: var(--text-secondary); font-style: italic;"></p>
+                    </div>
+                </div>
+
+                <!-- Mock Device -->
+                <div style="display: flex; justify-content: center;">
+                    <div class="mock-device">
+                        <div class="mock-device-header">
+                            <div class="mock-device-notch"></div>
+                        </div>
+                        <div id="sim-mock-body" class="mock-device-body" style="transition: opacity 0.3s;">
+                            <!-- Content injected by JS -->
+                        </div>
+                        <div class="mock-device-footer">
+                            <span style="font-size: 1.25rem;">⌂</span>
+                            <span style="font-size: 1.25rem;">≡</span>
+                            <span style="font-size: 1.25rem;">⚙</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <p style="font-weight: 600; color: var(--text-secondary); margin-bottom: 16px;">Sources & Framework</p>
+            <p>GATO: Generative Audio-Tooltip Overlay for Digital Public Infrastructure</p>
+            <p>Hybrid Architecture: Server-Driven Canonical UI with Generative Rhetorical On-Ramps</p>
+            <p>Sridhar Dhulipala, UIDAI — December 2025</p>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // ==================== API KEY MANAGEMENT ====================
+        // Store API key in localStorage instead of exposing in code
+        function getApiKey() {
+            let key = localStorage.getItem('gemini_api_key');
+            if (!key) {
+                key = prompt('Enter your Gemini API key (stored locally):');
+                if (key) localStorage.setItem('gemini_api_key', key);
+            }
+            return key;
+        }
+
+        // ==================== GATO DEMO LOGIC ====================
+        const appData = {
+            en: {
+                labels: {
+                    "lbl-intro-title": "Welcome",
+                    "lbl-intro-desc": "Please complete your registration to access government services.",
+                    "lbl-name": "Full Legal Name",
+                    "lbl-id": "National ID Number",
+                    "lbl-address": "Current Address",
+                    "lbl-submit": "Submit Application"
+                },
+                audio: {
+                    intro: {
+                        standard: "Welcome info. Please complete your registration.",
+                        generative: "Welcome to the government services portal. This form will help you create a new secure account. It takes about 2 minutes."
+                    },
+                    fullname: {
+                        standard: "Full Legal Name.",
+                        generative: "Please enter your full name exactly as it appears on your birth certificate or passport."
+                    },
+                    nationalid: {
+                        standard: "National ID Number.",
+                        generative: "Enter your 12-digit National ID number. You can find this on the back of your ID card."
+                    },
+                    address: {
+                        standard: "Current Address.",
+                        generative: "Type your current home address, including street name and city. This is where we will mail your documents."
+                    },
+                    submit: {
+                        standard: "Submit Application button.",
+                        generative: "Tap here to send your application. Make sure all details are correct before proceeding."
+                    }
+                }
+            },
+            es: {
+                labels: {
+                    "lbl-intro-title": "Bienvenido",
+                    "lbl-intro-desc": "Complete su registro para acceder a los servicios gubernamentales.",
+                    "lbl-name": "Nombre Legal Completo",
+                    "lbl-id": "Número de Identificación",
+                    "lbl-address": "Dirección Actual",
+                    "lbl-submit": "Enviar Solicitud"
+                },
+                audio: {
+                    intro: { standard: "Información de bienvenida.", generative: "Bienvenido al portal. Este formulario le ayudará a crear una cuenta segura." },
+                    fullname: { standard: "Nombre Legal Completo.", generative: "Ingrese su nombre completo exactamente como aparece en su pasaporte." },
+                    nationalid: { standard: "Número de Identificación.", generative: "Ingrese su número de identificación de 12 dígitos." },
+                    address: { standard: "Dirección Actual.", generative: "Escriba su dirección actual, incluyendo calle y ciudad." },
+                    submit: { standard: "Botón Enviar.", generative: "Toque aquí para enviar su solicitud." }
+                }
+            },
+            hi: {
+                labels: {
+                    "lbl-intro-title": "स्वागत है",
+                    "lbl-intro-desc": "सरकारी सेवाओं के लिए अपना पंजीकरण पूरा करें।",
+                    "lbl-name": "पूरा कानूनी नाम",
+                    "lbl-id": "राष्ट्रीय पहचान संख्या",
+                    "lbl-address": "वर्तमान पता",
+                    "lbl-submit": "आवेदन जमा करें"
+                },
+                audio: {
+                    intro: { standard: "स्वागत जानकारी।", generative: "सरकारी सेवा पोर्टल में आपका स्वागत है। यह फॉर्म आपको एक नया खाता बनाने में मदद करेगा।" },
+                    fullname: { standard: "पूरा कानूनी नाम।", generative: "कृपया अपना पूरा नाम दर्ज करें जैसे वह आपके पासपोर्ट पर है।" },
+                    nationalid: { standard: "राष्ट्रीय पहचान संख्या।", generative: "अपना 12 अंकों का राष्ट्रीय पहचान नंबर दर्ज करें।" },
+                    address: { standard: "वर्तमान पता।", generative: "अपना वर्तमान घर का पता टाइप करें।" },
+                    submit: { standard: "आवेदन जमा करें।", generative: "अपना आवेदन भेजने के लिए यहां टैप करें।" }
+                }
+            }
+        };
+
+        let currentLang = 'en';
+        let isGatoEnabled = true;
+        let contextLevel = 'generative';
+        let synth = window.speechSynthesis;
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                if (btn.id === `btn-${lang}`) {
+                    btn.style.background = 'var(--accent-cyan)';
+                    btn.style.color = 'var(--bg-primary)';
+                    btn.style.border = 'none';
+                } else {
+                    btn.style.background = 'var(--bg-secondary)';
+                    btn.style.color = 'var(--text-secondary)';
+                    btn.style.border = '1px solid var(--border)';
+                }
+            });
+            
+            const texts = appData[lang].labels;
+            for (const [id, text] of Object.entries(texts)) {
+                const el = document.getElementById(id);
+                if (el) el.innerText = text;
+            }
+            
+            logFeedback(`System: Language switched to ${lang.toUpperCase()}`);
+        }
+
+        function logFeedback(msg) {
+            const el = document.getElementById('visual-feedback');
+            const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+            el.innerHTML = `<span style="opacity: 0.5;">[${time}]</span> ${msg}`;
+        }
+
+        function speakField(fieldId) {
+            const data = appData[currentLang].audio[fieldId];
+            if (!data) return;
+            
+            const text = data[contextLevel] || data.standard;
+            logFeedback(`Speaking: "${text.substring(0, 40)}..."`);
+            
+            synth.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = currentLang === 'hi' ? 'hi-IN' : currentLang === 'es' ? 'es-ES' : 'en-US';
+            synth.speak(utterance);
+        }
+
+        // ==================== JOURNEY SIMULATOR ====================
+        const journeyVariations = {
+            standard: {
+                title: "Variation A: Standard",
+                context: ["User: Authenticated", "Intent: Update Address", "Device: Mobile"],
+                tokens: ["md.sys.color.primary", "md.sys.shape.corner.large", "md.sys.typescale.bodyLarge"],
+                mockHTML: `
+                    <div style="margin-top: 16px;">
+                        <h2 style="font-size: 1.5rem; color: #1c1b1f; margin-bottom: 4px;">Update Address</h2>
+                        <p style="font-size: 0.9rem; color: #49454f; margin-bottom: 24px;">Verify your new location.</p>
+                        <div style="background: white; border-radius: 16px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e7e0ec; margin-bottom: 16px;">
+                            <label style="font-size: 0.75rem; color: #49454f;">Street Address</label>
+                            <div style="height: 40px; border-bottom: 1px solid #49454f; display: flex; align-items: center; color: #1c1b1f;">123 Token Blvd</div>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; margin-top: 32px;">
+                            <button style="background: #6750a4; color: white; padding: 12px 24px; border-radius: 50px; border: none; font-weight: 500;">Save Changes</button>
+                        </div>
+                    </div>`
+            },
+            urgent: {
+                title: "Variation B: Urgent/Error",
+                context: ["User: Authenticated", "Intent: Fix Error", "Status: Guardrail Triggered"],
+                tokens: ["md.sys.color.error", "md.sys.color.errorContainer", "md.sys.typescale.labelLarge"],
+                mockHTML: `
+                    <div style="margin-top: 16px;">
+                        <div style="background: #f9dedc; color: #410e0b; padding: 16px; border-radius: 12px; margin-bottom: 24px; display: flex; gap: 12px; align-items: flex-start;">
+                            <span style="font-size: 1.25rem;">⚠</span>
+                            <div style="font-size: 0.9rem;"><strong>Action Required:</strong> Invalid postal code detected.</div>
+                        </div>
+                        <h2 style="font-size: 1.5rem; color: #1c1b1f; margin-bottom: 16px;">Correction Needed</h2>
+                        <div style="background: white; border-radius: 16px; padding: 16px; border: 2px solid #b3261e; margin-bottom: 16px; position: relative;">
+                            <label style="font-size: 0.75rem; color: #b3261e; font-weight: bold;">Postal Code*</label>
+                            <div style="height: 40px; border-bottom: 1px solid #b3261e; display: flex; align-items: center; color: #1c1b1f;">XYZ-99</div>
+                            <span style="position: absolute; right: 16px; top: 16px; color: #b3261e; font-size: 0.75rem;">Invalid format</span>
+                        </div>
+                        <button style="background: #b3261e; color: white; padding: 12px; border-radius: 50px; border: none; font-weight: 500; width: 100%;">Update Immediately</button>
+                    </div>`
+            },
+            simplified: {
+                title: "Variation C: Simplified",
+                context: ["User: Elderly/Low-Tech", "Intent: Clarity", "Access: High Contrast"],
+                tokens: ["md.sys.typescale.headlineSmall", "md.sys.shape.corner.medium", "md.sys.color.onSurface"],
+                mockHTML: `
+                    <div style="margin-top: 32px;">
+                        <h2 style="font-size: 1.75rem; font-weight: bold; color: black; margin-bottom: 16px;">Is this your new home?</h2>
+                        <div style="background: #f5f5f5; border-radius: 4px; padding: 24px; border: 2px solid black; margin-bottom: 24px;">
+                            <p style="font-size: 1.1rem; font-weight: bold; color: black; margin-bottom: 8px;">123 Token Blvd</p>
+                            <p style="font-size: 1.1rem; color: black;">San Francisco, CA</p>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 16px;">
+                            <button style="background: black; color: white; width: 100%; padding: 16px; border-radius: 8px; font-weight: bold; font-size: 1rem; border: 2px solid black;">YES, THIS IS CORRECT</button>
+                            <button style="background: white; color: black; width: 100%; padding: 16px; border-radius: 8px; font-weight: bold; font-size: 1rem; border: 2px solid black;">NO, GO BACK</button>
+                        </div>
+                    </div>`
+            },
+            detailed: {
+                title: "Variation D: Educational",
+                context: ["User: New User", "Intent: Learning", "Mode: Rhetorical Explanation"],
+                tokens: ["md.sys.color.tertiaryContainer", "md.sys.typescale.bodyMedium", "md.sys.elevation.level0"],
+                mockHTML: `
+                    <div style="margin-top: 16px;">
+                        <div style="background: #ffd8e4; padding: 16px; border-radius: 16px; margin-bottom: 16px;">
+                            <h3 style="color: #31111d; font-weight: bold; font-size: 0.9rem; margin-bottom: 4px;">Did you know?</h3>
+                            <p style="color: #31111d; font-size: 0.8rem;">Updating your address here syncs with all government services automatically.</p>
+                        </div>
+                        <h2 style="font-size: 1.25rem; color: #1c1b1f; margin-bottom: 16px;">Address Details</h2>
+                        <div style="background: white; border-radius: 12px; border: 1px solid #e7e0ec; overflow: hidden; margin-bottom: 16px;">
+                            <div style="background: #e8def8; padding: 8px 16px; font-size: 0.75rem; font-weight: bold; color: #1d192b;">STEP 1 OF 3</div>
+                            <div style="padding: 16px;">
+                                <label style="font-size: 0.75rem; color: #49454f;">New Street</label>
+                                <div style="height: 40px; background: #f5f5f5; border-radius: 4px; padding: 0 8px; display: flex; align-items: center; color: #1c1b1f;">123 Token Blvd</div>
+                                <p style="font-size: 0.65rem; color: #49454f; margin-top: 4px;">Enter street name without abbreviations.</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px;">
+                            <button style="background: transparent; color: #6750a4; border: none; font-weight: bold; font-size: 0.9rem;">Skip Context</button>
+                            <button style="background: #eaddff; color: #21005d; padding: 12px 24px; border-radius: 50px; border: none; font-weight: bold; font-size: 0.9rem;">Next Step</button>
+                        </div>
+                    </div>`
+            }
+        };
+
+        let customJourneyData = null;
+
+        function setJourney(variantKey, customData = null) {
+            const aiBox = document.getElementById('ai-reasoning-box');
+            const customBtn = document.getElementById('btn-custom');
+            
+            let data;
+            if (variantKey === 'custom' && customData) {
+                data = customData;
+                customJourneyData = customData;
+                aiBox.style.display = 'block';
+                document.getElementById('ai-reasoning-text').innerText = customData.reasoning || '';
+                customBtn.style.display = 'block';
+            } else {
+                data = journeyVariations[variantKey];
+                aiBox.style.display = 'none';
+            }
+
+            // Update buttons
+            document.querySelectorAll('.sim-btn').forEach(btn => {
+                btn.classList.remove('active');
+                btn.style.background = '';
+            });
+            
+            if (variantKey === 'custom') {
+                customBtn.classList.add('active');
+                customBtn.style.background = 'linear-gradient(135deg, var(--accent-purple), var(--accent-cyan))';
+            } else {
+                document.getElementById(`btn-${variantKey}`).classList.add('active');
+            }
+
+            // Update mock body
+            const body = document.getElementById('sim-mock-body');
+            body.style.opacity = '0';
+            setTimeout(() => {
+                body.innerHTML = data.mockHTML;
+                body.style.opacity = '1';
+            }, 150);
+
+            // Update context list
+            const contextList = document.getElementById('sim-context-list');
+            contextList.innerHTML = data.context.map(c => `<li style="display: flex; align-items: center; gap: 8px;"><span style="width: 6px; height: 6px; border-radius: 50%; background: var(--accent-purple);"></span>${c}</li>`).join('');
+
+            // Update token list
+            const tokenList = document.getElementById('sim-token-list');
+            tokenList.innerHTML = data.tokens.map(t => `<span style="background: var(--bg-secondary); padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; color: var(--accent-cyan); font-family: 'Space Mono', monospace;">${t}</span>`).join('');
+        }
+
+        async function generateCustomJourney() {
+            const input = document.getElementById('ai-scenario-input').value;
+            if (!input) {
+                alert("Please describe a scenario first.");
+                return;
+            }
+
+            const apiKey = getApiKey();
+            if (!apiKey) {
+                alert("API key required for AI generation.");
+                return;
+            }
+
+            const btn = document.getElementById('btn-generate-ai');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<span class="sparkle-loader">✨</span> Generating...`;
+            btn.disabled = true;
+
+            const systemPrompt = `You are the 'Rhetorical Engine' for a Material Design 3 system. Analyze the user scenario and generate a mobile UI mock.
+Return valid JSON with: { "context": ["String"], "tokens": ["String"], "html": "String (Tailwind CSS, inner content only)", "title": "String", "reasoning": "String" }`;
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: `User Scenario: "${input}"` }] }],
+                        systemInstruction: { parts: [{ text: systemPrompt }] },
+                        generationConfig: { responseMimeType: "application/json" }
+                    })
+                });
+
+                const data = await response.json();
+                const result = JSON.parse(data.candidates[0].content.parts[0].text);
+
+                setJourney('custom', {
+                    title: result.title,
+                    context: result.context,
+                    tokens: result.tokens,
+                    mockHTML: result.html,
+                    reasoning: result.reasoning
+                });
+
+            } catch (error) {
+                console.error("API Error:", error);
+                alert("Failed to generate. Check console for details.");
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            // GATO triggers
+            document.querySelectorAll('.gato-trigger').forEach(trigger => {
+                trigger.addEventListener('click', (e) => {
+                    if (!isGatoEnabled) return;
+                    e.preventDefault();
+                    speakField(trigger.dataset.field);
+                });
+            });
+
+            document.getElementById('gato-toggle').addEventListener('change', (e) => {
+                isGatoEnabled = e.target.checked;
+                logFeedback(`System: GATO Mode ${isGatoEnabled ? 'ENABLED' : 'DISABLED'}`);
+            });
+
+            document.getElementById('context-level').addEventListener('change', (e) => {
+                contextLevel = e.target.value;
+                logFeedback(`System: Context Level set to ${contextLevel.toUpperCase()}`);
+            });
+
+            // Initialize simulator
+            setJourney('standard');
+            setLanguage('en');
+
+            // Scroll animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.section, .header').forEach(el => observer.observe(el));
+
+            // Progress bar
+            window.addEventListener('scroll', () => {
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                document.getElementById('progressBar').style.width = scrolled + '%';
+            });
+
+            // Nav dots
+            const navDots = document.querySelectorAll('.nav-dot');
+            navDots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    const target = document.getElementById(dot.dataset.section);
+                    if (target) target.scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+
+            // Initial animation
+            setTimeout(() => document.querySelector('.header').classList.add('visible'), 100);
+        });
+    </script>
+</body>
+</html>
