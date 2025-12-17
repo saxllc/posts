@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power Laws & Platform Economics | Interactive Research</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.0/feather.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.2/marked.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        :root {
+            --bg-dark: #0f1115;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --bg-card-hover: rgba(255, 255, 255, 0.07);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --accent-primary: #3b82f6; /* Economic Blue */
+            --accent-secondary: #f59e0b; /* Emerging Gold */
+            --accent-tertiary: #10b981; /* DPI Green */
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --font-display: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* --- LAYOUT & UTILS --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 60px;
+        }
+
+        .main-content {
+            padding-top: 80px;
+            padding-bottom: 120px;
+        }
+
+        h1, h2, h3, h4 { font-family: var(--font-display); color: white; }
+        
+        .section { margin-bottom: 140px; opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+        .section.visible { opacity: 1; transform: translateY(0); }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* --- NAVIGATION --- */
+        .sidebar {
+            position: sticky;
+            top: 40px;
+            height: calc(100vh - 80px);
+            padding-top: 80px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 10px 0;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            border-left: 2px solid transparent;
+            padding-left: 20px;
+            transition: all 0.3s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--accent-primary);
+            border-left-color: var(--accent-primary);
+        }
+
+        /* --- HERO --- */
+        .hero {
+            text-align: left;
+            margin-bottom: 100px;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- CARDS & GRIDS --- */
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s, background 0.3s, border-color 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            background: var(--bg-card-hover);
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        /* --- PYRAMID VISUALIZATION --- */
+        .pyramid-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 40px 0;
+        }
+
+        .pyramid-level {
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.05) 0%, transparent 100%);
+            border-left: 4px solid var(--accent-primary);
+            position: relative;
+            transition: all 0.3s;
+            cursor: default;
+        }
+
+        .pyramid-level:hover {
+            transform: scale(1.02);
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, transparent 100%);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+            z-index: 2;
+        }
+
+        .level-2 { margin-left: 40px; border-left-color: var(--accent-secondary); background: linear-gradient(90deg, rgba(245, 158, 11, 0.05) 0%, transparent 100%); }
+        .level-3 { margin-left: 80px; border-left-color: var(--accent-tertiary); background: linear-gradient(90deg, rgba(16, 185, 129, 0.05) 0%, transparent 100%);}
+
+        /* --- COMPARISON TABLE --- */
+        .comparison-table-wrapper {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        th {
+            text-align: left;
+            padding: 20px;
+            background: rgba(255,255,255,0.05);
+            font-family: var(--font-mono);
+            color: var(--accent-primary);
+        }
+
+        td {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-muted);
+        }
+
+        tr:hover td {
+            background: rgba(255,255,255,0.02);
+            color: white;
+        }
+
+        /* --- INTERACTIVE AI CHAT --- */
+        .ai-fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: var(--text-main);
+            color: var(--bg-dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: transform 0.3s;
+            z-index: 1000;
+        }
+
+        .ai-fab:hover { transform: scale(1.1); }
+
+        .ai-panel {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 380px;
+            height: 500px;
+            background: #1a1d24;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(20px);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .ai-panel.open { opacity: 1; pointer-events: all; transform: translateY(0); }
+
+        .ai-header {
+            padding: 15px;
+            background: rgba(255,255,255,0.05);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ai-content {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            font-size: 0.9rem;
+        }
+
+        .ai-input-area {
+            padding: 15px;
+            border-top: 1px solid var(--border-color);
+            background: rgba(0,0,0,0.2);
+        }
+
+        .ai-input {
+            width: 100%;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            border-radius: 8px;
+            color: white;
+            font-family: var(--font-body);
+        }
+        
+        .ai-input:focus { outline: none; border-color: var(--accent-primary); }
+
+        .msg { margin-bottom: 10px; padding: 10px; border-radius: 8px; max-width: 85%; }
+        .msg.user { background: var(--accent-primary); color: white; margin-left: auto; }
+        .msg.bot { background: rgba(255,255,255,0.1); color: var(--text-muted); }
+        .api-key-modal {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        /* --- MOBILE --- */
+        @media (max-width: 900px) {
+            .container { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            .hero h1 { font-size: 2.5rem; }
+            .level-2, .level-3 { margin-left: 20px; }
+            .ai-panel { width: calc(100% - 40px); right: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <nav class="sidebar">
+            <h4 style="margin-bottom: 30px; opacity: 0.5;">CONTENTS</h4>
+            <a href="#intro" class="nav-link active">Introduction</a>
+            <a href="#theory" class="nav-link">The Theory Stack</a>
+            <a href="#comparison" class="nav-link">Choudhary vs. Power Laws</a>
+            <a href="#tensions" class="nav-link">Key Tensions</a>
+            <a href="#emerging" class="nav-link">Emerging Markets</a>
+            <a href="#dpi" class="nav-link">The DPI Breakthrough</a>
+            <a href="#table" class="nav-link">Market Structures</a>
+            <a href="#takeaways" class="nav-link">Strategic Takeaways</a>
+        </nav>
+
+        <main class="main-content">
+            
+            <div id="intro" class="section visible hero">
+                <span class="badge" style="color: var(--accent-primary); border-color: var(--accent-primary);">Design Philosophy</span>
+                <h1>From Power Laws to Platform Economics</h1>
+                <p style="font-size: 1.2rem; color: var(--text-muted); max-width: 600px;">
+                    An exploration of market concentration, unbundling, and the unique architecture of Digital Public Infrastructure in emerging economies.
+                </p>
+            </div>
+
+            <div id="theory" class="section">
+                <h2>① The Theoretical Foundation</h2>
+                <p class="mb-4 text-muted">Three layers that describe the same phenomenon at different levels of abstraction.</p>
+                
+                <div class="pyramid-container">
+                    <div class="pyramid-level">
+                        <div class="badge" style="color: var(--accent-primary);">Mathematics</div>
+                        <h3>Power Laws</h3>
+                        <p style="color: var(--text-muted);">Zipf's Law & Pareto Distributions. A small percentage controls a large portion. Distribution = rank ∝ 1/frequency.</p>
+                    </div>
+
+                    <div class="pyramid-level level-2">
+                        <div class="badge" style="color: var(--accent-secondary);">Economics</div>
+                        <h3>Increasing Returns</h3>
+                        <p style="color: var(--text-muted);">Brian Arthur's Framework. Advantages accumulate via lock-in and network effects. Small historical accidents lead to dominance.</p>
+                    </div>
+
+                    <div class="pyramid-level level-3">
+                        <div class="badge" style="color: var(--accent-tertiary);">Strategy</div>
+                        <h3>Unbundling & Rebundling</h3>
+                        <p style="color: var(--text-muted);">Sangeet Paul Choudhary. Systems cycle between fragmentation and concentration. Power sits with those who control the "rebundling point."</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="comparison" class="section">
+                <h2>② The Missing Connection</h2>
+                <p style="margin-bottom: 30px; color: var(--text-muted);">Bridging business strategy with mathematical reality.</p>
+                
+                <div class="grid-3">
+                    <div class="card">
+                        <h4>Platform Theory</h4>
+                        <p style="font-size: 0.9rem; margin-top: 10px; color: var(--text-muted);">Focuses on <strong>Supply Structure</strong>.</p>
+                        <ul style="margin-top: 15px; font-size: 0.9rem; list-style: none; color: var(--text-muted);">
+                            <li>• Spotify in concentrated markets</li>
+                            <li>• Amazon in fragmented markets</li>
+                            <li>• Focus: Who rebundles?</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Power Law Theory</h4>
+                        <p style="font-size: 0.9rem; margin-top: 10px; color: var(--text-muted);">Focuses on <strong>Distribution</strong>.</p>
+                        <ul style="margin-top: 15px; font-size: 0.9rem; list-style: none; color: var(--text-muted);">
+                            <li>• Rank vs. Frequency</li>
+                            <li>• Extreme inequality</li>
+                            <li>• Tail risk dominates</li>
+                        </ul>
+                    </div>
+                    <div class="card" style="border-color: var(--accent-primary);">
+                        <h4 style="color: var(--accent-primary);">The Bridge</h4>
+                        <p style="font-size: 0.9rem; margin-top: 10px; color: var(--text-muted);">How they connect.</p>
+                        <p style="margin-top: 15px; font-size: 0.9rem; color: var(--text-muted);">
+                            Unbundling creates fragmentation. Rebundling creates reconcentration. The result is a fat-tailed distribution.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tensions" class="section">
+                <h2>③ Central Tensions</h2>
+                <div class="grid-2" style="margin-top: 40px;">
+                    <div class="card">
+                        <span class="badge">Trade-off</span>
+                        <h4>Efficiency vs. Concentration</h4>
+                        <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 10px;">
+                            Fragmented markets offer choice but high search costs. Concentrated markets offer ease but high supplier power.
+                        </p>
+                    </div>
+                    <div class="card">
+                        <span class="badge">Trade-off</span>
+                        <h4>Coordination vs. Extraction</h4>
+                        <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 10px;">
+                            Platforms create value by coordinating (playlists, logistics) but extract value by gatekeeping access to that coordination.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="emerging" class="section">
+                <h2>④ The Emerging Market Paradox</h2>
+                <p style="color: var(--text-muted); margin-bottom: 30px;">Where standard Silicon Valley theory breaks down.</p>
+
+                <div class="grid-3">
+                    <div class="card" style="border-top: 3px solid var(--accent-primary);">
+                        <h4>Formal Sector</h4>
+                        <p style="font-size: 0.85rem; color: var(--text-muted);">Like the West: Banks, Telcos. Winner-take-all dynamics.</p>
+                    </div>
+                    <div class="card" style="border-top: 3px solid var(--accent-secondary);">
+                        <h4>Informal Sector</h4>
+                        <p style="font-size: 0.85rem; color: var(--text-muted);">Millions of micro-enterprises. Chaotic fragmentation. Relationships over protocols.</p>
+                    </div>
+                    <div class="card" style="border-top: 3px solid var(--accent-tertiary); background: linear-gradient(180deg, rgba(16, 185, 129, 0.1) 0%, transparent 100%);">
+                        <h4 style="color: var(--accent-tertiary);">DPI Layer</h4>
+                        <p style="font-size: 0.85rem; color: var(--text-muted);">Standardized protocols (UPI, Aadhaar). Distributed power.</p>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 40px; border-style: dashed; border-color: var(--accent-secondary);">
+                    <h3>⚠️ The Critical Gap</h3>
+                    <div class="grid-2" style="margin-top: 20px;">
+                        <div>
+                            <strong style="color: var(--text-main);">Standard Theory Assumes:</strong>
+                            <p style="font-size: 0.9rem; color: var(--text-muted);">A single unified market where price signals coordinate everything.</p>
+                        </div>
+                        <div>
+                            <strong style="color: var(--accent-secondary);">Reality:</strong>
+                            <p style="font-size: 0.9rem; color: var(--text-muted);">Two parallel, minimally-connected markets (Dual Economy). Power fractures by layer rather than concentrating at a single point.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="dpi" class="section">
+                <h2>⑤ The Breakthrough: DPI</h2>
+                <div class="card" style="background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(16, 185, 129, 0.05) 100%); border-color: var(--accent-tertiary);">
+                    <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 20px;">
+                        <span class="badge" style="margin:0; border-color: var(--accent-tertiary); color: var(--accent-tertiary);">Case Study</span>
+                        <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">AADHAAR & UPI</span>
+                    </div>
+                    
+                    <h3 style="margin-bottom: 20px;">Solving for scale without gatekeepers</h3>
+                    
+                    <p style="color: var(--text-muted); margin-bottom: 20px;">
+                        <strong>The Problem:</strong> How to create efficiency in a fragmented dual economy without handing total control to a generic monopoly like Amazon?
+                    </p>
+                    
+                    <p style="color: var(--text-muted);">
+                        <strong>The Solution:</strong> Unbundle the atomic unit (Identity, Payment) into a public protocol. This creates "Fat-tailed capabilities" (many providers) without "Fat-tailed power" (one boss).
+                    </p>
+                </div>
+            </div>
+
+            <div id="table" class="section">
+                <h2>⑥ Market Structure Comparison</h2>
+                <div class="comparison-table-wrapper" style="margin-top: 30px;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Dimension</th>
+                                <th>Developed Markets</th>
+                                <th>Emerging Markets</th>
+                                <th style="color: var(--accent-tertiary);">DPI Systems</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Dominant Force</strong></td>
+                                <td>Network Effects</td>
+                                <td>Dual Economy</td>
+                                <td style="color: var(--text-main);">Standardization</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Distribution</strong></td>
+                                <td>Fat-tailed (Concentrated)</td>
+                                <td>Multi-modal (Fragmented)</td>
+                                <td style="color: var(--text-main);">Thick Middle</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Power Center</strong></td>
+                                <td>Single Point (Platform)</td>
+                                <td>Multiple Points (Sectors)</td>
+                                <td style="color: var(--text-main);">Distributed Layers</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Coordination</strong></td>
+                                <td>Centralized</td>
+                                <td>Informal/Chaotic</td>
+                                <td style="color: var(--text-main);">Decentralized</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="takeaways" class="section">
+                <h2>⑦ Strategic Takeaways</h2>
+                <div class="grid-2" style="margin-top: 30px;">
+                    <div class="card">
+                        <h4>For Strategists</h4>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">Power doesn't accrue to aggregators in fragmented markets. It accrues to <strong>rebundlers</strong> who establish new control points.</p>
+                    </div>
+                    <div class="card">
+                        <h4>For Designers</h4>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">The <strong>atomic unit</strong> (file, ID, payment token) determines the system structure. Change the atom, shift the power.</p>
+                    </div>
+                </div>
+            </div>
+
+            <footer style="margin-top: 100px; padding-top: 40px; border-top: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.8rem; text-align: center;">
+                <p>Synthesized from: Sangeet Paul Choudhary, W. Brian Arthur, and Digital Public Infrastructure analysis.</p>
+            </footer>
+
+        </main>
+    </div>
+
+    <div class="ai-fab" onclick="toggleAI()">
+        <i data-feather="message-square"></i>
+    </div>
+
+    <div class="ai-panel" id="aiPanel">
+        <div class="ai-header">
+            <span style="font-weight: 600; font-family: var(--font-mono);">Contextual Synth</span>
+            <i data-feather="x" style="cursor: pointer;" onclick="toggleAI()"></i>
+        </div>
+        
+        <div class="api-key-modal" id="apiKeyModal">
+            <div style="text-align: center; width: 80%;">
+                <h4 style="margin-bottom: 10px;">Research Assistant</h4>
+                <p style="font-size: 0.8rem; color: #ccc; margin-bottom: 15px;">Enter OpenAI API Key to chat with this document. (Key not stored).</p>
+                <input type="password" id="userApiKey" placeholder="sk-..." class="ai-input" style="margin-bottom: 10px; text-align: center;">
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <button onclick="setKey()" style="padding: 8px 16px; background: var(--accent-primary); border: none; border-radius: 4px; color: white; cursor: pointer;">Start</button>
+                    <button onclick="useDemo()" style="padding: 8px 16px; background: transparent; border: 1px solid white; border-radius: 4px; color: white; cursor: pointer;">Demo Mode</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="ai-content" id="chatContainer">
+            <div class="msg bot">
+                Hello. I have analyzed the text on Power Laws and Platform Economics. Ask me about the connection between Zipf's Law and DPI.
+            </div>
+        </div>
+        <div class="ai-input-area">
+            <input type="text" id="chatInput" class="ai-input" placeholder="Ask a question..." onkeypress="handleEnter(event)">
+        </div>
+    </div>
+
+    <script>
+        feather.replace();
+
+        // SCROLL SPY
+        const sections = document.querySelectorAll('.section');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    // Update Nav
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href').substring(1) === entry.target.id) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, { threshold: 0.2 });
+
+        sections.forEach(section => observer.observe(section));
+
+        // AI LOGIC
+        let apiKey = null;
+        let isDemo = false;
+        
+        // Extract page content for context
+        const pageContent = document.querySelector('main').innerText.replace(/\s+/g, ' ').substring(0, 5000); 
+
+        function toggleAI() {
+            document.getElementById('aiPanel').classList.toggle('open');
+        }
+
+        function setKey() {
+            const input = document.getElementById('userApiKey').value;
+            if(input.startsWith('sk-')) {
+                apiKey = input;
+                document.getElementById('apiKeyModal').style.display = 'none';
+            } else {
+                alert('Please enter a valid key starting with sk-');
+            }
+        }
+
+        function useDemo() {
+            isDemo = true;
+            document.getElementById('apiKeyModal').style.display = 'none';
+            appendMessage('bot', "Demo Mode Active. I will simulate responses based on keywords.");
+        }
+
+        function handleEnter(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            appendMessage('user', text);
+            input.value = '';
+            
+            // Loading state
+            const loadingId = 'loading-' + Date.now();
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'msg bot';
+            loadingDiv.id = loadingId;
+            loadingDiv.innerText = 'Thinking...';
+            document.getElementById('chatContainer').appendChild(loadingDiv);
+            scrollToBottom();
+
+            if (isDemo) {
+                setTimeout(() => {
+                    const response = simulateResponse(text);
+                    document.getElementById(loadingId).remove();
+                    appendMessage('bot', response);
+                }, 1000);
+            } else if (apiKey) {
+                try {
+                    const response = await fetchOpenAI(text);
+                    document.getElementById(loadingId).remove();
+                    appendMessage('bot', response);
+                } catch (err) {
+                    document.getElementById(loadingId).remove();
+                    appendMessage('bot', "Error connecting to API. Check key.");
+                }
+            }
+        }
+
+        function appendMessage(sender, text) {
+            const div = document.createElement('div');
+            div.className = `msg ${sender}`;
+            div.innerHTML = marked.parse(text); // Use marked for parsing markdown
+            document.getElementById('chatContainer').appendChild(div);
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            const c = document.getElementById('chatContainer');
+            c.scrollTop = c.scrollHeight;
+        }
+
+        // Simple heuristic response for Demo Mode
+        function simulateResponse(query) {
+            query = query.toLowerCase();
+            if (query.includes('zipf') || query.includes('power law')) {
+                return "The document links Zipf's Law (rank/frequency) to market share. In platform economics, unbundling fragments the market, but rebundling creates a 'winner-take-all' outcome described by these power laws.";
+            }
+            if (query.includes('dpi') || query.includes('aadhaar')) {
+                return "DPI (Digital Public Infrastructure) represents a breakthrough because it standardizes protocols. This allows for 'fat-tailed capabilities' (many service providers) without the 'fat-tailed power' concentration seen in private platforms like Amazon.";
+            }
+            if (query.includes('choudhary') || query.includes('brian arthur')) {
+                return "Brian Arthur provided the economic mechanism (increasing returns), while Sangeet Paul Choudhary provides the strategy (unbundling). The document argues they are describing the same phenomenon.";
+            }
+            return "Based on the text: This suggests that market structure is defined by the 'atomic unit' of value. Would you like to know more about the Emerging Market Paradox?";
+        }
+
+        async function fetchOpenAI(userQuery) {
+            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                    model: "gpt-3.5-turbo",
+                    messages: [
+                        {role: "system", content: "You are a helpful research assistant. Answer based strictly on this context: " + pageContent},
+                        {role: "user", content: userQuery}
+                    ]
+                })
+            });
+            const data = await response.json();
+            return data.choices[0].message.content;
+        }
+    </script>
+</body>
+</html>
