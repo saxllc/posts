@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urban Resilience 2025: Interactive Report + AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F9F8F6; color: #2D3748; }
+        
+        /* Layout & Charts */
+        .chart-container { 
+            position: relative; 
+            width: 100%; 
+            max-width: 800px; 
+            margin-left: auto; 
+            margin-right: auto; 
+            height: 400px; 
+            max-height: 400px; 
+        }
+        @media (max-width: 768px) {
+            .chart-container { height: 300px; }
+        }
+        .nav-active { border-bottom: 2px solid #5C7C66; color: #2F855A; font-weight: 600; }
+        .card { background: white; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); transition: transform 0.2s; }
+        .card:hover { transform: translateY(-2px); }
+        .tab-btn.active { background-color: #5C7C66; color: white; }
+        
+        /* AI Feature Styles */
+        .ai-btn { 
+            background: linear-gradient(135deg, #5C7C66 0%, #486350 100%); 
+            color: white; 
+            border: none; 
+            padding: 8px 16px; 
+            border-radius: 20px; 
+            font-size: 0.875rem; 
+            font-weight: 600; 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center;
+            gap: 8px; 
+            transition: all 0.3s; 
+            cursor: pointer; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+        }
+        .ai-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0,0,0,0.15); }
+        .ai-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+        
+        .ai-result-box { 
+            background: #f0fdf4; 
+            border: 1px solid #bbf7d0; 
+            border-radius: 8px; 
+            padding: 16px; 
+            margin-top: 12px; 
+            font-size: 0.9rem; 
+            color: #166534; 
+            display: none; 
+            animation: fadeIn 0.5s ease-out; 
+        }
+        
+        /* Loading Animations */
+        .loading-dots:after { content: ' .'; animation: dots 1s steps(5, end) infinite; }
+        @keyframes dots { 0%, 20% { color: rgba(0,0,0,0); text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0);} 40% { color: inherit; text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0);} 60% { text-shadow: .25em 0 0 inherit, .5em 0 0 rgba(0,0,0,0);} 80%, 100% { text-shadow: .25em 0 0 inherit, .5em 0 0 inherit;}}
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Chat Widget */
+        .chat-fab { 
+            position: fixed; bottom: 2rem; right: 2rem; width: 60px; height: 60px; 
+            background: #5C7C66; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; 
+            color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
+            cursor: pointer; transition: transform 0.3s; z-index: 100; font-size: 24px; 
+        }
+        .chat-fab:hover { transform: scale(1.1); }
+        .chat-window { 
+            position: fixed; bottom: 6rem; right: 2rem; width: 350px; height: 500px; 
+            background: white; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); 
+            display: none; flex-direction: column; z-index: 100; overflow: hidden; 
+            border: 1px solid #e2e8f0; 
+        }
+        .chat-header { background: #5C7C66; color: white; padding: 1rem; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        .chat-messages { flex-grow: 1; padding: 1rem; overflow-y: auto; background: #F9F8F6; }
+        .chat-input-area { padding: 1rem; border-top: 1px solid #e2e8f0; background: white; display: flex; gap: 8px; }
+        .chat-msg { margin-bottom: 12px; max-width: 85%; padding: 8px 12px; border-radius: 12px; font-size: 0.9rem; line-height: 1.4; word-wrap: break-word; }
+        .msg-user { background: #E2E8F0; align-self: flex-end; margin-left: auto; color: #2D3748; }
+        .msg-ai { background: #E6FFFA; border: 1px solid #B2F5EA; align-self: flex-start; color: #234E52; }
+        .msg-ai p { margin: 0; }
+    </style>
+    <!-- Chosen Palette: Earthen Harmony (Background: #F9F8F6, Primary: #5C7C66, Accent: #C05621) -->
+    <!-- Application Structure Plan: Narrative dashboard. Hero -> Trends -> Pillars -> Global Analysis -> Recommendations. -->
+    <!-- Visualization & Content Choices: Line Chart (Trends), Radar Chart (Pillars), Plotly Bubble Chart (Analysis), AI Features (Gemini 2.5). -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-gray-800 tracking-tight">Urban<span class="text-[#5C7C66]">Resilience</span>'25</span>
+                </div>
+                <div class="hidden md:flex space-x-8 items-center" id="desktop-nav">
+                    <button onclick="scrollToSection('hero')" class="nav-btn nav-active text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium">Overview</button>
+                    <button onclick="scrollToSection('trends')" class="nav-btn text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium">Trends</button>
+                    <button onclick="scrollToSection('pillars')" class="nav-btn text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium">Pillars</button>
+                    <button onclick="scrollToSection('analysis')" class="nav-btn text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium">Analysis</button>
+                    <a href="#" download class="ml-4 bg-[#5C7C66] hover:bg-[#486350] text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">Download PDF</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+        
+        <!-- Hero Section -->
+        <section id="hero" class="py-12 bg-[#F9F8F6]">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">The State of Sustainable Cities</h1>
+                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                        An interactive analysis of how global metropolises are adapting to climate change. Source: 2025 Global Urban Resilience Report.
+                    </p>
+                </div>
+
+                <!-- Metrics -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="card p-6 border-l-4 border-[#5C7C66]">
+                        <p class="text-sm font-medium text-gray-500 uppercase">Urban Population</p>
+                        <p class="mt-2 text-4xl font-bold text-gray-900">68%</p>
+                        <p class="mt-1 text-sm text-gray-600">Projected by 2050</p>
+                    </div>
+                    <div class="card p-6 border-l-4 border-[#C05621]">
+                        <p class="text-sm font-medium text-gray-500 uppercase">Carbon Reduction</p>
+                        <p class="mt-2 text-4xl font-bold text-gray-900">-12%</p>
+                        <p class="mt-1 text-sm text-gray-600">YoY in Smart Cities</p>
+                    </div>
+                    <div class="card p-6 border-l-4 border-[#2B6CB0]">
+                        <p class="text-sm font-medium text-gray-500 uppercase">Green Investment</p>
+                        <p class="mt-2 text-4xl font-bold text-gray-900">$2.4T</p>
+                        <p class="mt-1 text-sm text-gray-600">Global allocation 2024</p>
+                    </div>
+                    <div class="card p-6 border-l-4 border-[#D69E2E]">
+                        <p class="text-sm font-medium text-gray-500 uppercase">EV Adoption</p>
+                        <p class="mt-2 text-4xl font-bold text-gray-900">1 in 5</p>
+                        <p class="mt-1 text-sm text-gray-600">New public transit vehicles</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Trends & AI Analyst -->
+        <section id="trends" class="py-16 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
+                    <div class="lg:col-span-1">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-6">The Acceleration of Urbanization</h2>
+                        <p class="text-gray-600 mb-4 text-lg leading-relaxed">
+                            The report highlights a critical inflection point. As rural-to-urban migration accelerates, infrastructure is under immense strain.
+                        </p>
+                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                            <h4 class="font-bold text-gray-800 mb-2">Insight:</h4>
+                            <p class="text-sm text-gray-600">By 2030, the world is projected to have 43 megacities with >10m inhabitants.</p>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-2">
+                        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                            <h3 class="text-lg font-semibold text-gray-700 text-center mb-4">Global Urban vs Rural Population (Billions)</h3>
+                            <div class="chart-container">
+                                <canvas id="trendsChart"></canvas>
+                            </div>
+                            <!-- AI Feature: Trend Analysis -->
+                            <div class="mt-6 px-4 pt-4 border-t border-gray-100">
+                                <button onclick="analyzeTrends()" id="btn-analyze-trends" class="ai-btn w-full sm:w-auto">
+                                    <span>✨ AI Trend Analyst: Predict 2060</span>
+                                </button>
+                                <div id="trend-analysis-result" class="ai-result-box">
+                                    <h4 class="font-bold mb-2">🤖 AI Forecast</h4>
+                                    <div id="trend-analysis-text" class="leading-relaxed"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Strategic Pillars -->
+        <section id="pillars" class="py-16 bg-[#F9F8F6]">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-gray-900">The 4 Pillars of Resilience</h2>
+                    <p class="mt-4 text-gray-600">Balance of mobility, energy, social equity, and digital infrastructure.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <!-- Controls -->
+                    <div class="lg:col-span-4 space-y-4">
+                        <button onclick="updatePillar('mobility')" id="btn-mobility" class="tab-btn w-full text-left px-6 py-4 rounded-lg shadow-sm hover:shadow-md transition-all flex items-center justify-between group active bg-[#5C7C66] text-white">
+                            <div><h3 class="font-bold text-lg">Smart Mobility</h3></div><span class="text-xl">🚌</span>
+                        </button>
+                        <button onclick="updatePillar('energy')" id="btn-energy" class="tab-btn w-full text-left px-6 py-4 rounded-lg bg-white shadow-sm hover:shadow-md transition-all flex items-center justify-between group">
+                            <div><h3 class="font-bold text-lg">Green Energy</h3></div><span class="text-xl">⚡</span>
+                        </button>
+                        <button onclick="updatePillar('social')" id="btn-social" class="tab-btn w-full text-left px-6 py-4 rounded-lg bg-white shadow-sm hover:shadow-md transition-all flex items-center justify-between group">
+                            <div><h3 class="font-bold text-lg">Social Equity</h3></div><span class="text-xl">🤝</span>
+                        </button>
+
+                        <div id="pillar-description" class="mt-6 p-6 bg-white rounded-lg border-l-4 border-[#5C7C66] shadow-sm">
+                            <h4 class="font-bold text-gray-900 mb-2">Smart Mobility Focus</h4>
+                            <p class="text-gray-700 text-sm leading-relaxed">
+                                Cities prioritizing mobility are seeing a 30% reduction in commute times via AI traffic management.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Visualization -->
+                    <div class="lg:col-span-8 bg-white p-6 rounded-xl shadow-lg border border-gray-100 flex flex-col items-center">
+                        <div class="flex justify-between w-full mb-4 items-center">
+                            <h3 class="font-bold text-gray-700">Gap Analysis</h3>
+                            <select id="city-selector" onchange="updateRadarCity()" class="bg-gray-50 border border-gray-300 rounded-lg p-2.5 text-sm">
+                                <option value="copenhagen">Copenhagen</option>
+                                <option value="singapore">Singapore</option>
+                                <option value="medellin">Medellin</option>
+                            </select>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="pillarRadar"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Global Analysis -->
+        <section id="analysis" class="py-16 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-gray-900">Global City Performance Matrix</h2>
+                    <p class="mt-2 text-gray-600">Budget (X) vs Satisfaction (Y) vs Population (Size).</p>
+                </div>
+                <div class="bg-[#F9F8F6] p-4 rounded-xl border border-gray-200">
+                    <div id="bubbleChart" class="w-full h-[500px]"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: AI Policy Generator -->
+        <section class="py-16 bg-[#2D3748] text-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl font-bold mb-10 text-center">Pathways to 2030</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Card 1 -->
+                    <div class="bg-gray-700 p-6 rounded-lg hover:bg-gray-600 transition-colors flex flex-col h-full">
+                        <div class="text-[#5C7C66] text-3xl mb-4">01</div>
+                        <h3 class="text-xl font-bold mb-3">Decentralize Energy</h3>
+                        <p class="text-gray-300 text-sm mb-6 flex-grow">Shift to community microgrids to increase resilience.</p>
+                        <button onclick="generatePolicy('Decentralized Energy Microgrids')" class="ai-btn w-full bg-white text-gray-800 hover:bg-gray-200 border-0">
+                            ✨ Generate Action Plan
+                        </button>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="bg-gray-700 p-6 rounded-lg hover:bg-gray-600 transition-colors flex flex-col h-full">
+                        <div class="text-[#D69E2E] text-3xl mb-4">02</div>
+                        <h3 class="text-xl font-bold mb-3">Reclaim Streets</h3>
+                        <p class="text-gray-300 text-sm mb-6 flex-grow">Prioritize pedestrians to boost local retail revenue.</p>
+                        <button onclick="generatePolicy('Pedestrian Street Reclamation')" class="ai-btn w-full bg-white text-gray-800 hover:bg-gray-200 border-0">
+                            ✨ Generate Action Plan
+                        </button>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="bg-gray-700 p-6 rounded-lg hover:bg-gray-600 transition-colors flex flex-col h-full">
+                        <div class="text-[#C05621] text-3xl mb-4">03</div>
+                        <h3 class="text-xl font-bold mb-3">Retrofit First</h3>
+                        <p class="text-gray-300 text-sm mb-6 flex-grow">Reduce embodied carbon by retrofitting existing stock.</p>
+                        <button onclick="generatePolicy('Building Retrofit Programs')" class="ai-btn w-full bg-white text-gray-800 hover:bg-gray-200 border-0">
+                            ✨ Generate Action Plan
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <!-- AI Modal -->
+    <div id="ai-modal" class="fixed inset-0 bg-black bg-opacity-50 z-[200] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg max-w-2xl w-full max-h-[80vh] flex flex-col shadow-2xl animate-fade-in">
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-[#5C7C66] rounded-t-lg">
+                <h3 id="ai-modal-title" class="text-xl font-bold text-white">AI Generated Content</h3>
+                <button onclick="closeAiModal()" class="text-white hover:text-gray-200 text-2xl">&times;</button>
+            </div>
+            <div class="p-6 overflow-y-auto">
+                <div id="ai-modal-content" class="prose max-w-none text-gray-700 text-sm"></div>
+            </div>
+            <div class="p-4 border-t border-gray-100 bg-gray-50 rounded-b-lg text-right">
+                <button onclick="closeAiModal()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded text-gray-700 font-medium">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Widget -->
+    <div class="chat-fab" onclick="toggleChat()" title="Ask the Expert">💬</div>
+    <div id="chat-window" class="chat-window">
+        <div class="chat-header">
+            <span>Ask the Expert</span>
+            <button onclick="toggleChat()" class="text-white hover:text-gray-200">&times;</button>
+        </div>
+        <div id="chat-messages" class="chat-messages flex flex-col">
+            <div class="chat-msg msg-ai">Hello! I'm your guide to the 2025 Urban Resilience Report. Ask me about trends or data. ✨</div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chat-input" placeholder="Type a question..." class="flex-grow border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#5C7C66]" onkeypress="handleChatKey(event)">
+            <button onclick="sendChat()" class="bg-[#5C7C66] text-white px-3 py-2 rounded-md hover:bg-[#486350]">➤</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 border-t border-gray-200 py-12 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <span class="text-xl font-bold text-gray-800">Urban<span class="text-[#5C7C66]">Resilience</span>'25</span>
+        </div>
+    </footer>
+
+    <!-- Logic -->
+    <script>
+        // --- DATA & STATE ---
+        const state = {
+            currentPillar: 'mobility',
+            currentRadarCity: 'copenhagen',
+            data: {
+                trends: {
+                    labels: ['1990', '2000', '2010', '2020', '2030', '2040', '2050'],
+                    urban: [2.3, 2.9, 3.6, 4.4, 5.2, 5.9, 6.7],
+                    rural: [3.0, 3.2, 3.3, 3.4, 3.3, 3.1, 2.9]
+                },
+                radarData: {
+                    copenhagen: [95, 85, 90, 80, 92],
+                    singapore: [90, 95, 75, 98, 88],
+                    medellin: [85, 60, 95, 65, 70],
+                    globalAvg: [65, 60, 60, 55, 60]
+                },
+                bubbleData: [
+                    { x: 80, y: 85, size: 20, label: 'Copenhagen', color: '#5C7C66' },
+                    { x: 90, y: 82, size: 45, label: 'Singapore', color: '#5C7C66' },
+                    { x: 45, y: 75, size: 30, label: 'Medellin', color: '#D69E2E' },
+                    { x: 70, y: 78, size: 60, label: 'Tokyo', color: '#5C7C66' },
+                    { x: 85, y: 65, size: 70, label: 'New York', color: '#C05621' },
+                    { x: 30, y: 60, size: 80, label: 'Mumbai', color: '#C05621' },
+                    { x: 95, y: 88, size: 15, label: 'Zurich', color: '#5C7C66' }
+                ]
+            }
+        };
+
+        // --- GEMINI API ---
+        const apiKey = ""; // Set by environment
+
+        async function callGeminiAPI(prompt, systemInstruction = null) {
+            if (!apiKey) {
+                return "API Key is missing. Features are disabled.";
+            }
+
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+                generationConfig: { maxOutputTokens: 300 }
+            };
+            if (systemInstruction) {
+                payload.systemInstruction = { parts: [{ text: systemInstruction }] };
+            }
+
+            // Exponential Backoff Logic
+            let delay = 1000;
+            for (let i = 0; i < 5; i++) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    if (!response.ok) {
+                        if (response.status === 429) throw new Error("Too Many Requests");
+                        throw new Error(`HTTP Error ${response.status}`);
+                    }
+                    
+                    const result = await response.json();
+                    return result.candidates?.[0]?.content?.parts?.[0]?.text || "No content generated.";
+                } catch (error) {
+                    if (i === 4) return "Sorry, the AI service is currently unavailable. Please try again later.";
+                    await new Promise(r => setTimeout(r, delay));
+                    delay *= 2;
+                }
+            }
+        }
+
+        // --- CHART JS ---
+        let trendsChartInstance, pillarRadarInstance;
+
+        function initCharts() {
+            // Trends
+            const ctxTrends = document.getElementById('trendsChart').getContext('2d');
+            trendsChartInstance = new Chart(ctxTrends, {
+                type: 'line',
+                data: {
+                    labels: state.data.trends.labels,
+                    datasets: [
+                        { label: 'Urban', data: state.data.trends.urban, borderColor: '#5C7C66', fill: false },
+                        { label: 'Rural', data: state.data.trends.rural, borderColor: '#CBD5E0', borderDash: [5,5], fill: false }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            // Radar
+            const ctxRadar = document.getElementById('pillarRadar').getContext('2d');
+            pillarRadarInstance = new Chart(ctxRadar, {
+                type: 'radar',
+                data: {
+                    labels: ['Transport', 'Digital', 'Green', 'Energy', 'Housing'],
+                    datasets: [{
+                        label: 'City', data: state.data.radarData.copenhagen,
+                        backgroundColor: 'rgba(92,124,102,0.2)', borderColor: '#5C7C66'
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { r: { suggestedMin: 0, suggestedMax: 100 } } }
+            });
+
+            // Plotly Bubble
+            const trace = {
+                x: state.data.bubbleData.map(d => d.x),
+                y: state.data.bubbleData.map(d => d.y),
+                text: state.data.bubbleData.map(d => d.label),
+                mode: 'markers',
+                marker: {
+                    size: state.data.bubbleData.map(d => d.size),
+                    sizemode: 'area', sizeref: 0.1, color: state.data.bubbleData.map(d => d.color)
+                }
+            };
+            Plotly.newPlot('bubbleChart', [trace], {
+                margin: { t: 20, r: 20, b: 40, l: 40 },
+                xaxis: { title: 'Budget Score' }, yaxis: { title: 'Satisfaction Index' },
+                paper_bgcolor: '#F9F8F6', plot_bgcolor: '#F9F8F6'
+            }, { responsive: true, displayModeBar: false });
+        }
+
+        // --- INTERACTION ---
+        function updatePillar(key) {
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.classList.remove('active', 'bg-[#5C7C66]', 'text-white');
+                b.classList.add('bg-white');
+            });
+            const btn = document.getElementById(`btn-${key}`);
+            btn.classList.remove('bg-white');
+            btn.classList.add('active', 'bg-[#5C7C66]', 'text-white');
+            
+            const desc = document.getElementById('pillar-description');
+            const content = {
+                mobility: { t: "Smart Mobility", d: "Cities prioritizing mobility see 30% reduction in commute times." },
+                energy: { t: "Green Energy", d: "Microgrids increase resilience against climate blackouts." },
+                social: { t: "Social Equity", d: "Affordable housing near transit is key to social mobility." }
+            }[key];
+            
+            desc.innerHTML = `<h4 class="font-bold text-gray-900 mb-2">${content.t}</h4><p class="text-gray-700 text-sm">${content.d}</p>`;
+        }
+
+        function updateRadarCity() {
+            const city = document.getElementById('city-selector').value;
+            pillarRadarInstance.data.datasets[0].data = state.data.radarData[city];
+            pillarRadarInstance.update();
+        }
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // --- AI FEATURES ---
+        async function analyzeTrends() {
+            const btn = document.getElementById('btn-analyze-trends');
+            const box = document.getElementById('trend-analysis-result');
+            const txt = document.getElementById('trend-analysis-text');
+            
+            btn.disabled = true;
+            btn.innerHTML = `<span class="loading-dots">Analyzing 70 years of data</span>`;
+            
+            const prompt = `Given Urban Pop: ${state.data.trends.urban.join(',')} and Rural Pop: ${state.data.trends.rural.join(',')} from 1990-2050. Predict 2060 and give 2 key risks. Concise.`;
+            const res = await callGeminiAPI(prompt);
+            
+            txt.innerHTML = marked.parse(res);
+            box.style.display = 'block';
+            btn.innerHTML = `<span>✨ Analysis Complete</span>`;
+            btn.disabled = false;
+        }
+
+        async function generatePolicy(topic) {
+            const modal = document.getElementById('ai-modal');
+            const content = document.getElementById('ai-modal-content');
+            const title = document.getElementById('ai-modal-title');
+            
+            title.innerText = `Plan for: ${topic}`;
+            content.innerHTML = `<div class="text-center p-8"><span class="loading-dots text-xl">Consulting Expert Models</span></div>`;
+            modal.classList.remove('hidden');
+
+            const prompt = `Create a 3-step action plan for: "${topic}" for a mid-sized city. Use Markdown headers. Keep it under 150 words.`;
+            const res = await callGeminiAPI(prompt);
+            
+            content.innerHTML = marked.parse(res);
+        }
+
+        function closeAiModal() { document.getElementById('ai-modal').classList.add('hidden'); }
+
+        // Chat
+        function toggleChat() {
+            const win = document.getElementById('chat-window');
+            win.style.display = win.style.display === 'flex' ? 'none' : 'flex';
+            if(win.style.display === 'flex') document.getElementById('chat-input').focus();
+        }
+
+        async function sendChat() {
+            const input = document.getElementById('chat-input');
+            const val = input.value.trim();
+            if(!val) return;
+
+            const box = document.getElementById('chat-messages');
+            box.innerHTML += `<div class="chat-msg msg-user">${val}</div>`;
+            input.value = '';
+            box.scrollTop = box.scrollHeight;
+
+            const loadId = 'loading-' + Date.now();
+            box.innerHTML += `<div id="${loadId}" class="chat-msg msg-ai loading-dots">Thinking</div>`;
+            box.scrollTop = box.scrollHeight;
+
+            const res = await callGeminiAPI(val, "You are an expert on the 2025 Urban Resilience Report.");
+            
+            document.getElementById(loadId).remove();
+            box.innerHTML += `<div class="chat-msg msg-ai">${marked.parse(res)}</div>`;
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function handleChatKey(e) { if(e.key === 'Enter') sendChat(); }
+
+        window.onload = function() { initCharts(); };
+        window.onresize = function() { Plotly.Plots.resize('bubbleChart'); };
+
+    </script>
+</body>
+</html>
