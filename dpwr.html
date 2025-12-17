@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>From Power Laws to Platform Economics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Sora:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0e17;
+            --bg-secondary: #111827;
+            --bg-tertiary: #1a2234;
+            --bg-card: #1e293b;
+            --accent-cyan: #00d9ff;
+            --accent-orange: #ff6b35;
+            --accent-yellow: #f4d35e;
+            --accent-purple: #a855f7;
+            --accent-green: #10b981;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border: rgba(148, 163, 184, 0.2);
+            --glow-cyan: rgba(0, 217, 255, 0.3);
+            --glow-orange: rgba(255, 107, 53, 0.3);
+            --glow-purple: rgba(168, 85, 247, 0.3);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Sora', sans-serif;
+            color: var(--text-primary);
+            line-height: 1.7;
+            background: var(--bg-primary);
+            overflow-x: hidden;
+        }
+
+        /* SCROLL PROGRESS BAR */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple), var(--accent-orange));
+            z-index: 1000;
+            width: 0%;
+            transition: width 0.1s ease-out;
+        }
+
+        /* FLOATING NAV */
+        .floating-nav {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            border: 2px solid var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-dot:hover,
+        .nav-dot.active {
+            background: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 20px var(--glow-cyan);
+            transform: scale(1.3);
+        }
+
+        .nav-dot::after {
+            content: attr(data-label);
+            position: absolute;
+            right: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            white-space: nowrap;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            background: var(--bg-card);
+            padding: 4px 12px;
+            border-radius: 4px;
+        }
+
+        .nav-dot:hover::after {
+            opacity: 1;
+            right: 30px;
+        }
+
+        /* BACKGROUND EFFECTS */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(0, 217, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(255, 107, 53, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* HEADER */
+        .header {
+            text-align: center;
+            margin-bottom: 100px;
+            padding: 100px 0;
+            position: relative;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .header.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 217, 255, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-cyan) 50%, var(--accent-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -2px;
+            line-height: 1.1;
+            position: relative;
+        }
+
+        .header p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .scroll-indicator svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--accent-cyan);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        /* SECTION STYLING */
+        .section {
+            margin-bottom: 120px;
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            color: var(--text-primary);
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+            border-radius: 2px;
+        }
+
+        .section-number {
+            color: var(--accent-cyan);
+            font-family: 'Space Mono', monospace;
+            font-size: 1rem;
+            display: block;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        /* THEORY PYRAMID */
+        .theory-pyramid {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .pyramid-level {
+            padding: 35px 35px 35px 80px;
+            border-radius: 16px;
+            position: relative;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+
+        .pyramid-level.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .pyramid-level::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--level-color);
+        }
+
+        .pyramid-level:hover {
+            transform: translateX(10px);
+            border-color: var(--level-color);
+            box-shadow: 0 20px 60px -20px var(--level-glow);
+        }
+
+        .level-1 { 
+            --level-color: var(--accent-cyan); 
+            --level-glow: var(--glow-cyan);
+            transition-delay: 0.1s;
+        }
+        .level-2 { 
+            --level-color: var(--accent-yellow); 
+            --level-glow: rgba(244, 211, 94, 0.3);
+            margin-left: 40px;
+            transition-delay: 0.2s;
+        }
+        .level-3 { 
+            --level-color: var(--accent-purple); 
+            --level-glow: var(--glow-purple);
+            margin-left: 80px;
+            transition-delay: 0.3s;
+        }
+
+        .level-number {
+            position: absolute;
+            left: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: 'Space Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--level-color);
+        }
+
+        .pyramid-level h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .pyramid-level p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .mechanism {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin-top: 16px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--accent-cyan);
+            border-left: 3px solid var(--accent-orange);
+        }
+
+        /* COMPARISON GRID */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin: 40px 0;
+        }
+
+        .comparison-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+        }
+
+        .comparison-card.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .comparison-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .comparison-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .comparison-card:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-8px);
+            box-shadow: 0 30px 60px -20px rgba(0, 217, 255, 0.2);
+        }
+
+        .card-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+        }
+
+        .comparison-card h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .comparison-card ul {
+            list-style: none;
+        }
+
+        .comparison-card li {
+            padding: 12px 0;
+            padding-left: 28px;
+            position: relative;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .comparison-card li:last-child {
+            border-bottom: none;
+        }
+
+        .comparison-card li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--accent-orange);
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+
+        .comparison-card:hover li::before {
+            transform: translateX(5px);
+        }
+
+        /* TENSIONS GRID */
+        .tensions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin: 40px 0;
+        }
+
+        .tension-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        .tension-card.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .tension-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, var(--glow-orange) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .tension-card:hover::after {
+            opacity: 1;
+        }
+
+        .tension-card:hover {
+            border-color: var(--accent-orange);
+            transform: scale(1.02);
+        }
+
+        .tension-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--accent-orange);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+
+        .tension-card h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .tension-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        /* EMERGING MARKETS */
+        .em-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin: 40px 0;
+        }
+
+        .em-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        .em-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .em-card.formal { 
+            --card-accent: var(--accent-cyan);
+            transition-delay: 0.1s;
+        }
+        .em-card.informal { 
+            --card-accent: var(--accent-orange);
+            transition-delay: 0.2s;
+        }
+        .em-card.dpi { 
+            --card-accent: var(--accent-yellow);
+            transition-delay: 0.3s;
+        }
+
+        .em-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--card-accent);
+        }
+
+        .em-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--card-accent);
+            box-shadow: 0 30px 60px -20px color-mix(in srgb, var(--card-accent) 30%, transparent);
+        }
+
+        .em-card h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .em-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* GAP SECTION */
+        .gap-section {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            border: 1px dashed var(--accent-yellow);
+            border-radius: 20px;
+            padding: 50px;
+            margin: 60px 0;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .gap-section.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .gap-section::before {
+            content: '⚠️';
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3rem;
+            opacity: 0.3;
+        }
+
+        .gap-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            margin-bottom: 30px;
+            color: var(--accent-yellow);
+            text-align: center;
+        }
+
+        .gap-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .gap-left, .gap-right {
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        .gap-left h4, .gap-right h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .gap-left {
+            color: var(--text-secondary);
+        }
+
+        .gap-right {
+            padding: 25px;
+            background: rgba(244, 211, 94, 0.1);
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-yellow);
+        }
+
+        /* APPLICATION SECTION */
+        .application {
+            background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+            border-radius: 20px;
+            padding: 50px;
+            margin: 60px 0;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .application.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .application::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, var(--glow-purple) 0%, transparent 70%);
+            opacity: 0.5;
+        }
+
+        .application h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            margin-bottom: 30px;
+            color: var(--accent-purple);
+            position: relative;
+        }
+
+        .application-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .app-context {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+
+        .app-context h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .app-solution {
+            background: var(--bg-card);
+            border-left: 4px solid var(--accent-purple);
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        .app-solution h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .app-solution ul {
+            list-style: none;
+        }
+
+        .app-solution li {
+            padding: 10px 0 10px 28px;
+            position: relative;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .app-solution li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent-green);
+            font-weight: bold;
+        }
+
+        .app-solution li:hover {
+            color: var(--text-primary);
+            transform: translateX(5px);
+        }
+
+        .theory-note {
+            margin-top: 40px;
+            padding: 24px;
+            background: rgba(168, 85, 247, 0.1);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            border-left: 4px solid var(--accent-purple);
+        }
+
+        /* TABLE */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            margin: 30px 0;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .table-wrapper.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        thead tr {
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+        }
+
+        th {
+            padding: 18px 20px;
+            text-align: left;
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            color: var(--bg-primary);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        tbody tr {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        tbody tr:hover {
+            background: var(--bg-tertiary);
+        }
+
+        td {
+            padding: 18px 20px;
+            color: var(--text-secondary);
+        }
+
+        td:first-child {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* MISSING THEORY */
+        .theory-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .theory-box {
+            padding: 30px;
+            border-radius: 16px;
+            position: relative;
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .theory-box.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .theory-box.know {
+            background: rgba(244, 211, 94, 0.1);
+            border-left: 4px solid var(--accent-yellow);
+            transition-delay: 0.1s;
+        }
+
+        .theory-box.missing {
+            background: rgba(0, 217, 255, 0.1);
+            border-left: 4px solid var(--accent-cyan);
+            transition-delay: 0.2s;
+        }
+
+        .theory-box h4 {
+            font-family: 'Playfair Display', serif;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .theory-box ul {
+            list-style: none;
+        }
+
+        .theory-box li {
+            padding: 10px 0;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .theory-box.know li::before {
+            content: '✓';
+            color: var(--accent-green);
+            font-weight: bold;
+        }
+
+        .theory-box.missing li::before {
+            content: '?';
+            color: var(--accent-cyan);
+            font-weight: bold;
+        }
+
+        /* TAKEAWAYS */
+        .takeaways-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin: 40px 0;
+        }
+
+        .takeaway-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(30px) rotateX(10deg);
+        }
+
+        .takeaway-card.visible {
+            opacity: 1;
+            transform: translateY(0) rotateX(0);
+        }
+
+        .takeaway-card:nth-child(1) { 
+            --takeaway-color: var(--accent-cyan);
+            transition-delay: 0.1s;
+        }
+        .takeaway-card:nth-child(2) { 
+            --takeaway-color: var(--accent-yellow);
+            transition-delay: 0.2s;
+        }
+        .takeaway-card:nth-child(3) { 
+            --takeaway-color: var(--accent-purple);
+            transition-delay: 0.3s;
+        }
+        .takeaway-card:nth-child(4) { 
+            --takeaway-color: var(--accent-orange);
+            transition-delay: 0.4s;
+        }
+
+        .takeaway-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--takeaway-color);
+        }
+
+        .takeaway-card:hover {
+            border-color: var(--takeaway-color);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -20px color-mix(in srgb, var(--takeaway-color) 40%, transparent);
+        }
+
+        .takeaway-card h4 {
+            font-family: 'Playfair Display', serif;
+            color: var(--takeaway-color);
+            margin-bottom: 16px;
+            font-size: 1.1rem;
+        }
+
+        .takeaway-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        /* FOOTER */
+        .footer {
+            margin-top: 120px;
+            padding-top: 50px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+
+        .footer.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .footer p {
+            margin: 8px 0;
+        }
+
+        .footer-title {
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .floating-nav {
+                display: none;
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .gap-content,
+            .application-grid,
+            .tensions,
+            .theory-grid,
+            .takeaways-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .em-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .level-2, .level-3 {
+                margin-left: 0;
+            }
+
+            .container {
+                padding: 40px 20px;
+            }
+        }
+
+        /* ANIMATIONS */
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .shimmer-text {
+            background: linear-gradient(90deg, var(--text-primary), var(--accent-cyan), var(--text-primary));
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="bg-gradient"></div>
+
+    <nav class="floating-nav">
+        <div class="nav-dot" data-section="header" data-label="Introduction"></div>
+        <div class="nav-dot" data-section="section1" data-label="Foundation"></div>
+        <div class="nav-dot" data-section="section2" data-label="Missing Link"></div>
+        <div class="nav-dot" data-section="section3" data-label="Tensions"></div>
+        <div class="nav-dot" data-section="section4" data-label="Emerging Markets"></div>
+        <div class="nav-dot" data-section="section5" data-label="DPI"></div>
+        <div class="nav-dot" data-section="section6" data-label="Comparison"></div>
+        <div class="nav-dot" data-section="section7" data-label="Theory"></div>
+        <div class="nav-dot" data-section="section8" data-label="Takeaways"></div>
+    </nav>
+
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header" id="header">
+            <h1>From Power Laws to<br>Platform Economics</h1>
+            <p>Understanding Market Concentration, Unbundling, and Digital Public Infrastructure in Emerging Economies</p>
+            <div class="scroll-indicator">
+                <span>Scroll to explore</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- SECTION 1 -->
+        <div class="section" id="section1">
+            <span class="section-number">SECTION 01</span>
+            <h2 class="section-title">The Theoretical Foundation: Three Layers</h2>
+            
+            <div class="theory-pyramid">
+                <div class="pyramid-level level-1">
+                    <span class="level-number">①</span>
+                    <h3>Mathematical Layer: Power Laws</h3>
+                    <p><strong>Zipf's Law, Pareto Distributions, Fat Tails</strong></p>
+                    <p>A small percentage controls a large portion of the total (e.g., top 1% of music labels control 70% of revenues). Extreme events are more common than normal distribution predicts.</p>
+                    <div class="mechanism">Key insight: Distribution pattern = rank/frequency shows inverse power relationship</div>
+                </div>
+
+                <div class="pyramid-level level-2">
+                    <span class="level-number">②</span>
+                    <h3>Economic Mechanism: Increasing Returns</h3>
+                    <p><strong>Brian Arthur's Framework (1980s-1990s)</strong></p>
+                    <p>When a competitor gets ahead, they gain further advantage through lock-in, network effects, and positive feedback. The winner need not be the best—random early events cascade into dominance.</p>
+                    <div class="mechanism">Key insight: Small historical accidents cumulate → path dependence → market lock-in</div>
+                </div>
+
+                <div class="pyramid-level level-3">
+                    <span class="level-number">③</span>
+                    <h3>Business Strategy: Unbundling/Rebundling</h3>
+                    <p><strong>Sangeet Paul Choudhary's Framework</strong></p>
+                    <p>Systems cycle between unbundling (fragmentation) and rebundling (reconcentration). Control accrues to those who establish "rebundling points"—the new locus of power after disruption.</p>
+                    <div class="mechanism">Key insight: Power = control of coordination, not just data or technology</div>
+                </div>
+            </div>
+
+            <p style="margin-top: 50px; font-style: italic; color: var(--text-muted); text-align: center; font-size: 1rem;">
+                These three layers are not separate—they describe the same phenomenon at different levels of abstraction.
+            </p>
+        </div>
+
+        <!-- SECTION 2 -->
+        <div class="section" id="section2">
+            <span class="section-number">SECTION 02</span>
+            <h2 class="section-title">The Missing Connection</h2>
+            
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <div class="card-label">What Choudhary Describes</div>
+                    <h4>Fragmented vs. Concentrated Supply</h4>
+                    <ul>
+                        <li>Spotify in concentrated music label market</li>
+                        <li>Amazon in fragmented seller market</li>
+                        <li>Different power dynamics based on supply structure</li>
+                        <li>Who can rebundle determines who wins</li>
+                    </ul>
+                </div>
+
+                <div class="comparison-card">
+                    <div class="card-label">What Power Law Describes</div>
+                    <h4>Distribution of Market Share</h4>
+                    <ul>
+                        <li>Mathematical relationship: rank ∝ 1/frequency</li>
+                        <li>Few huge players, many tiny ones</li>
+                        <li>Extreme inequality in outcomes</li>
+                        <li>Tail risk dominates outcomes</li>
+                    </ul>
+                </div>
+
+                <div class="comparison-card">
+                    <div class="card-label">The Bridge</div>
+                    <h4>Increasing Returns Creates Power Laws</h4>
+                    <ul>
+                        <li>Unbundling creates fragmentation</li>
+                        <li>Rebundling creates reconcentration</li>
+                        <li>Winners establish control points</li>
+                        <li>Result: fat-tailed distributions emerge naturally</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 3 -->
+        <div class="section" id="section3">
+            <span class="section-number">SECTION 03</span>
+            <h2 class="section-title">The Central Theoretical Tensions</h2>
+            
+            <div class="tensions">
+                <div class="tension-card">
+                    <div class="tension-label">Tension #1</div>
+                    <h4>Efficiency vs. Concentration</h4>
+                    <p>Fragmented markets (many suppliers) = consumer choice but high search costs. Concentrated markets (few suppliers) = low search costs but high supplier power.</p>
+                </div>
+
+                <div class="tension-card">
+                    <div class="tension-label">Tension #2</div>
+                    <h4>Predictability vs. Path Dependence</h4>
+                    <p>Small early random events in increasing-returns systems cascade into massive outcomes. Winners are often determined by historical accident, not merit.</p>
+                </div>
+
+                <div class="tension-card">
+                    <div class="tension-label">Tension #3</div>
+                    <h4>Unbundling Opportunity vs. Rebundling Reality</h4>
+                    <p>Disruption (unbundling) creates opportunities for startups. But value capture requires rebundling. Only a tiny handful succeed at rebundling.</p>
+                </div>
+
+                <div class="tension-card">
+                    <div class="tension-label">Tension #4</div>
+                    <h4>Coordination vs. Extraction</h4>
+                    <p>Platforms create value through coordination but extract value through gatekeeping. Power accrues to those controlling coordination points (e.g., Spotify's playlists).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 4 -->
+        <div class="section" id="section4">
+            <span class="section-number">SECTION 04</span>
+            <h2 class="section-title">Emerging Markets: Where Standard Theory Breaks</h2>
+            
+            <div class="em-grid">
+                <div class="em-card formal">
+                    <h4>Formal Sector</h4>
+                    <p>Arthur's theory applies: few dominant firms (banks, telcos, retailers), network effects, lock-in behavior. Winner-take-all dynamics visible.</p>
+                </div>
+
+                <div class="em-card informal">
+                    <h4>Informal Sector</h4>
+                    <p>Massive fragmentation: millions of micro-enterprises, petty traders, informal workers. Power laws describe the distribution, but mechanisms differ.</p>
+                </div>
+
+                <div class="em-card dpi">
+                    <h4>DPI Layer (NEW)</h4>
+                    <p>Neither formal lock-in nor informal chaos. Distributed power through standardized protocols (e.g., UPI, Aadhaar). Fat-tailed capabilities, not power concentration.</p>
+                </div>
+            </div>
+
+            <div class="gap-section">
+                <h3 class="gap-title">The Critical Gap: Dual Economy Mismatch</h3>
+                <div class="gap-content">
+                    <div class="gap-left">
+                        <h4>What Standard Theory Assumes</h4>
+                        <p>A single market where all actors compete under the same rules. Price signals coordinate behavior. Winners consolidate advantage.</p>
+                        <p style="margin-top: 20px;">→ Works for developed tech markets ✓</p>
+                    </div>
+                    <div class="gap-right">
+                        <h4>What Emerging Markets Have</h4>
+                        <p>Two or three parallel, minimally-connected markets with different rules, institutions, and actors.</p>
+                        <p><strong>Result:</strong> You get fat-tailed distributions <em>within each</em> sector but not across sectors. Power doesn't concentrate at single points; it fragments by layer.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 5 -->
+        <div class="section" id="section5">
+            <span class="section-number">SECTION 05</span>
+            <h2 class="section-title">The Breakthrough: Digital Public Infrastructure</h2>
+            
+            <div class="application">
+                <h3>Real-World Application: Sri's Context at AADHAAR</h3>
+                
+                <div class="application-grid">
+                    <div class="app-context">
+                        <h4>The Problem Being Solved</h4>
+                        <p>How do you create market efficiency in a dual economy (formal + massive informal sector + fragmented regions) without creating winner-take-all concentration?</p>
+                        <p style="margin-top: 20px;">Traditional platforms (Amazon, Alibaba) consolidate power. But Aadhaar unbundles identity—a capability no single player controls.</p>
+                    </div>
+
+                    <div class="app-solution">
+                        <h4>The DPI Approach</h4>
+                        <ul>
+                            <li>Standardized, open building blocks</li>
+                            <li>Interoperability across private providers</li>
+                            <li>Distributed power: many firms compete on services, not on fundamental access</li>
+                            <li>Billions of users served without creating gatekeepers</li>
+                            <li>Enables the informal sector to connect formally</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="theory-note">
+                    <strong>Why This Matters Theoretically:</strong> DPI creates "fat-tailed capability distributions" (many providers of different services) while avoiding "fat-tailed power distributions" (few controlling gatekeepers). This is a third possibility that neither traditional markets nor platforms offer.
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 6 -->
+        <div class="section" id="section6">
+            <span class="section-number">SECTION 06</span>
+            <h2 class="section-title">Three Market Structures Compared</h2>
+            
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Dimension</th>
+                            <th>Developed Markets</th>
+                            <th>Emerging Markets</th>
+                            <th>DPI Systems</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Dominant Force</td>
+                            <td>Network effects → winner-take-most</td>
+                            <td>Dual economy → parallel fragmentation</td>
+                            <td>Standardization → distributed competition</td>
+                        </tr>
+                        <tr>
+                            <td>Distribution Pattern</td>
+                            <td>Fat-tailed (power concentrated)</td>
+                            <td>Multi-modal (fragmented by layer)</td>
+                            <td>Thick middle (many viable competitors)</td>
+                        </tr>
+                        <tr>
+                            <td>Path Dependence</td>
+                            <td>Strong (lock-in via network effects)</td>
+                            <td>Weak (informal markets enable switching)</td>
+                            <td>Moderate (standards reduce switching costs)</td>
+                        </tr>
+                        <tr>
+                            <td>Coordination Costs</td>
+                            <td>Low (centralized platforms)</td>
+                            <td>High (fragmented, informal)</td>
+                            <td>Medium (standardized but decentralized)</td>
+                        </tr>
+                        <tr>
+                            <td>Power Concentration</td>
+                            <td>Single point (platform owner)</td>
+                            <td>Multiple points (by sector)</td>
+                            <td>Distributed (service layers)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SECTION 7 -->
+        <div class="section" id="section7">
+            <span class="section-number">SECTION 07</span>
+            <h2 class="section-title">The Missing Theory: Quantifying DPI Economics</h2>
+            
+            <div class="theory-grid">
+                <div class="theory-box know">
+                    <h4>What We Know</h4>
+                    <ul>
+                        <li>Power laws describe wealth, city size, firm size</li>
+                        <li>Increasing returns create lock-in and path dependence</li>
+                        <li>Unbundling/rebundling cycles create power shifts</li>
+                        <li>Dual economies are structurally fragmented</li>
+                    </ul>
+                </div>
+
+                <div class="theory-box missing">
+                    <h4>What's Missing</h4>
+                    <ul>
+                        <li>How do you maintain fat-tailed capabilities without fat-tailed power?</li>
+                        <li>Can standards prevent reconcentration over time?</li>
+                        <li>What's the optimal degree of modularity?</li>
+                        <li>How do DPI systems resist capture?</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 8 -->
+        <div class="section" id="section8">
+            <span class="section-number">SECTION 08</span>
+            <h2 class="section-title">Key Insights for Strategy & Theory</h2>
+            
+            <div class="takeaways-grid">
+                <div class="takeaway-card">
+                    <h4>For Market Strategists</h4>
+                    <p>Power accrues not to aggregators in fragmented markets, but to <strong>rebundlers who establish control points</strong>. Success requires identifying the right moment and layer to rebundle.</p>
+                </div>
+
+                <div class="takeaway-card">
+                    <h4>For Emerging Market Policymakers</h4>
+                    <p>DPI systems can achieve market efficiency and universal reach without creating gatekeeping monopolies. The key is designing standardized, interoperable layers that prevent reconcentration.</p>
+                </div>
+
+                <div class="takeaway-card">
+                    <h4>For Economists</h4>
+                    <p>Path dependence and increasing returns create fat-tailed distributions naturally. But dual economies exhibit <strong>multi-modal distributions</strong> with structural, not just market-based, fragmentation.</p>
+                </div>
+
+                <div class="takeaway-card">
+                    <h4>For Systems Designers</h4>
+                    <p>The atomic unit (file, title, experience, capability) determines what concentrates and what fragments. Shifting the atomic unit reshuffles power and value flows across the entire ecosystem.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <p class="footer-title">Sources & Framework</p>
+            <p>Sangeet Paul Choudhary: Platform Economics, Unbundling/Rebundling, Building Blocks Thesis</p>
+            <p>W. Brian Arthur: Increasing Returns and Path Dependence in the Economy (1990s)</p>
+            <p>Pareto, Zipf, Newman: Power Law Theory and Distribution Mechanics</p>
+            <p>Sri's Context: Digital Public Infrastructure at AADHAAR, Billion-User Systems Design</p>
+        </div>
+    </div>
+
+    <script>
+        // Scroll Progress Bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    
+                    // Animate children with stagger
+                    const children = entry.target.querySelectorAll('.pyramid-level, .comparison-card, .tension-card, .em-card, .theory-box, .takeaway-card');
+                    children.forEach((child, index) => {
+                        setTimeout(() => {
+                            child.classList.add('visible');
+                        }, index * 100);
+                    });
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections
+        document.querySelectorAll('.section, .header, .gap-section, .application, .table-wrapper, .footer').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Navigation dots
+        const navDots = document.querySelectorAll('.nav-dot');
+        const sections = document.querySelectorAll('.section, .header');
+
+        navDots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                const targetId = dot.dataset.section;
+                const target = document.getElementById(targetId);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Update active nav dot on scroll
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= sectionTop - 300) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navDots.forEach(dot => {
+                dot.classList.remove('active');
+                if (dot.dataset.section === current) {
+                    dot.classList.add('active');
+                }
+            });
+        });
+
+        // Initial animation trigger
+        setTimeout(() => {
+            document.querySelector('.header').classList.add('visible');
+        }, 100);
+    </script>
+</body>
+</html>
