@@ -1,0 +1,1775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategic Thinking in Design: From Personas to Populations</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a24;
+            --text-primary: #f5f5f7;
+            --text-secondary: #a0a0b0;
+            --text-muted: #6a6a7a;
+            --accent-primary: #ff6b35;
+            --accent-secondary: #ffd166;
+            --accent-tertiary: #06d6a0;
+            --accent-blue: #118ab2;
+            --gradient-warm: linear-gradient(135deg, #ff6b35 0%, #ffd166 100%);
+            --gradient-cool: linear-gradient(135deg, #118ab2 0%, #06d6a0 100%);
+            --shadow-glow: 0 0 60px rgba(255, 107, 53, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-weight: 300;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(to bottom, rgba(10,10,15,0.95) 0%, rgba(10,10,15,0) 100%);
+            transition: all 0.3s ease;
+        }
+
+        .nav.scrolled {
+            background: rgba(10,10,15,0.98);
+            backdrop-filter: blur(20px);
+            padding: 1rem 3rem;
+        }
+
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 400;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-warm);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            z-index: 1001;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--gradient-warm);
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 6rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 40%, rgba(255,107,53,0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 60%, rgba(6,214,160,0.05) 0%, transparent 50%);
+            animation: heroGlow 15s ease-in-out infinite alternate;
+        }
+
+        @keyframes heroGlow {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(-5%, 5%) rotate(3deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: rgba(255,107,53,0.1);
+            border: 1px solid rgba(255,107,53,0.3);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--accent-primary);
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .hero h1 span {
+            background: var(--gradient-warm);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            animation: fadeInUp 0.8s ease 0.4s forwards;
+            opacity: 0;
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 3rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease 0.6s forwards;
+            opacity: 0;
+        }
+
+        .hero-meta-item {
+            text-align: left;
+        }
+
+        .hero-meta-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .hero-meta-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 8rem 2rem;
+            position: relative;
+        }
+
+        .section-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 600;
+            margin-bottom: 2rem;
+            line-height: 1.2;
+        }
+
+        .section-content {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+        }
+
+        .section-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Card Styles */
+        .card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-top: 3rem;
+            border: 1px solid rgba(255,255,255,0.05);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-warm);
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: rgba(255,107,53,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-text {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* Example Box */
+        .example-box {
+            background: linear-gradient(135deg, rgba(17,138,178,0.1) 0%, rgba(6,214,160,0.05) 100%);
+            border-left: 3px solid var(--accent-blue);
+            padding: 2rem;
+            border-radius: 0 12px 12px 0;
+            margin: 2rem 0;
+        }
+
+        .example-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent-blue);
+            margin-bottom: 0.75rem;
+        }
+
+        .example-content {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* Anecdote Style */
+        .anecdote {
+            background: var(--bg-secondary);
+            padding: 3rem;
+            border-radius: 16px;
+            margin: 3rem 0;
+            position: relative;
+        }
+
+        .anecdote::before {
+            content: '"';
+            font-family: 'Playfair Display', serif;
+            font-size: 8rem;
+            color: rgba(255,107,53,0.1);
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            line-height: 1;
+        }
+
+        .anecdote-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-style: italic;
+            color: var(--text-primary);
+            position: relative;
+            z-index: 1;
+            margin-bottom: 1rem;
+        }
+
+        .anecdote-source {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 2rem;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: var(--gradient-warm);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Comparison Grid */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-item {
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .comparison-item.traditional {
+            background: linear-gradient(135deg, rgba(255,107,53,0.05) 0%, transparent 100%);
+            border-color: rgba(255,107,53,0.2);
+        }
+
+        .comparison-item.strategic {
+            background: linear-gradient(135deg, rgba(6,214,160,0.05) 0%, transparent 100%);
+            border-color: rgba(6,214,160,0.2);
+        }
+
+        .comparison-header {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .comparison-header .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .traditional .dot { background: var(--accent-primary); }
+        .strategic .dot { background: var(--accent-tertiary); }
+
+        .comparison-list {
+            list-style: none;
+        }
+
+        .comparison-list li {
+            padding: 0.75rem 0;
+            color: var(--text-secondary);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.95rem;
+        }
+
+        .comparison-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* Data Table Styles */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .data-table thead tr {
+            background: var(--gradient-warm);
+        }
+
+        .data-table th {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--bg-primary);
+            font-size: 0.9rem;
+        }
+
+        .data-table td {
+            padding: 1rem 1.5rem;
+            background: var(--bg-card);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .data-table tbody tr:hover td {
+            background: rgba(255,107,53,0.05);
+        }
+
+        /* Leverage Box */
+        .leverage-box {
+            background: var(--gradient-warm);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .leverage-box h4 {
+            color: var(--bg-primary);
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .leverage-stats {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .leverage-stat {
+            text-align: center;
+        }
+
+        .leverage-stat strong {
+            display: block;
+            font-size: 1.8rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--bg-primary);
+        }
+
+        .leverage-stat span {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: rgba(10,10,15,0.7);
+        }
+
+        .leverage-divider {
+            font-size: 1.5rem;
+            color: var(--bg-primary);
+            opacity: 0.5;
+        }
+
+        .leverage-footer {
+            border-top: 1px solid rgba(10,10,15,0.2);
+            padding-top: 1rem;
+            font-size: 0.9rem;
+            color: var(--bg-primary);
+        }
+
+        /* Quiz Section */
+        .quiz-section {
+            background: var(--bg-secondary);
+            padding: 6rem 2rem;
+        }
+
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .quiz-progress {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .quiz-progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .quiz-progress-dot.active {
+            background: var(--accent-primary);
+            box-shadow: 0 0 15px rgba(255,107,53,0.5);
+        }
+
+        .quiz-progress-dot.completed {
+            background: var(--accent-tertiary);
+        }
+
+        .quiz-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 3rem;
+            border: 1px solid rgba(255,255,255,0.05);
+            display: none;
+        }
+
+        .quiz-card.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .quiz-question-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
+        }
+
+        .quiz-question {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            line-height: 1.4;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .quiz-option {
+            padding: 1.25rem 1.5rem;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            text-align: left;
+        }
+
+        .quiz-option:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.2);
+            color: var(--text-primary);
+        }
+
+        .quiz-option.selected {
+            background: rgba(255,107,53,0.1);
+            border-color: var(--accent-primary);
+            color: var(--text-primary);
+        }
+
+        .quiz-option.correct {
+            background: rgba(6,214,160,0.1);
+            border-color: var(--accent-tertiary);
+            color: var(--text-primary);
+        }
+
+        .quiz-option.incorrect {
+            background: rgba(239,68,68,0.1);
+            border-color: #ef4444;
+            color: var(--text-primary);
+        }
+
+        .quiz-feedback {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            border-radius: 12px;
+            display: none;
+        }
+
+        .quiz-feedback.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .quiz-feedback.correct {
+            background: rgba(6,214,160,0.1);
+            border-left: 3px solid var(--accent-tertiary);
+        }
+
+        .quiz-feedback.incorrect {
+            background: rgba(239,68,68,0.1);
+            border-left: 3px solid #ef4444;
+        }
+
+        .quiz-feedback-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .quiz-feedback.correct .quiz-feedback-title { color: var(--accent-tertiary); }
+        .quiz-feedback.incorrect .quiz-feedback-title { color: #ef4444; }
+
+        .quiz-btn {
+            margin-top: 2rem;
+            padding: 1rem 2.5rem;
+            background: var(--gradient-warm);
+            border: none;
+            border-radius: 50px;
+            color: var(--bg-primary);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .quiz-btn.show {
+            display: inline-block;
+        }
+
+        .quiz-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255,107,53,0.3);
+        }
+
+        /* Quiz Results */
+        .quiz-results {
+            text-align: center;
+            display: none;
+        }
+
+        .quiz-results.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .results-score {
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem;
+            font-weight: 700;
+            background: var(--gradient-warm);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .results-message {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .restart-btn {
+            padding: 1rem 2.5rem;
+            background: transparent;
+            border: 2px solid var(--accent-primary);
+            border-radius: 50px;
+            color: var(--accent-primary);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .restart-btn:hover {
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+        }
+
+        /* Key Takeaways */
+        .takeaways-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .takeaway-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .takeaway-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255,107,53,0.3);
+        }
+
+        .takeaway-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--gradient-warm);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .takeaway-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .takeaway-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 4rem 2rem;
+            text-align: center;
+            background: var(--bg-secondary);
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-text {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Animations for scroll */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s ease;
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .section {
+                padding: 5rem 1.5rem;
+            }
+
+            .hero {
+                padding: 4rem 1.5rem;
+            }
+
+            .hero-meta {
+                gap: 2rem;
+            }
+
+            .card, .anecdote {
+                padding: 2rem;
+            }
+
+            .quiz-card {
+                padding: 2rem;
+            }
+
+            .leverage-stats {
+                flex-direction: column;
+            }
+
+            .leverage-divider {
+                display: none;
+            }
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            margin: 3rem 0;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--accent-primary), var(--accent-tertiary));
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 2rem;
+            padding-left: 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 0.5rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            border: 3px solid var(--bg-primary);
+        }
+
+        .timeline-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <div class="nav-logo">Strategic Design</div>
+        <ul class="nav-links">
+            <li><a href="#intro">Introduction</a></li>
+            <li><a href="#relevance">Relevance</a></li>
+            <li><a href="#limits">Limits</a></li>
+            <li><a href="#systems">Systems</a></li>
+            <li><a href="#ai">AI Scale</a></li>
+            <li><a href="#quiz">Quiz</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <span class="hero-badge">CGT 37108 • Purdue University</span>
+            <h1>Strategic Thinking in Design:<br><span>From Personas to Populations</span></h1>
+            <p class="hero-subtitle">What happens to your design toolkit when you're designing for 1.4 billion people?</p>
+            <div class="hero-meta">
+                <div class="hero-meta-item">
+                    <div class="hero-meta-label">Speaker</div>
+                    <div class="hero-meta-value">Sridhar</div>
+                </div>
+                <div class="hero-meta-item">
+                    <div class="hero-meta-label">Role</div>
+                    <div class="hero-meta-value">Principal Design Advisor, UIDAI</div>
+                </div>
+                <div class="hero-meta-item">
+                    <div class="hero-meta-label">Focus</div>
+                    <div class="hero-meta-value">Aadhaar & Digital Public Infrastructure</div>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <span>Scroll to explore</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14M19 12l-7 7-7-7"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Section 1: The Opening Question -->
+    <section class="section" id="intro">
+        <div class="section-container">
+            <span class="section-number animate-on-scroll">01</span>
+            <h2 class="section-title animate-on-scroll">The Billion-User Question</h2>
+            <div class="section-content animate-on-scroll">
+                <p>In design school, we learn about personas, user journeys, and affinity mapping. These tools work beautifully when you're designing an app for urban millennials or a website for enterprise customers.</p>
+                <p>But what happens when your "user" is 1.4 billion people across 22 official languages, spanning literacy levels from PhD scholars to those who sign with a thumbprint?</p>
+            </div>
+
+            <div class="stats-grid animate-on-scroll">
+                <div class="stat-item">
+                    <div class="stat-number">1.4B</div>
+                    <div class="stat-label">Aadhaar enrollments</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">22</div>
+                    <div class="stat-label">Official languages</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">6</div>
+                    <div class="stat-label">Literacy categories</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">1M+</div>
+                    <div class="stat-label">Possible user journeys</div>
+                </div>
+            </div>
+
+            <div class="anecdote animate-on-scroll">
+                <p class="anecdote-text">How do you make personas for a billion people?</p>
+                <p class="anecdote-source">— The question that started this conversation</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW SECTION: The Relevance Wall (from token_obsevatory.html) -->
+    <section class="section" id="relevance" style="background: var(--bg-secondary);">
+        <div class="section-container">
+            <span class="section-number animate-on-scroll">01A</span>
+            <h2 class="section-title animate-on-scroll">The Relevance Wall</h2>
+            <div class="section-content animate-on-scroll">
+                <p>Current systems hit a "Relevance Wall." One fixed user journey cannot accommodate the diverse contexts of a billion users. The variance is not a bug to be smoothed over—it's a fundamental characteristic of the population.</p>
+            </div>
+
+            <table class="data-table animate-on-scroll">
+                <thead>
+                    <tr>
+                        <th>Context Dimension</th>
+                        <th>Variance in Indian Population</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Language</td><td>22 scheduled languages, 100+ dialects</td></tr>
+                    <tr><td>Literacy</td><td>Pre-literate to expert digital users</td></tr>
+                    <tr><td>Device</td><td>Feature phones to high-end smartphones</td></tr>
+                    <tr><td>Connectivity</td><td>Intermittent 2G to 5G broadband</td></tr>
+                    <tr><td>Accessibility</td><td>Visual, motor, cognitive impairments</td></tr>
+                    <tr><td>Assistance Mode</td><td>Self-service to fully assisted</td></tr>
+                </tbody>
+            </table>
+
+            <div class="card animate-on-scroll">
+                <div class="card-icon">🎯</div>
+                <h3 class="card-title">The Target State</h3>
+                <p class="card-text">The goal is to move from "Low Touch, High Scale" (current standardized portals) to "High Touch, High Scale" (contextually generated interfaces). This requires decoupling the canonical requirements from the user experience layer.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW SECTION: The Combinatorial Framework (from token_obsevatory.html) -->
+    <section class="section">
+        <div class="section-container">
+            <span class="section-number animate-on-scroll">01B</span>
+            <h2 class="section-title animate-on-scroll">The Combinatorial Framework</h2>
+            <div class="section-content animate-on-scroll">
+                <p>When we quantify the journey space, the numbers are staggering. The formula is simple but the implications are profound:</p>
+            </div>
+
+            <div class="example-box animate-on-scroll">
+                <div class="example-label">Journey Space Formula</div>
+                <p class="example-content" style="font-family: 'JetBrains Mono', monospace; font-size: 1.1rem;">TOTAL JOURNEY SPACE = Context Combinations × Path Variations × State Branches</p>
+            </div>
+
+            <div class="card animate-on-scroll">
+                <div class="card-icon">📊</div>
+                <h3 class="card-title">Raw Context Combinations</h3>
+                <p class="card-text">15 Languages × 5 Literacy Tiers × 5 Devices × 4 Connectivity × 5 Accessibility × 4 Experience Levels...</p>
+                <p class="card-text" style="margin-top: 1rem;"><strong style="color: var(--accent-primary); font-size: 1.3rem;">= ~4,320,000 context combinations</strong></p>
+                <p class="card-text" style="margin-top: 1rem;">Through archetyping (clustering similar contexts like "Rural First-Time"), we estimate <strong>1,000–2,000 meaningful archetypes</strong>.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW SECTION: The Leverage Model (from token_obsevatory.html) -->
+    <section class="section" style="background: var(--bg-secondary);">
+        <div class="section-container">
+            <span class="section-number animate-on-scroll">01C</span>
+            <h2 class="section-title animate-on-scroll">The Leverage Model</h2>
+            <div class="section-content animate-on-scroll">
+                <p>The breakthrough insight: through intelligent design primitives, we can achieve massive leverage—serving billions through thousands of journeys generated from just hundreds of components.</p>
+            </div>
+
+            <div class="leverage-box animate-on-scroll">
+                <h4>The Compression Ratio</h4>
+                <div class="leverage-stats">
+                    <div class="leverage-stat">
+                        <strong>1,000,000,000</strong>
+                        <span>Users</span>
+                    </div>
+                    <span class="leverage-divider">:</span>
+                    <div class="leverage-stat">
+                        <strong>~1,000,000</strong>
+                        <span>Journeys</span>
+                    </div>
+                    <span class="leverage-divider">:</span>
+                    <div class="leverage-stat">
+                        <strong>~180</strong>
+                        <span>Design Primitives</span>
+                    </div>
+                </div>
+                <div class="leverage-footer">
+                    <strong>Ratio 1:</strong> 1,000 users per journey variant &nbsp;|&nbsp;
+                    <strong>Ratio 2:</strong> 5,500 journeys per design primitive (leverage multiplier)
+                </div>
+            </div>
+
+            <div class="anecdote animate-on-scroll">
+                <p class="anecdote-text">A billion users can have a million different journeys TO the form. But they all complete THE SAME FORM.</p>
+                <p class="anecdote-source">— The canonical/adaptive separation principle</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: When Textbook Methods Work -->
+    <section class="section">
+        <div class="section-container">
+            <span class="section-number animate-on-scroll">02</span>
+            <h2 class="section-title animate-on-scroll">When Textbook Methods Work</h2>
+            <div class="section-content animate-on-scroll">
+                <p>Let's be clear: personas, affinity mapping, and user shadowing are powerful tools. They emerged from product design contexts where they solve real problems brilliantly.</p>
+            </div>
+
+            <div class="card animate-on-scroll">
+                <div class="card-icon">🎯</div>
+                <h3 class="card-title">The Design Envelope</h3>
+                <p class="card-text">Textbook methods work when you have: bounded user groups, defined use cases, controllable environments, and iterative deployment capabilities. A banking app for young professionals? Perfect for personas. An e-commerce checkout flow? Affinity mapping shines.</p>
+            </div>
+
+            <div class="example-box animate-on-scroll">
+                <div class="example-label">Real-World Example</div>
+                <p class="example-content">When Spotify designs their "Discover Weekly" playlist experience, personas work beautifully. They can identify distinct listener types: the "Mood Curator" who creates playlists for specific activities, the "Genre Purist" who deep-dives into specific styles, the "Eclectic Explorer" who enjoys variety. Each persona informs different feature priorities and UI decisions. The user base, while large, shares fundamental contexts: smartphone access, subscription model understanding, and music consumption patterns.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: The Limits of Personas -->
+    <section class="section" id="limits" style="background: var(--bg-secondary);">
+        <div class="section-container">
+            <span class="section-number animate-on-scroll">03</span>
+            <h2 class="section-title animate-on-scroll">The Limits of Personas at Population Scale</h2>
+            <div class="section-content animate-on-scroll">
+                <p>At Aadhaar, we cannot create personas for a billion people. The diversity isn't segmentable into 5-7 archetypes. The traditional persona approach assumes you can find meaningful clusters—but when your users range from tech-savvy urban professionals to elderly villagers who've never touched a screen, the clusters become meaningless.</p>
+            </div>
+
+            <div class="comparison-grid animate-on-scroll">
+                <div class="comparison-item traditional">
+                    <div class="comparison-header">
+                        <span class="dot"></span>
+                        Traditional Persona Thinking
+                    </div>
+                    <ul class="comparison-list">
+                        <li>Segment users into 5-7 archetypes</li>
+                        <li>Design for the "average" within each segment</li>
+                        <li>Optimize for majority use cases</li>
+                        <li>Iterate based on segment feedback</li>
+                        <li>Assume shared technological context</li>
+                    </ul>
+                </div>
+                <div class="comparison-item strategic">
+                    <div class="comparison-header">
+                        <span class="dot"></span>
+                        Population Scale Thinking
+                    </div>
+                    <ul class="comparison-list">
+                        <li>Design for extreme edge cases</li>
+                        <li>If it works for the most constrained, it works for all</li>
+                        <li>Build in graceful degradation</li>
+                        <li>Assume nothing about technological literacy</li>
+                        <li>Design for assisted and direct interaction modes</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card animate-on-scroll">
+                <div class="card-icon">🔬</div>
+                <h3 class="card-title">The Method of Extremes</h3>
+                <p class="card-text">Instead of designing for the average, we design for the extremes. If an enrollment process works for a 90-year-old woman in a remote village with arthritic hands and fading eyesight, it will work for a 25-year-old software engineer in Bangalore. The reverse is never true.</p>
+            </div>
+
+            <div class="example-box animate-on-scroll">
+                <div class="example-label">Case Study: Biometric Capture</div>
+                <p class="example-content">Early Aadhaar enrollment centers discovered that manual laborers often had worn fingerprints that failed standard scanners. Rather than creating a "laborer persona" and designing a separate flow, we redesigned the entire capture process to handle degraded biometrics gracefully—using iris scans as backup, allowing multiple capture attempts, and training operators for edge cases. This universal design now serves everyone better.</p>
+            </div>
+
+            <div class="anecdote animate-on-scroll">
+                <p class="anecdote-text">The question isn't 'who is our user?' but 'what are the most challenging conditions under which our system must still work?'</p>
+                <p class="anecdote-source">— Design principle for Digital Public Infrastructure</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: From User Research to Systems Thinking -->
+    <section class="section" id="systems">
+        <div class="section-container">
+            <span class="section-number animate-on-scroll">04</span>
+            <h2 class="section-title animate-on-scroll">From User Research to Systems Thinking</h2>
+            <div class="section-content animate-on-scroll">
+                <p>When your "user" is an entire population, research shifts from ethnographic depth to understanding systemic constraints. We still care about people, but we analyze at a different altitude.</p>
+            </div>
+
+            <div class="timeline animate-on-scroll">
+                <div class="timeline-item">
+                    <h4 class="timeline-title">Infrastructure Reliability</h4>
+                    <p class="timeline-text">What happens when network connectivity drops mid-transaction? How do we handle power outages at enrollment centers? Design must account for systems failing gracefully.</p>
+                </div>
+                <div class="timeline-item">
+                    <h4 class="timeline-title">Institutional Capacity</h4>
+                    <p class="timeline-text">Can bank clerks in rural areas be trained to operate the system? What's the cognitive load on government employees processing thousands of requests daily?</p>
+                </div>
+                <div class="timeline-item">
+                    <h4 class="timeline-title">Policy Requirements</h4>
+                    <p class="timeline-text">Regulatory compliance isn't a constraint to work around—it's a design requirement. Privacy laws, data protection, audit trails: these shape the solution space.</p>
+                </div>
+                <div class="timeline-item">
+                    <h4 class="timeline-title">Failure Mode Analysis</h4>
+                    <p class="timeline-text">At scale, even a 0.1% failure rate means millions of failed interactions. We design for recovery, not just success.</p>
+                </div>
+            </div>
+
+            <div class="example-box animate-on-scroll">
+                <div class="example-label">Systems Thinking in Practice</div>
+                <p class="example-content">Consider the UPI (Unified Payments Interface) system. Traditional UX would focus on the payment screen design. Systems thinking asks: What happens when a transaction times out? How do we handle the case where money is debited but not credited? How do we design for dispute resolution at scale? The actual payment UI is perhaps 10% of the design challenge—the system architecture is the other 90%.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 5: Digital Public Infrastructure -->
+    <section class="section" style="background: var(--bg-secondary);">
+        <div class="section-container">
+            <span class="section-number animate-on-scroll">05</span>
+            <h2 class="section-title animate-on-scroll">Digital Public Infrastructure: A Different Design Problem</h2>
+            <div class="section-content animate-on-scroll">
+                <p>DPI isn't a product; it's plumbing. Aadhaar, UPI, and similar systems are designed for ecosystem enablement, not feature completeness. Strategy here means designing for what others will build on top.</p>
+            </div>
+
+            <div class="card animate-on-scroll">
+                <div class="card-icon">🏗️</div>
+                <h3 class="card-title">The Platform Mindset</h3>
+                <p class="card-text">When you build a road, you don't design for specific cars—you create a surface that any vehicle can use. DPI works the same way. Aadhaar doesn't compete with specific identity solutions; it provides an identity layer that thousands of services build upon.</p>
+            </div>
+
+            <div class="anecdote animate-on-scroll">
+                <p class="anecdote-text">We don't design features. We design capabilities. The feature is what someone else builds using our capability.</p>
+                <p class="anecdote-source">— DPI design philosophy</p>
+            </div>
+
+            <div class="example-box animate-on-scroll">
+                <div class="example-label">Ecosystem Effects</div>
+                <p class="example-content">Consider what happened after Aadhaar launched: DigiLocker emerged for document storage, eSign for digital signatures, eKYC transformed banking onboarding. None of these were designed by the Aadhaar team—but all were enabled by the identity infrastructure. Good DPI design anticipates and enables this ecosystem growth.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 6: Billion Users, Million Journeys -->
+    <section class="section">
+        <div class="section-container">
+            <span class="section-number animate-on-scroll">06</span>
+            <h2 class="section-title animate-on-scroll">Designing for "Billion Users, Million Journeys"</h2>
+            <div class="section-content animate-on-scroll">
+                <p>The emerging challenge: how do we enable contextually appropriate experiences while maintaining compliance and trust? This requires separating the deterministic from the adaptive.</p>
+            </div>
+
+            <div class="comparison-grid animate-on-scroll">
+                <div class="comparison-item traditional">
+                    <div class="comparison-header">
+                        <span class="dot"></span>
+                        Canonical (Fixed)
+                    </div>
+                    <ul class="comparison-list">
+                        <li>Regulatory requirements</li>
+                        <li>Legal compliance steps</li>
+                        <li>Audit trail requirements</li>
+                        <li>Security protocols</li>
+                        <li>Data validation rules</li>
+                    </ul>
+                </div>
+                <div class="comparison-item strategic">
+                    <div class="comparison-header">
+                        <span class="dot"></span>
+                        Adaptive (Flexible)
+                    </div>
+                    <ul class="comparison-list">
+                        <li>Interface language and tone</li>
+                        <li>Step sequencing for context</li>
+                        <li>Help and guidance systems</li>
+                        <li>Error recovery flows</li>
+                        <li>Interaction modalities</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card animate-on-scroll">
+                <div class="card-icon">🔀</div>
+                <h3 class="card-title">The Separation Principle</h3>
+                <p class="card-text">The canonical layer is non-negotiable—the same data must be collected, the same validations must pass, the same audit trails must exist. But how a user gets there can be infinitely adaptive to their context, capability, and needs.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 7: AI at Population Scale -->
+    <section class="section" id="ai" style="background: var(--bg-secondary);">
+        <div class="section-container">
+            <span class="section-number animate-on-scroll">07</span>
+            <h2 class="section-title animate-on-scroll">AI at Population Scale: Beyond Automation</h2>
+            <div class="section-content animate-on-scroll">
+                <p>AI in DPI isn't about chatbots replacing humans. It's about intelligent routing, contextual adaptation, and serving users in their language and literacy level—while keeping critical transactions rock-solid and auditable.</p>
+            </div>
+
+            <div class="takeaways-grid animate-on-scroll">
+                <div class="takeaway-card">
+                    <div class="takeaway-number">01</div>
+                    <h4 class="takeaway-title">Intelligent Routing</h4>
+                    <p class="takeaway-text">AI determines the optimal path through a process based on user signals—detected literacy level, device capability, network conditions, time constraints.</p>
+                </div>
+                <div class="takeaway-card">
+                    <div class="takeaway-number">02</div>
+                    <h4 class="takeaway-title">Contextual Adaptation</h4>
+                    <p class="takeaway-text">The same regulatory requirement can be presented differently—as a form field, a voice prompt, an assisted flow with a human operator, or an automated verification.</p>
+                </div>
+                <div class="takeaway-card">
+                    <div class="takeaway-number">03</div>
+                    <h4 class="takeaway-title">Language & Literacy</h4>
+                    <p class="takeaway-text">Moving beyond mere translation to true communication—adjusting complexity, using local idioms, switching between text and voice as needed.</p>
+                </div>
+            </div>
+
+            <div class="example-box animate-on-scroll">
+                <div class="example-label">The Token Observatory Concept</div>
+                <p class="example-content">Imagine a system where AI generates the user journey in real-time while the compliance layer remains fixed. A farmer applying for a subsidy might get a voice-guided flow in their dialect, while a tech professional gets a streamlined form interface. Both complete the same canonical requirements, but through journeys optimized for their context. This is the shift from "pixel space" to "token space" design.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 8: Strategic Thinking -->
+    <section class="section">
+        <div class="section-container">
+            <span class="section-number animate-on-scroll">08</span>
+            <h2 class="section-title animate-on-scroll">Strategic Thinking = Choosing Your Methods</h2>
+            <div class="section-content animate-on-scroll">
+                <p>Design strategy isn't about applying techniques; it's about understanding the problem's structure and selecting—or creating—methods that fit. Sometimes you need personas. Sometimes you need policy analysis. Often you need both.</p>
+            </div>
+
+            <div class="card animate-on-scroll">
+                <div class="card-icon">🧭</div>
+                <h3 class="card-title">The Strategic Designer's Mindset</h3>
+                <p class="card-text">Before reaching for any tool, ask: What's the scale? Who are the stakeholders? What are the constraints? What must remain fixed versus what can adapt? Only then choose—or invent—your methodology.</p>
+            </div>
+
+            <div class="comparison-grid animate-on-scroll">
+                <div class="comparison-item traditional">
+                    <div class="comparison-header">
+                        <span class="dot"></span>
+                        Method-First Thinking
+                    </div>
+                    <ul class="comparison-list">
+                        <li>"We should do user interviews"</li>
+                        <li>"Let's create personas"</li>
+                        <li>"We need affinity mapping"</li>
+                        <li>Techniques seeking problems</li>
+                    </ul>
+                </div>
+                <div class="comparison-item strategic">
+                    <div class="comparison-header">
+                        <span class="dot"></span>
+                        Problem-First Thinking
+                    </div>
+                    <ul class="comparison-list">
+                        <li>"What's the actual constraint here?"</li>
+                        <li>"What would failure look like?"</li>
+                        <li>"Who else has solved this?"</li>
+                        <li>Problems seeking appropriate methods</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="anecdote animate-on-scroll">
+                <p class="anecdote-text">The most strategic design decision is often which methodology not to use.</p>
+                <p class="anecdote-source">— Learning from population-scale projects</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 9: What Industry Needs -->
+    <section class="section" style="background: var(--bg-secondary);">
+        <div class="section-container">
+            <span class="section-number animate-on-scroll">09</span>
+            <h2 class="section-title animate-on-scroll">What Industry Actually Needs from Designers</h2>
+            <div class="section-content animate-on-scroll">
+                <p>The ability to zoom out (systems, constraints, stakeholders) and zoom in (interaction, friction, delight). Not allegiance to methods, but judgment about when each method serves the problem.</p>
+            </div>
+
+            <div class="takeaways-grid animate-on-scroll">
+                <div class="takeaway-card">
+                    <div class="takeaway-number">→</div>
+                    <h4 class="takeaway-title">Systems Awareness</h4>
+                    <p class="takeaway-text">How does your design interact with infrastructure, policy, and other stakeholders?</p>
+                </div>
+                <div class="takeaway-card">
+                    <div class="takeaway-number">→</div>
+                    <h4 class="takeaway-title">Constraint Mapping</h4>
+                    <p class="takeaway-text">What's fixed? What's flexible? Where do compliance requirements shape the solution space?</p>
+                </div>
+                <div class="takeaway-card">
+                    <div class="takeaway-number">→</div>
+                    <h4 class="takeaway-title">Scale Awareness</h4>
+                    <p class="takeaway-text">What works at 1,000 users may catastrophically fail at 1,000,000. Design for the scale you'll actually reach.</p>
+                </div>
+            </div>
+
+            <div class="takeaways-grid animate-on-scroll" style="margin-top: 2rem;">
+                <div class="takeaway-card">
+                    <div class="takeaway-number">?</div>
+                    <h4 class="takeaway-title">Failure Analysis</h4>
+                    <p class="takeaway-text">What happens when your design fails? How do users recover? What's the blast radius?</p>
+                </div>
+                <div class="takeaway-card">
+                    <div class="takeaway-number">?</div>
+                    <h4 class="takeaway-title">Inclusion Analysis</h4>
+                    <p class="takeaway-text">Who benefits from your design? Who might be excluded? Is that exclusion intentional and justified?</p>
+                </div>
+                <div class="takeaway-card">
+                    <div class="takeaway-number">?</div>
+                    <h4 class="takeaway-title">Method Fit</h4>
+                    <p class="takeaway-text">What methods does this specific context demand? Are you using techniques because they fit, or because they're familiar?</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quiz Section -->
+    <section class="quiz-section" id="quiz">
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <span class="section-number">Interactive Assessment</span>
+                <h2 class="section-title">Test Your Understanding</h2>
+                <div class="quiz-progress" id="quizProgress">
+                    <div class="quiz-progress-dot active"></div>
+                    <div class="quiz-progress-dot"></div>
+                    <div class="quiz-progress-dot"></div>
+                    <div class="quiz-progress-dot"></div>
+                    <div class="quiz-progress-dot"></div>
+                </div>
+            </div>
+
+            <!-- Question 1 -->
+            <div class="quiz-card active" data-question="1">
+                <div class="quiz-question-number">Question 1 of 5</div>
+                <h3 class="quiz-question">When designing at population scale (like Aadhaar), why doesn't the traditional persona approach work well?</h3>
+                <div class="quiz-options">
+                    <button class="quiz-option" data-answer="a">Personas take too long to create for large user bases</button>
+                    <button class="quiz-option" data-answer="b">The diversity cannot be meaningfully clustered into 5-7 archetypes</button>
+                    <button class="quiz-option" data-answer="c">Government projects don't require user research</button>
+                    <button class="quiz-option" data-answer="d">Users at scale all have similar needs anyway</button>
+                </div>
+                <div class="quiz-feedback" id="feedback1">
+                    <div class="quiz-feedback-title"></div>
+                    <p class="quiz-feedback-text"></p>
+                </div>
+                <button class="quiz-btn" onclick="nextQuestion(2)">Next Question →</button>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="quiz-card" data-question="2">
+                <div class="quiz-question-number">Question 2 of 5</div>
+                <h3 class="quiz-question">What is the "Method of Extremes" in population-scale design?</h3>
+                <div class="quiz-options">
+                    <button class="quiz-option" data-answer="a">Testing designs only with extreme users (very tech-savvy or very tech-averse)</button>
+                    <button class="quiz-option" data-answer="b">Using the most extreme design methods available</button>
+                    <button class="quiz-option" data-answer="c">Designing for the most constrained user—if it works for them, it works for everyone</button>
+                    <button class="quiz-option" data-answer="d">Creating extreme variations of designs for A/B testing</button>
+                </div>
+                <div class="quiz-feedback" id="feedback2">
+                    <div class="quiz-feedback-title"></div>
+                    <p class="quiz-feedback-text"></p>
+                </div>
+                <button class="quiz-btn" onclick="nextQuestion(3)">Next Question →</button>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="quiz-card" data-question="3">
+                <div class="quiz-question-number">Question 3 of 5</div>
+                <h3 class="quiz-question">In Digital Public Infrastructure (DPI) design, what's the key distinction between "canonical" and "adaptive" layers?</h3>
+                <div class="quiz-options">
+                    <button class="quiz-option" data-answer="a">Canonical is for mobile, adaptive is for desktop</button>
+                    <button class="quiz-option" data-answer="b">Canonical is the fixed compliance layer; adaptive is the flexible user experience layer</button>
+                    <button class="quiz-option" data-answer="c">Canonical is old technology, adaptive is new technology</button>
+                    <button class="quiz-option" data-answer="d">Canonical is for experts, adaptive is for beginners</button>
+                </div>
+                <div class="quiz-feedback" id="feedback3">
+                    <div class="quiz-feedback-title"></div>
+                    <p class="quiz-feedback-text"></p>
+                </div>
+                <button class="quiz-btn" onclick="nextQuestion(4)">Next Question →</button>
+            </div>
+
+            <!-- Question 4 -->
+            <div class="quiz-card" data-question="4">
+                <div class="quiz-question-number">Question 4 of 5</div>
+                <h3 class="quiz-question">How does systems thinking differ from traditional user research in population-scale design?</h3>
+                <div class="quiz-options">
+                    <button class="quiz-option" data-answer="a">Systems thinking ignores users entirely</button>
+                    <button class="quiz-option" data-answer="b">It shifts from ethnographic depth to understanding infrastructure, institutions, policy, and failure modes</button>
+                    <button class="quiz-option" data-answer="c">Systems thinking only considers technical requirements</button>
+                    <button class="quiz-option" data-answer="d">There is no difference—they're the same approach</button>
+                </div>
+                <div class="quiz-feedback" id="feedback4">
+                    <div class="quiz-feedback-title"></div>
+                    <p class="quiz-feedback-text"></p>
+                </div>
+                <button class="quiz-btn" onclick="nextQuestion(5)">Next Question →</button>
+            </div>
+
+            <!-- Question 5 -->
+            <div class="quiz-card" data-question="5">
+                <div class="quiz-question-number">Question 5 of 5</div>
+                <h3 class="quiz-question">What does "problem-first thinking" mean for strategic designers?</h3>
+                <div class="quiz-options">
+                    <button class="quiz-option" data-answer="a">Always starting with user interviews</button>
+                    <button class="quiz-option" data-answer="b">Understanding problem structure before choosing methods, rather than applying techniques by default</button>
+                    <button class="quiz-option" data-answer="c">Finding problems where none exist</button>
+                    <button class="quiz-option" data-answer="d">Using as many design methods as possible on every project</button>
+                </div>
+                <div class="quiz-feedback" id="feedback5">
+                    <div class="quiz-feedback-title"></div>
+                    <p class="quiz-feedback-text"></p>
+                </div>
+                <button class="quiz-btn" onclick="showResults()">See Results →</button>
+            </div>
+
+            <!-- Results -->
+            <div class="quiz-results" id="quizResults">
+                <div class="results-score" id="scoreDisplay">0/5</div>
+                <p class="results-message" id="resultsMessage"></p>
+                <button class="restart-btn" onclick="restartQuiz()">Take Quiz Again</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-logo">Strategic Thinking in Design</div>
+        <p class="footer-text">CGT 37108 • Purdue University • Fall 2025</p>
+    </footer>
+
+    <script>
+        // Quiz Data
+        const quizData = {
+            1: {
+                correct: 'b',
+                feedback: {
+                    correct: "Exactly right! At population scale, diversity is so vast that traditional clustering into archetypes becomes meaningless. The range from PhD scholars to those who sign with thumbprints cannot be captured in 5-7 personas.",
+                    incorrect: "Not quite. The issue isn't time or effort—it's that population-scale diversity simply cannot be meaningfully reduced to archetypes. When users span literacy levels from scholars to those who've never touched a screen, clustering fails."
+                }
+            },
+            2: {
+                correct: 'c',
+                feedback: {
+                    correct: "Correct! The Method of Extremes focuses on the most constrained users. If a system works for a 90-year-old with arthritis in a remote village, it will work for a tech-savvy urban professional. The reverse is never true.",
+                    incorrect: "The Method of Extremes means designing for the most constrained user conditions. When the design works for the most challenged users (limited literacy, physical constraints, poor connectivity), it automatically serves everyone else."
+                }
+            },
+            3: {
+                correct: 'b',
+                feedback: {
+                    correct: "Exactly! The canonical layer contains non-negotiable requirements (data collection, validations, audit trails), while the adaptive layer allows infinite flexibility in how users reach those requirements based on their context and capabilities.",
+                    incorrect: "The canonical/adaptive distinction separates fixed compliance requirements from flexible user journeys. The same regulatory data must be collected (canonical), but how users provide it can vary by language, modality, and guidance level (adaptive)."
+                }
+            },
+            4: {
+                correct: 'b',
+                feedback: {
+                    correct: "Right! At population scale, design research must consider infrastructure reliability, institutional capacity, policy requirements, and failure modes—factors that traditional ethnographic research doesn't typically address.",
+                    incorrect: "Systems thinking doesn't abandon caring about people—it changes the altitude of analysis. Instead of individual user journeys, it considers infrastructure, institutions, policies, and how systems fail at scale."
+                }
+            },
+            5: {
+                correct: 'b',
+                feedback: {
+                    correct: "Exactly! Strategic designers understand the problem's structure first, then select or create appropriate methods. They don't reach for familiar techniques by default—they ask what the problem actually requires.",
+                    incorrect: "Problem-first thinking means analyzing constraints, scale, and stakeholders before choosing methods. A strategic designer asks 'What does this problem need?' rather than 'Which technique should I apply?'"
+                }
+            }
+        };
+
+        let score = 0;
+        let currentQuestion = 1;
+        let answeredQuestions = new Set();
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+
+            // Nav background
+            const nav = document.getElementById('nav');
+            if (winScroll > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Quiz functionality
+        document.querySelectorAll('.quiz-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const card = this.closest('.quiz-card');
+                const questionNum = parseInt(card.dataset.question);
+                
+                if (answeredQuestions.has(questionNum)) return;
+                
+                const selectedAnswer = this.dataset.answer;
+                const correctAnswer = quizData[questionNum].correct;
+                const feedback = document.getElementById('feedback' + questionNum);
+                const feedbackTitle = feedback.querySelector('.quiz-feedback-title');
+                const feedbackText = feedback.querySelector('.quiz-feedback-text');
+                const nextBtn = card.querySelector('.quiz-btn');
+
+                // Mark all options
+                card.querySelectorAll('.quiz-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                    if (opt.dataset.answer === correctAnswer) {
+                        opt.classList.add('correct');
+                    } else if (opt.dataset.answer === selectedAnswer && selectedAnswer !== correctAnswer) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+
+                this.classList.add('selected');
+
+                // Show feedback
+                if (selectedAnswer === correctAnswer) {
+                    score++;
+                    feedback.classList.add('correct');
+                    feedback.classList.remove('incorrect');
+                    feedbackTitle.textContent = '✓ Correct!';
+                    feedbackText.textContent = quizData[questionNum].feedback.correct;
+                } else {
+                    feedback.classList.add('incorrect');
+                    feedback.classList.remove('correct');
+                    feedbackTitle.textContent = '✗ Not quite right';
+                    feedbackText.textContent = quizData[questionNum].feedback.incorrect;
+                }
+
+                feedback.classList.add('show');
+                nextBtn.classList.add('show');
+                answeredQuestions.add(questionNum);
+
+                // Update progress dots
+                updateProgressDots();
+            });
+        });
+
+        function updateProgressDots() {
+            const dots = document.querySelectorAll('.quiz-progress-dot');
+            dots.forEach((dot, index) => {
+                dot.classList.remove('active', 'completed');
+                if (index + 1 === currentQuestion) {
+                    dot.classList.add('active');
+                } else if (answeredQuestions.has(index + 1)) {
+                    dot.classList.add('completed');
+                }
+            });
+        }
+
+        function nextQuestion(num) {
+            document.querySelector(`.quiz-card[data-question="${currentQuestion}"]`).classList.remove('active');
+            document.querySelector(`.quiz-card[data-question="${num}"]`).classList.add('active');
+            currentQuestion = num;
+            updateProgressDots();
+        }
+
+        function showResults() {
+            document.querySelector(`.quiz-card[data-question="5"]`).classList.remove('active');
+            const results = document.getElementById('quizResults');
+            results.classList.add('show');
+            
+            document.getElementById('scoreDisplay').textContent = `${score}/5`;
+            
+            const messages = {
+                5: "Outstanding! You've fully grasped the principles of strategic design thinking at scale.",
+                4: "Excellent work! You have a strong understanding of population-scale design challenges.",
+                3: "Good effort! You're developing a solid foundation in strategic design thinking.",
+                2: "Keep learning! Review the sections on systems thinking and the Method of Extremes.",
+                1: "This is complex material. Consider revisiting the presentation to strengthen your understanding.",
+                0: "Don't worry—these concepts take time to absorb. Review the material and try again!"
+            };
+            
+            document.getElementById('resultsMessage').textContent = messages[score];
+        }
+
+        function restartQuiz() {
+            score = 0;
+            currentQuestion = 1;
+            answeredQuestions = new Set();
+
+            // Reset all cards
+            document.querySelectorAll('.quiz-card').forEach(card => {
+                card.classList.remove('active');
+                card.querySelectorAll('.quiz-option').forEach(opt => {
+                    opt.classList.remove('selected', 'correct', 'incorrect');
+                });
+                card.querySelector('.quiz-feedback').classList.remove('show', 'correct', 'incorrect');
+                card.querySelector('.quiz-btn').classList.remove('show');
+            });
+
+            // Show first question
+            document.querySelector('.quiz-card[data-question="1"]').classList.add('active');
+            document.getElementById('quizResults').classList.remove('show');
+            updateProgressDots();
+        }
+
+        // Smooth scroll for nav links
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
