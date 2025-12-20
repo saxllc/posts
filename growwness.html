@@ -1,0 +1,1745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Groww Strategic Design: Comprehensive Analysis</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="importmap">
+        {"imports": {"@google/generative-ai": "https://esm.run/@google/generative-ai"}}
+    </script>
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a24;
+            --bg-card-hover: #222230;
+            --text-primary: #f5f5f7;
+            --text-secondary: #a0a0b0;
+            --text-muted: #6a6a7a;
+            --accent-green: #00d09c;
+            --accent-green-dim: rgba(0,208,156,0.15);
+            --accent-orange: #ff6b35;
+            --accent-orange-dim: rgba(255,107,53,0.15);
+            --accent-blue: #118ab2;
+            --accent-gold: #ffd166;
+            --accent-red: #ef4444;
+            --gradient-groww: linear-gradient(135deg, #00d09c 0%, #00b386 100%);
+            --gradient-warm: linear-gradient(135deg, #ff6b35 0%, #ffd166 100%);
+            --border-subtle: rgba(255,255,255,0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-weight: 300;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 0 2rem;
+            background: rgba(10,10,15,0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 64px;
+        }
+
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-logo .green { color: var(--accent-green); }
+
+        /* Nav Links */
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-green);
+        }
+
+        /* Tool Buttons */
+        .nav-tools {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .nav-icon-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+            font-family: inherit;
+            position: relative;
+        }
+
+        .nav-icon-btn:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        .nav-icon-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .status-dot {
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 2px solid var(--bg-primary);
+        }
+
+        .status-dot.red { background: var(--accent-red); }
+        .status-dot.green { background: var(--accent-green); }
+
+        .pulse-red {
+            animation: pulse-red 2s infinite;
+        }
+
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+            70% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        /* Common Section Styles */
+        .section {
+            padding: 5rem 2rem;
+        }
+
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--accent-green);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .section-subtitle {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin-bottom: 3rem;
+        }
+
+        /* Page Dividers */
+        .page-divider {
+            padding: 4rem 2rem;
+            text-align: center;
+            background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-primary) 100%);
+            position: relative;
+        }
+
+        .page-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-green), transparent);
+        }
+
+        .page-divider-content {
+            display: inline-block;
+            background: var(--bg-secondary);
+            padding: 1rem 3rem;
+            border-radius: 50px;
+            border: 1px solid var(--accent-green);
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-divider-icon {
+            font-size: 1.5rem;
+            margin-right: 0.75rem;
+        }
+
+        .page-divider-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            color: var(--text-primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 30%, rgba(0,208,156,0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 70%, rgba(255,107,53,0.05) 0%, transparent 50%);
+        }
+
+        .hero-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--accent-green-dim);
+            border: 1px solid rgba(0,208,156,0.3);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--accent-green);
+            margin-bottom: 2rem;
+        }
+
+        .hero-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 .strike {
+            color: var(--text-muted);
+            text-decoration: line-through;
+            text-decoration-color: var(--accent-red);
+        }
+
+        .hero h1 .green { color: var(--accent-green); }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--border-subtle);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(0,208,156,0.3);
+            transform: translateY(-2px);
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .card-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Grid Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 1100px) {
+            .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Architecture Layers */
+        .arch-layers {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .arch-layer {
+            display: flex;
+            align-items: stretch;
+            gap: 1.5rem;
+        }
+
+        .arch-layer-label {
+            width: 120px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding-top: 1.25rem;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .arch-layer-content {
+            flex: 1;
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            border: 1px solid;
+        }
+
+        .arch-layer-content h5 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .arch-layer-content p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .layer-rhetorical .arch-layer-label { color: #e07a5f; }
+        .layer-rhetorical .arch-layer-content {
+            background: rgba(224,122,95,0.1);
+            border-color: rgba(224,122,95,0.3);
+        }
+
+        .layer-generative .arch-layer-label { color: var(--accent-blue); }
+        .layer-generative .arch-layer-content {
+            background: rgba(17,138,178,0.1);
+            border-color: rgba(17,138,178,0.3);
+        }
+
+        .layer-canonical .arch-layer-label { color: var(--accent-green); }
+        .layer-canonical .arch-layer-content {
+            background: var(--accent-green-dim);
+            border-color: rgba(0,208,156,0.3);
+        }
+
+        /* Journey Timeline */
+        .journey-timeline {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 0;
+            border-top: 1px solid var(--border-subtle);
+            border-bottom: 1px solid var(--border-subtle);
+            margin: 2rem 0;
+        }
+
+        .timeline-point {
+            text-align: center;
+        }
+
+        .timeline-point .year {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-point .amount {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--accent-green);
+        }
+
+        .timeline-line {
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-gold));
+            margin: 0 1rem;
+        }
+
+        /* Insight Box */
+        .insight-box {
+            background: var(--bg-card);
+            border-left: 4px solid var(--accent-green);
+            padding: 1.5rem 2rem;
+            border-radius: 0 12px 12px 0;
+            margin: 2rem 0;
+        }
+
+        .insight-box.warning {
+            border-left-color: var(--accent-orange);
+        }
+
+        .insight-box p {
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .insight-box strong {
+            color: var(--text-primary);
+        }
+
+        /* Quote Block */
+        .quote-block {
+            background: var(--bg-secondary);
+            padding: 2.5rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .quote-block::before {
+            content: '"';
+            font-family: 'Playfair Display', serif;
+            font-size: 6rem;
+            color: var(--accent-green);
+            opacity: 0.2;
+            position: absolute;
+            top: -10px;
+            left: 20px;
+        }
+
+        .quote-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-style: italic;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 1rem;
+        }
+
+        .quote-source {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+        }
+
+        .data-table th {
+            background: var(--bg-card);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border-bottom: 2px solid var(--accent-green);
+        }
+
+        .data-table td {
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .data-table tbody tr:hover td {
+            background: var(--bg-card);
+        }
+
+        /* Tags */
+        .tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .tag-fear { background: rgba(239,68,68,0.2); color: #f87171; }
+        .tag-aspiration { background: rgba(255,209,102,0.2); color: #ffd166; }
+        .tag-opportunity { background: rgba(17,138,178,0.2); color: #3b82f6; }
+        .tag-problem { background: rgba(255,107,53,0.2); color: #ff6b35; }
+
+        /* Persona Cards */
+        .persona-card {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .persona-avatar {
+            font-size: 2.5rem;
+            flex-shrink: 0;
+        }
+
+        .persona-content h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .persona-meta {
+            font-size: 0.85rem;
+            color: var(--accent-green);
+            margin-bottom: 0.75rem;
+        }
+
+        .persona-content p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        /* Principle Grid */
+        .principle-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .principle-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .principle-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--gradient-groww);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .principle-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .principle-text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-subtle);
+        }
+
+        /* Simulator Section */
+        .simulator-section {
+            background: var(--bg-secondary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .simulator-section::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--accent-green-dim) 0%, transparent 70%);
+        }
+
+        .simulator-input {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .simulator-input input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .simulator-input input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .simulator-input input:focus {
+            outline: none;
+            border-color: var(--accent-green);
+        }
+
+        .btn-primary {
+            padding: 1rem 2rem;
+            background: var(--gradient-groww);
+            border: none;
+            border-radius: 12px;
+            color: var(--bg-primary);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,208,156,0.3);
+        }
+
+        .btn-secondary {
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-card-hover);
+        }
+
+        /* Loading Animation */
+        .typing-dots {
+            display: inline-flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out both;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        /* Hidden */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 3rem 2rem;
+            text-align: center;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Highlight Classes */
+        .highlight { color: var(--accent-green); }
+        .highlight-orange { color: var(--accent-orange); }
+
+        /* Stat Cards */
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .stat-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: var(--accent-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-content {
+                flex-wrap: wrap;
+                height: auto;
+                padding: 1rem 0;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .section {
+                padding: 3rem 1rem;
+            }
+
+            .hero {
+                padding: 6rem 1rem 3rem;
+                min-height: 70vh;
+            }
+
+            .arch-layer {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .arch-layer-label {
+                width: auto;
+                text-align: left;
+                padding-top: 0;
+            }
+
+            .simulator-input {
+                flex-direction: column;
+            }
+
+            .persona-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .page-divider-content {
+                padding: 1rem 1.5rem;
+            }
+
+            .page-divider-text {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-content">
+            <div class="nav-logo">
+                Strategic<span class="green">Design</span>
+            </div>
+
+            <div class="nav-links">
+                <a href="#thesis">Thesis</a>
+                <a href="#architecture">Architecture</a>
+                <a href="#simulator">Simulator</a>
+                <a href="#ethnography">Ethnography</a>
+                <a href="#casestudy">Case Study</a>
+                <a href="#recommendations">Recommendations</a>
+            </div>
+
+            <div class="nav-tools">
+                <button id="btn-api-key" class="nav-icon-btn pulse-red" title="Set Gemini API Key">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+                    </svg>
+                    <span>API Key</span>
+                    <span id="key-status-dot" class="status-dot red"></span>
+                </button>
+                <button id="btn-download" class="nav-icon-btn" title="Download HTML">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ========== PART 1: STRATEGIC PITCH ========== -->
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">From Personas to Populations</div>
+            <h1>
+                You are designing for <span class="strike">Marketing Mary</span>.<br>
+                You should be designing for <span class="green">Combinatorial Chaos</span>.
+            </h1>
+            <p class="hero-subtitle">
+                A strategic audit of Groww's next growth frontier. Why "simple" is no longer enough, and how to build a product resilient enough for the vegetable vendor in Varanasi and the engineer in Bangalore.
+            </p>
+            <button class="btn-primary" onclick="document.getElementById('thesis').scrollIntoView({behavior: 'smooth'})">
+                Explore the Analysis
+            </button>
+        </div>
+    </section>
+
+    <!-- Thesis Section -->
+    <section id="thesis" class="section">
+        <div class="section-container">
+            <span class="section-label">01 — The Core Thesis</span>
+            <h2 class="section-title">The Fallacy of the Average User</h2>
+            <p class="section-subtitle">
+                Traditional design aggregates fears and aspirations into a "Generalized Persona." But the Indian market isn't static. It's a combinatorial explosion. Click any dot below to see the real human story behind the data point.
+            </p>
+
+            <div class="grid-2" style="align-items: start;">
+                <!-- Chart -->
+                <div class="chart-container">
+                    <canvas id="populationChart"></canvas>
+                    <p style="text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-top: 1rem;">
+                        X: Aspiration (Financial Independence) | Y: Fear (Market Crash)
+                    </p>
+                </div>
+
+                <!-- Persona Card -->
+                <div id="persona-card" class="card" style="min-height: 300px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                    <div class="card-icon">👤</div>
+                    <h3 class="card-title">Select a User</h3>
+                    <p class="card-text">Click any dot on the scatter plot to generate a real-time micro-ethnography using Gemini AI.</p>
+                    <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--accent-green); margin-top: 1rem;">Waiting for selection...</span>
+                </div>
+            </div>
+
+            <div class="insight-box" style="margin-top: 2rem;">
+                <p><strong>Insight:</strong> A user isn't just "The Anxious Aspirant." They are a dynamic vector. A technical glitch on Monday pushes them into high fear. A market rally on Tuesday pushes them into high aspiration. <span class="highlight">Groww needs a system that adapts to these shifts, not static pages for static people.</span></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Million Journeys Architecture -->
+    <section id="architecture" class="section" style="background: var(--bg-secondary);">
+        <div class="section-container">
+            <span class="section-label">02 — The Architecture</span>
+            <h2 class="section-title">Three Layers: Canonical, Generative, Rhetorical</h2>
+            <p class="section-subtitle">
+                This isn't about replacing Groww's robust transaction infrastructure. It's about adding two layers above it that enable personalized journeys while maintaining regulatory integrity.
+            </p>
+
+            <div class="arch-layers">
+                <div class="arch-layer layer-rhetorical">
+                    <div class="arch-layer-label">Rhetorical<br>Layer</div>
+                    <div class="arch-layer-content">
+                        <h5>User-Specific Presentation</h5>
+                        <p>Personalized language, emotional framing, cultural context. "A million journeys" live here—each user sees the interface that resonates with them.</p>
+                    </div>
+                </div>
+
+                <div class="arch-layer layer-generative">
+                    <div class="arch-layer-label">Generative<br>Layer</div>
+                    <div class="arch-layer-content">
+                        <h5>Journey Simulation Engine</h5>
+                        <p>AI generates paths, simulates outcomes, scores probabilities. Creates the "what-if" capacity—users explore futures before committing to them.</p>
+                    </div>
+                </div>
+
+                <div class="arch-layer layer-canonical">
+                    <div class="arch-layer-label">Canonical<br>Layer</div>
+                    <div class="arch-layer-content">
+                        <h5>SEBI-Compliant Transaction Rails</h5>
+                        <p>Deterministic, auditable, immutable. KYC flows, order execution, regulatory disclosures. This layer doesn't change—it's the foundation.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quote-block">
+                <p class="quote-text">The generative layer produces the path to the form, not just the form itself. Users don't see a generic mutual fund selection screen—they experience a narrative that leads them to the right choice for their situation.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Journey Artifact Demo -->
+    <section class="section">
+        <div class="section-container">
+            <span class="section-label">03 — The Experience</span>
+            <h2 class="section-title">Wearing User Boots: A Journey Simulation</h2>
+
+            <div class="card" style="background: var(--bg-primary); border-color: var(--accent-green);">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+                    <span style="width: 40px; height: 40px; background: var(--accent-green); border-radius: 50%; display: flex; align-items: center; justify-content: center;">👟</span>
+                    <span style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted);">Personalized Journey Artifact</span>
+                </div>
+
+                <p style="font-family: 'Playfair Display', serif; font-size: 1.5rem; font-style: italic; color: var(--text-primary); margin-bottom: 2rem;">
+                    "Imagine three years from now. You started with just ₹500 a month. Each month, quietly, your money worked while you slept..."
+                </p>
+
+                <div class="journey-timeline">
+                    <div class="timeline-point">
+                        <div class="year">Today</div>
+                        <div class="amount">₹500</div>
+                    </div>
+                    <div class="timeline-line"></div>
+                    <div class="timeline-point">
+                        <div class="year">Year 1</div>
+                        <div class="amount">₹6,400</div>
+                    </div>
+                    <div class="timeline-line"></div>
+                    <div class="timeline-point">
+                        <div class="year">Year 3</div>
+                        <div class="amount">₹21,200</div>
+                    </div>
+                </div>
+
+                <div class="insight-box" style="margin: 0;">
+                    <p><strong>The insight isn't the number.</strong> It's that the user <em>walked</em> this path before choosing it. The journey becomes an artifact—something they carry, revisit, and build upon.</p>
+                </div>
+            </div>
+
+            <p style="color: var(--text-secondary); margin-top: 2rem;">
+                This isn't a calculator. It's a <strong style="color: var(--text-primary);">journey artifact</strong>—a living simulation that spans the user's past decisions, today's context, and future possibilities.
+            </p>
+        </div>
+    </section>
+
+    <!-- Resilience Simulator -->
+    <section id="simulator" class="section simulator-section">
+        <div class="section-container" style="position: relative; z-index: 1;">
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <span class="section-label">04 — Powered by Gemini AI</span>
+                <h2 class="section-title">The Resilience Simulator</h2>
+                <p class="section-subtitle" style="margin: 0 auto;">
+                    Test your system against chaos. Input a market crisis to see how the "Population" reacts vs. how your current UI copes.
+                </p>
+                <p id="sim-warning" class="hidden" style="color: var(--accent-red); margin-top: 1rem; font-size: 0.9rem;">
+                    ⚠️ API Key Missing! Click the 'API Key' button to enable AI features.
+                </p>
+            </div>
+
+            <div class="card" style="max-width: 800px; margin: 0 auto;">
+                <label style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem; display: block;">
+                    Simulate a Crisis Event (e.g., "RBI bans crypto," "Sensex crashes 1500 points")
+                </label>
+                <div class="simulator-input">
+                    <input type="text" id="crisisInput" placeholder="Enter a hypothetical market event...">
+                    <button id="btn-simulate" class="btn-primary">Run Simulation ✨</button>
+                </div>
+
+                <div id="sim-loading" class="hidden" style="text-align: center; padding: 2rem;">
+                    <div class="typing-dots">
+                        <span class="typing-dot"></span>
+                        <span class="typing-dot"></span>
+                        <span class="typing-dot"></span>
+                    </div>
+                    <p style="color: var(--text-muted); margin-top: 1rem;">Analyzing 3 distinct user archetypes...</p>
+                </div>
+
+                <div id="sim-results" class="hidden grid-3" style="margin-top: 2rem;"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Strategic Gap -->
+    <section class="section">
+        <div class="section-container">
+            <span class="section-label">05 — The Strategic Gap</span>
+            <h2 class="section-title" style="text-align: center; margin-bottom: 3rem;">Current State vs. Future State</h2>
+
+            <div class="grid-3">
+                <div class="card">
+                    <div class="card-icon">⚡</div>
+                    <h3 class="card-title" style="color: var(--accent-green);">Current Win: Simplicity</h3>
+                    <p class="card-text">Groww made investing accessible. 1-click KYC, e-commerce style UI.<br><br><em>Result: Massive Acquisition.</em></p>
+                </div>
+
+                <div class="card" style="border-color: rgba(239,68,68,0.3); background: linear-gradient(135deg, rgba(239,68,68,0.05) 0%, var(--bg-card) 100%);">
+                    <div class="card-icon">⚠️</div>
+                    <h3 class="card-title" style="color: var(--accent-red);">The Danger Zone</h3>
+                    <p class="card-text">Gamification without education. Technical glitches erode trust instantly for new, fearful users.<br><br><em>Risk: High Churn & Trust Deficit.</em></p>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">🛡️</div>
+                    <h3 class="card-title" style="color: var(--accent-blue);">Future Win: Resilience</h3>
+                    <p class="card-text">Designing for "The Bad Day." Educational nudges embedded in the flow. Transparency in failure.<br><br><em>Result: Population-Scale Trust.</em></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ask the Strategist -->
+    <section class="section" style="background: var(--bg-secondary);">
+        <div class="section-container">
+            <div class="grid-2" style="align-items: center;">
+                <div>
+                    <span class="section-label">06 — The Recommendation</span>
+                    <h2 class="section-title">Why You Need a Strategic Designer</h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                        To bridge the gap between "Product Management" and "Population Sociology," you need a specific type of thinker who operates at the intersection of <strong style="color: var(--text-primary);">Strategic Design</strong> and <strong style="color: var(--text-primary);">Financial Anthropology</strong>.
+                    </p>
+
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                            <span style="width: 28px; height: 28px; background: var(--accent-green-dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; color: var(--accent-green); font-weight: 600; flex-shrink: 0;">1</span>
+                            <div>
+                                <h4 style="font-family: 'Playfair Display', serif; margin-bottom: 0.25rem;">From Personas to Populations</h4>
+                                <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">Understands that users are combinatorial sets of fears/hopes, not static marketing slides.</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                            <span style="width: 28px; height: 28px; background: var(--accent-green-dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; color: var(--accent-green); font-weight: 600; flex-shrink: 0;">2</span>
+                            <div>
+                                <h4 style="font-family: 'Playfair Display', serif; margin-bottom: 0.25rem;">Systems Thinking</h4>
+                                <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">Sees the connection between a UI glitch and a Tier-3 family's generational trust in finance.</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                            <span style="width: 28px; height: 28px; background: var(--accent-green-dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; color: var(--accent-green); font-weight: 600; flex-shrink: 0;">3</span>
+                            <div>
+                                <h4 style="font-family: 'Playfair Display', serif; margin-bottom: 0.25rem;">Design for Resilience</h4>
+                                <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">Prioritizes designing for the "most challenging conditions" (DPI principles), creating a moat against competitors.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4 style="font-family: 'Playfair Display', serif; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <span class="highlight">✨</span> Ask the Strategist
+                    </h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">
+                        Interview Dhulis (AI) about specific strategic challenges at Groww.
+                    </p>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="text" id="chatInput" placeholder="e.g. How do we handle trust?" style="flex: 1; padding: 0.75rem 1rem; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 8px; color: var(--text-primary); font-family: inherit;">
+                        <button id="btn-chat" class="btn-secondary">Ask</button>
+                    </div>
+                    <div id="chat-response" class="hidden" style="margin-top: 1rem; padding: 1rem; background: var(--bg-secondary); border-radius: 8px; font-size: 0.9rem; color: var(--text-secondary); font-style: italic;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== PAGE DIVIDER: ETHNOGRAPHIC ANALYSIS ========== -->
+    <div class="page-divider">
+        <div class="page-divider-content">
+            <span class="page-divider-icon">📊</span>
+            <span class="page-divider-text">Ethnographic Analysis</span>
+        </div>
+    </div>
+
+    <!-- ========== PART 2: ETHNOGRAPHIC ANALYSIS ========== -->
+
+    <section id="ethnography" class="section">
+        <div class="section-container">
+            <span class="section-label">07 — User Research</span>
+            <h2 class="section-title">Groww User Ethnography</h2>
+            <p class="section-subtitle">
+                Challenges, Aspirations & Business Mapping based on Groww Digest archives, user reviews, and market research.
+            </p>
+
+            <!-- Fears Section -->
+            <div style="margin-bottom: 3rem;">
+                <h3 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                    <span style="width: 40px; height: 40px; background: rgba(239,68,68,0.15); border-radius: 10px; display: flex; align-items: center; justify-content: center;">😰</span>
+                    The Paralyzing Fears
+                </h3>
+
+                <div class="card" style="margin-bottom: 1rem; border-left: 4px solid var(--accent-red);">
+                    <h4 style="font-family: 'Playfair Display', serif; margin-bottom: 0.5rem;">Generational Trauma & Market Timing</h4>
+                    <div class="quote-block" style="background: var(--bg-primary); margin: 1rem 0;">
+                        <p class="quote-text" style="font-size: 1.1rem;">"My father lost everything in 1992. Now every time I see red in my portfolio, I hear his voice warning me."</p>
+                    </div>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">The fear isn't about markets—it's about repeating family history.</p>
+                </div>
+
+                <div class="card" style="margin-bottom: 1rem; border-left: 4px solid var(--accent-red);">
+                    <h4 style="font-family: 'Playfair Display', serif; margin-bottom: 0.5rem;">Technical Infrastructure Fear</h4>
+                    <div class="quote-block" style="background: var(--bg-primary); margin: 1rem 0;">
+                        <p class="quote-text" style="font-size: 1.1rem;">"When the app crashed, I couldn't exit my position and lost money."</p>
+                    </div>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Infrastructure investment, 3-cloud redundancy exists, but trust already damaged.</p>
+                </div>
+
+                <div class="card" style="border-left: 4px solid var(--accent-red);">
+                    <h4 style="font-family: 'Playfair Display', serif; margin-bottom: 0.5rem;">Hidden Charges Anxiety</h4>
+                    <div class="quote-block" style="background: var(--bg-primary); margin: 1rem 0;">
+                        <p class="quote-text" style="font-size: 1.1rem;">"Hidden charges are my biggest nightmare. They eat into returns silently."</p>
+                    </div>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Fee transparency is improving, but the mental model of "hidden costs" persists.</p>
+                </div>
+            </div>
+
+            <!-- Aspirations Section -->
+            <div style="margin-bottom: 3rem;">
+                <h3 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                    <span style="width: 40px; height: 40px; background: rgba(255,209,102,0.15); border-radius: 10px; display: flex; align-items: center; justify-content: center;">🌟</span>
+                    The Ambitious Aspirations
+                </h3>
+
+                <div class="grid-2">
+                    <div class="card" style="border-left: 4px solid var(--accent-gold);">
+                        <h4 style="font-family: 'Playfair Display', serif; margin-bottom: 0.5rem;">Beat Inflation, Not Just Save</h4>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">"I want to beat inflation, not just save. FDs feel like losing money slowly."</p>
+                    </div>
+                    <div class="card" style="border-left: 4px solid var(--accent-gold);">
+                        <h4 style="font-family: 'Playfair Display', serif; margin-bottom: 0.5rem;">Financial Independence</h4>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">"₹1 crore by 30 is the goal. I want money to work for me while I sleep."</p>
+                    </div>
+                    <div class="card" style="border-left: 4px solid var(--accent-gold);">
+                        <h4 style="font-family: 'Playfair Display', serif; margin-bottom: 0.5rem;">Generational Wealth</h4>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">"I want to teach my children about money and investing—break the cycle."</p>
+                    </div>
+                    <div class="card" style="border-left: 4px solid var(--accent-gold);">
+                        <h4 style="font-family: 'Playfair Display', serif; margin-bottom: 0.5rem;">Investor Identity</h4>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">"I want to be a serious investor, not a gambler. Understanding moats matters."</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Personas -->
+            <div>
+                <h3 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                    <span style="width: 40px; height: 40px; background: var(--accent-green-dim); border-radius: 10px; display: flex; align-items: center; justify-content: center;">👥</span>
+                    Emergent User Personas
+                </h3>
+
+                <div class="persona-card">
+                    <div class="persona-avatar">👨‍💻</div>
+                    <div class="persona-content">
+                        <h4>The Anxious First-Timer</h4>
+                        <p class="persona-meta">Age 22-28 • Tier-2 City • First Job Income</p>
+                        <p><strong>Fears:</strong> Market crash, losing hard-earned money, not understanding jargon<br>
+                        <strong>Aspirations:</strong> ₹1 crore by 30, financial independence, beating FD returns<br>
+                        <strong>Groww Fit:</strong> SIPs starting at ₹100, simplified interface, Digest education<br>
+                        <strong>Gap:</strong> Needs more handholding, vernacular depth, "what does this mean?" explainers</p>
+                    </div>
+                </div>
+
+                <div class="persona-card">
+                    <div class="persona-avatar">👨‍🔧</div>
+                    <div class="persona-content">
+                        <h4>The Aspirational Trader</h4>
+                        <p class="persona-meta">Age 25-35 • Mixed Metro/Tier-2 • Has Some Experience</p>
+                        <p><strong>Fears:</strong> App crashes during trades, missing exit points, platform reliability<br>
+                        <strong>Aspirations:</strong> Active income from F&O, beat the market, trader identity<br>
+                        <strong>Groww Fit:</strong> 915 Terminal, F&O trading, real-time P&L tracking<br>
+                        <strong>Gap:</strong> Trust damaged by outages. May use Groww for MF + competitor for trading.</p>
+                    </div>
+                </div>
+
+                <div class="persona-card">
+                    <div class="persona-avatar">👩‍👧</div>
+                    <div class="persona-content">
+                        <h4>The Wealth Builder Parent</h4>
+                        <p class="persona-meta">Age 35-45 • Established Career • Family Responsibilities</p>
+                        <p><strong>Fears:</strong> Inadequate retirement corpus, children's education costs, inflation erosion<br>
+                        <strong>Aspirations:</strong> Long-term wealth, financial security, teaching kids money skills<br>
+                        <strong>Groww Fit:</strong> Goal-based MF portfolios, ELSS tax saving, systematic wealth building<br>
+                        <strong>Gap:</strong> No family accounts, no minor investing path, no retirement planning tools</p>
+                    </div>
+                </div>
+
+                <div class="persona-card">
+                    <div class="persona-avatar">🧓</div>
+                    <div class="persona-content">
+                        <h4>The Digital Hesitant</h4>
+                        <p class="persona-meta">Age 45+ • Tier-3/4 Town • Low Digital Confidence</p>
+                        <p><strong>Fears:</strong> Scams, losing money to technology errors, not being able to get help<br>
+                        <strong>Aspirations:</strong> Safe returns, trust in platform, human support when needed<br>
+                        <strong>Groww Fit:</strong> Limited—interface assumes self-serve digital natives<br>
+                        <strong>Gap:</strong> No assisted mode, no phone-based KYC help, no local language support depth</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Business Implications -->
+    <section class="section" style="background: var(--bg-secondary);">
+        <div class="section-container">
+            <span class="section-label">08 — Business Mapping</span>
+            <h3 class="section-title">Strategic Implications for Groww Business</h3>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h4 style="font-family: 'Playfair Display', serif; margin-bottom: 0.75rem;">Content-Led Trust Building is Working</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Groww Digest's approach of using <strong style="color: var(--text-primary);">storytelling + data</strong> is sophisticated investor education. This supports the <span class="highlight">83% organic user acquisition</span> rate.</p>
+                </div>
+
+                <div class="card">
+                    <h4 style="font-family: 'Playfair Display', serif; margin-bottom: 0.75rem;">Reliability is Now Existential</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Technical failures have shifted from "growing pains" to "trust destroyers." At <span class="highlight">13M+ active users</span>, failures are national news.</p>
+                </div>
+
+                <div class="card">
+                    <h4 style="font-family: 'Playfair Display', serif; margin-bottom: 0.75rem;">Next 50M Users Require Different Design</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Current users are digital-native, self-serve capable. Next wave from Tier-3/4 (<span class="highlight">60% already outside metros</span>) will need assisted onboarding, true cognitive localization, and lower complexity defaults.</p>
+                </div>
+
+                <div class="card">
+                    <h4 style="font-family: 'Playfair Display', serif; margin-bottom: 0.75rem;">Behavioral Finance as Product Differentiator</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Groww's educational content addresses behavioral biases but the <strong style="color: var(--text-primary);">product doesn't intervene</strong>. Opportunity to embed behavioral guardrails that competitors don't offer.</p>
+                </div>
+            </div>
+
+            <div class="quote-block" style="margin-top: 2rem;">
+                <p class="quote-text">The opportunity lies in embedding insights into the interface itself—behavioral nudges, progressive complexity, recovery flows—creating a platform that serves the vegetable vendor in Varanasi as elegantly as the software engineer in Bangalore.</p>
+                <p class="quote-source">— Ethnographic Synthesis</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== PAGE DIVIDER: CASE STUDY ========== -->
+    <div class="page-divider">
+        <div class="page-divider-content">
+            <span class="page-divider-icon">📋</span>
+            <span class="page-divider-text">Case Study & Framework Analysis</span>
+        </div>
+    </div>
+
+    <!-- ========== PART 3: CASE STUDY ========== -->
+
+    <section id="casestudy" class="section">
+        <div class="section-container">
+            <span class="section-label">09 — Framework Analysis</span>
+            <h2 class="section-title">Groww Case Study: Strategic Design at Scale</h2>
+            <p class="section-subtitle">
+                An analysis applying principles from "Strategic Thinking in Design: From Personas to Populations"
+            </p>
+
+            <!-- Market Context -->
+            <div style="margin-bottom: 3rem;">
+                <h3 style="font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 1.5rem;">Market Context: India's Retail Investment Revolution</h3>
+
+                <div class="grid-4">
+                    <div class="stat-card">
+                        <div class="stat-value">80M+</div>
+                        <p class="stat-label">New demat accounts since 2020</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">72%</div>
+                        <p class="stat-label">Groww users outside top metros</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">13M+</div>
+                        <p class="stat-label">Active Groww users</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">83%</div>
+                        <p class="stat-label">Organic user acquisition</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strengths & Challenges -->
+            <div class="grid-2" style="margin-bottom: 3rem;">
+                <div class="card" style="border-left: 4px solid var(--accent-green);">
+                    <h4 style="font-family: 'Playfair Display', serif; margin-bottom: 1rem; color: var(--accent-green);">✓ Strengths</h4>
+                    <ul style="color: var(--text-secondary); font-size: 0.9rem; list-style: none;">
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-subtle);">• <strong style="color: var(--text-primary);">Extreme Simplicity:</strong> 2-minute KYC, 3-tap SIP setup</li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-subtle);">• <strong style="color: var(--text-primary);">Educational Integration:</strong> Learning embedded in flows</li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-subtle);">• <strong style="color: var(--text-primary);">DPI Leverage:</strong> Excellent use of Aadhaar, UPI infrastructure</li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-subtle);">• <strong style="color: var(--text-primary);">Vernacular Content:</strong> Multi-language support expanding reach</li>
+                        <li style="padding: 0.5rem 0;">• <strong style="color: var(--text-primary);">Rapid Iteration:</strong> Features shipped in days based on feedback</li>
+                    </ul>
+                </div>
+
+                <div class="card" style="border-left: 4px solid var(--accent-orange);">
+                    <h4 style="font-family: 'Playfair Display', serif; margin-bottom: 1rem; color: var(--accent-orange);">⚠ Challenges</h4>
+                    <ul style="color: var(--text-secondary); font-size: 0.9rem; list-style: none;">
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-subtle);">• <strong style="color: var(--text-primary);">No Assisted Mode:</strong> Assumes all users can self-serve</li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-subtle);">• <strong style="color: var(--text-primary);">Translation ≠ Localization:</strong> Concepts not adapted for varying literacy</li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-subtle);">• <strong style="color: var(--text-primary);">Fragmented Advanced Tools:</strong> Power users need separate apps</li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-subtle);">• <strong style="color: var(--text-primary);">Revenue Concentration:</strong> 85% from broking; regulatory risk</li>
+                        <li style="padding: 0.5rem 0;">• <strong style="color: var(--text-primary);">Infrastructure Resilience:</strong> Outages at scale have significant impact</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Framework Scores -->
+            <h3 style="font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 1.5rem;">Framework Application Score</h3>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Principle</th>
+                        <th style="text-align: center;">Score</th>
+                        <th>Assessment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Method of Extremes</td>
+                        <td style="text-align: center;"><span class="tag tag-aspiration">Partial</span></td>
+                        <td>Intuitive application, not formalized</td>
+                    </tr>
+                    <tr>
+                        <td>Canonical/Adaptive Separation</td>
+                        <td style="text-align: center;"><span class="tag" style="background: var(--accent-green-dim); color: var(--accent-green);">Strong</span></td>
+                        <td>Progressive disclosure, multi-language</td>
+                    </tr>
+                    <tr>
+                        <td>Systems Thinking</td>
+                        <td style="text-align: center;"><span class="tag" style="background: var(--accent-green-dim); color: var(--accent-green);">Strong</span></td>
+                        <td>Infrastructure investment, regulatory awareness</td>
+                    </tr>
+                    <tr>
+                        <td>DPI Platform Mindset</td>
+                        <td style="text-align: center;"><span class="tag tag-aspiration">Partial</span></td>
+                        <td>Leverages DPI well; proprietary, not enabling</td>
+                    </tr>
+                    <tr>
+                        <td>Failure Mode Design</td>
+                        <td style="text-align: center;"><span class="tag tag-problem">Emerging</span></td>
+                        <td>Building resilience, but gaps remain</td>
+                    </tr>
+                    <tr>
+                        <td>Problem-First Thinking</td>
+                        <td style="text-align: center;"><span class="tag" style="background: var(--accent-green-dim); color: var(--accent-green);">Strong</span></td>
+                        <td>User pain points drive product decisions</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Recommendations -->
+    <section id="recommendations" class="section" style="background: var(--bg-secondary);">
+        <div class="section-container">
+            <span class="section-label">10 — Recommendations</span>
+            <h2 class="section-title">Applying Population-Scale Principles</h2>
+
+            <div class="principle-grid">
+                <div class="principle-card">
+                    <div class="principle-number">01</div>
+                    <h4 class="principle-title">Formalize the Method of Extremes</h4>
+                    <p class="principle-text">Explicitly design for the most constrained user: lowest literacy, weakest connectivity, oldest device. Make it a systematic practice with defined "extreme user" testing protocols.</p>
+                </div>
+                <div class="principle-card">
+                    <div class="principle-number">02</div>
+                    <h4 class="principle-title">Introduce Assisted Pathways</h4>
+                    <p class="principle-text">Partner with kirana stores, banking correspondents, or create a "Groww Mitra" program. For users who can't self-serve, design human-assisted flows.</p>
+                </div>
+                <div class="principle-card">
+                    <div class="principle-number">03</div>
+                    <h4 class="principle-title">True Cognitive Localization</h4>
+                    <p class="principle-text">Beyond translation: adapt complexity levels. A "SIP" in Hindi should explain differently to a teacher in Lucknow vs. an IT professional in Hyderabad.</p>
+                </div>
+                <div class="principle-card">
+                    <div class="principle-number">04</div>
+                    <h4 class="principle-title">Unified Adaptive Interface</h4>
+                    <p class="principle-text">Instead of separate apps for beginners vs. traders, create one interface that adapts—same canonical requirements, different journeys based on user context.</p>
+                </div>
+                <div class="principle-card">
+                    <div class="principle-number">05</div>
+                    <h4 class="principle-title">Design for Recovery</h4>
+                    <p class="principle-text">Build explicit recovery flows: what happens when a transaction fails? How do users know their money is safe? Proactive, multi-channel communication during incidents.</p>
+                </div>
+                <div class="principle-card">
+                    <div class="principle-number">06</div>
+                    <h4 class="principle-title">Explore Platform Enablement</h4>
+                    <p class="principle-text">Consider opening APIs for third-party developers. Move from capturing ecosystem value to enabling it—a strategic evolution toward platform thinking.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conclusion -->
+    <section class="section">
+        <div class="section-container">
+            <span class="section-label">11 — Conclusion</span>
+            <h2 class="section-title">The Strategic Design Verdict</h2>
+
+            <p style="color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 2rem;">
+                Groww represents a fascinating case study in <strong style="color: var(--text-primary);">intuitive population-scale design</strong>. Without explicitly articulating the principles, the founders naturally gravitated toward many of the right solutions.
+            </p>
+
+            <div class="quote-block">
+                <p class="quote-text">The question isn't 'who is our user?' but 'what are the most challenging conditions under which our system must still work?'</p>
+                <p class="quote-source">— Design principle for Digital Public Infrastructure</p>
+            </div>
+
+            <p style="color: var(--text-secondary); font-size: 1.1rem; margin-top: 2rem;">
+                <strong style="color: var(--text-primary);">Final Assessment:</strong> Groww is a <span class="highlight">strong product-led company</span> with <span class="highlight-orange">emerging population-scale design capabilities</span>. Their next evolution should formalize these principles—moving from intuitive application to systematic practice.
+            </p>
+
+            <p style="color: var(--text-secondary); font-size: 1.1rem; margin-top: 1rem;">
+                The company that figures out how to serve the vegetable vendor in Varanasi as elegantly as the software engineer in Bangalore will define the future of Indian retail investing.
+            </p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-logo">Groww × Strategic Design</div>
+        <p class="footer-text">Comprehensive Analysis • December 2025<br>Based on "Strategic Thinking in Design: From Personas to Populations"</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script type="module">
+        import { GoogleGenerativeAI } from "@google/generative-ai";
+
+        // --- API KEY MANAGEMENT ---
+        let apiKey = localStorage.getItem('gemini_api_key') || "";
+        const statusDot = document.getElementById('key-status-dot');
+        const simWarning = document.getElementById('sim-warning');
+        const btnApiKey = document.getElementById('btn-api-key');
+
+        // Check URL for test key
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('testkey')) {
+            apiKey = urlParams.get('testkey');
+            localStorage.setItem('gemini_api_key', apiKey);
+            window.history.pushState({}, '', window.location.pathname);
+        }
+
+        function updateKeyStatus() {
+            if (apiKey && apiKey.length > 10) {
+                statusDot.classList.remove('red');
+                statusDot.classList.add('green');
+                btnApiKey.classList.remove('pulse-red');
+                if (simWarning) simWarning.classList.add('hidden');
+            } else {
+                statusDot.classList.remove('green');
+                statusDot.classList.add('red');
+                btnApiKey.classList.add('pulse-red');
+            }
+        }
+        updateKeyStatus();
+
+        btnApiKey.addEventListener('click', () => {
+            const newKey = prompt("Enter your Gemini API Key:", apiKey);
+            if (newKey !== null) {
+                apiKey = newKey.trim();
+                localStorage.setItem('gemini_api_key', apiKey);
+                updateKeyStatus();
+                alert("API Key saved!");
+            }
+        });
+
+        document.getElementById('btn-download').addEventListener('click', () => {
+            const blob = new Blob([document.documentElement.outerHTML], {type: 'text/html'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Groww_Strategic_Design_Comprehensive.html';
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+
+        // --- GEMINI API ---
+        async function runGemini(prompt, systemInstruction) {
+            if (!apiKey) {
+                if (simWarning) simWarning.classList.remove('hidden');
+                btnApiKey.classList.add('pulse-red');
+                alert("API Key is missing. Please click the API Key button to set it.");
+                return null;
+            }
+            try {
+                const genAI = new GoogleGenerativeAI(apiKey);
+                const model = genAI.getGenerativeModel({
+                    model: "gemini-2.0-flash-exp",
+                    systemInstruction: { parts: [{ text: systemInstruction }] }
+                });
+                const result = await model.generateContent(prompt);
+                const response = await result.response;
+                return response.text();
+            } catch (error) {
+                console.error("Gemini API Error:", error);
+                alert("Gemini API Error: " + error.message);
+                return null;
+            }
+        }
+
+        // --- POPULATION CHART ---
+        const populationData = [];
+        for (let i = 0; i < 400; i++) {
+            let x = 50 + (Math.random() * 50);
+            let y = 20 + (Math.random() * 80);
+            if (Math.random() > 0.7) y += 10;
+            populationData.push({ x, y });
+        }
+
+        const ctx = document.getElementById('populationChart');
+        if (ctx) {
+            const chart = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'User Population',
+                        data: populationData,
+                        backgroundColor: 'rgba(0, 208, 156, 0.5)',
+                        borderColor: 'rgba(0, 208, 156, 0.8)',
+                        pointRadius: 4,
+                        pointHoverRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    scales: {
+                        x: {
+                            min: 0, max: 100,
+                            title: { display: true, text: 'Aspiration', color: '#a0a0b0' },
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { color: '#6a6a7a' }
+                        },
+                        y: {
+                            min: 0, max: 100,
+                            title: { display: true, text: 'Fear', color: '#a0a0b0' },
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { color: '#6a6a7a' }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    onClick: async (e, elements) => {
+                        if (elements.length > 0) {
+                            const idx = elements[0].index;
+                            const point = populationData[idx];
+                            generatePersona(point.x, point.y);
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- GENERATE PERSONA ---
+        const personaCard = document.getElementById('persona-card');
+        async function generatePersona(x, y) {
+            personaCard.innerHTML = `
+                <div style="font-size: 3rem; margin-bottom: 1rem; animation: pulse 1s infinite;">🤖</div>
+                <h3 class="card-title">Generating Persona...</h3>
+                <p class="card-text">Gemini is imagining a user with<br><strong>Aspiration: ${Math.round(x)}</strong> & <strong>Fear: ${Math.round(y)}</strong></p>
+            `;
+
+            const prompt = `Aspiration Level: ${Math.round(x)}/100. Fear Level: ${Math.round(y)}/100.`;
+            const systemPrompt = `You are a creative ethnographer for an Indian fintech. Create a micro-persona based on the provided stats. Return ONLY a JSON object: {"name": "Indian Name", "city": "Specific Indian City (Tier 2/3 focus)", "job": "Occupation", "quote": "A single sentence quote capturing their financial anxiety or hope.", "need": "One specific UI feature they need"}`;
+
+            const jsonStr = await runGemini(prompt, systemPrompt);
+            if (jsonStr) {
+                try {
+                    const cleanJson = jsonStr.replace(/```json/g, '').replace(/```/g, '').trim();
+                    const p = JSON.parse(cleanJson);
+                    personaCard.innerHTML = `
+                        <div style="text-align: left; width: 100%;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent-green);">Generated Profile</span>
+                                <span style="font-size: 0.75rem; color: var(--text-muted);">Asp:${Math.round(x)} | Fear:${Math.round(y)}</span>
+                            </div>
+                            <h3 class="card-title">${p.name}</h3>
+                            <p style="color: var(--accent-green); font-size: 0.9rem; margin-bottom: 1rem;">${p.job} • ${p.city}</p>
+                            <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                                <p style="font-style: italic; color: var(--text-secondary); margin: 0;">"${p.quote}"</p>
+                            </div>
+                            <p style="font-size: 0.9rem; margin: 0;"><strong style="color: var(--accent-orange);">Needs:</strong> <span style="color: var(--text-secondary);">${p.need}</span></p>
+                        </div>
+                    `;
+                } catch (e) {
+                    personaCard.innerHTML = `<p class="card-text" style="color: var(--accent-red);">Error parsing response. Check console.</p>`;
+                    console.error(e);
+                }
+            }
+        }
+
+        // --- RESILIENCE SIMULATOR ---
+        const btnSimulate = document.getElementById('btn-simulate');
+        const crisisInput = document.getElementById('crisisInput');
+        const simLoading = document.getElementById('sim-loading');
+        const simResults = document.getElementById('sim-results');
+
+        btnSimulate.addEventListener('click', async () => {
+            const crisis = crisisInput.value;
+            if (!crisis) return;
+
+            simLoading.classList.remove('hidden');
+            simResults.classList.add('hidden');
+            simResults.innerHTML = '';
+
+            const systemPrompt = `You are a UX researcher simulating user reactions to a market crisis for an Indian fintech app (Groww). Given a crisis event, generate reactions for 3 distinct user archetypes. Return ONLY a JSON array: [{"archetype": "Name", "reaction": "Emotional reaction", "failure": "How current UI fails them", "win": "Strategic design intervention"}]`;
+
+            const result = await runGemini(`Crisis Event: "${crisis}"`, systemPrompt);
+            simLoading.classList.add('hidden');
+
+            if (result) {
+                try {
+                    const cleanJson = result.replace(/```json/g, '').replace(/```/g, '').trim();
+                    const cards = JSON.parse(cleanJson);
+                    simResults.classList.remove('hidden');
+
+                    cards.forEach(card => {
+                        const div = document.createElement('div');
+                        div.className = 'card';
+                        div.innerHTML = `
+                            <h4 style="font-family: 'Playfair Display', serif; margin-bottom: 0.5rem;">${card.archetype}</h4>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">${card.reaction}</p>
+                            <div style="margin-bottom: 1rem;">
+                                <span class="tag tag-fear" style="margin-bottom: 0.5rem; display: inline-block;">UI Failure</span>
+                                <p style="color: var(--text-secondary); font-size: 0.85rem; margin: 0.5rem 0 0 0;">${card.failure}</p>
+                            </div>
+                            <div>
+                                <span class="tag" style="background: var(--accent-green-dim); color: var(--accent-green); margin-bottom: 0.5rem; display: inline-block;">Strategic Win</span>
+                                <p style="color: var(--text-secondary); font-size: 0.85rem; margin: 0.5rem 0 0 0;">${card.win}</p>
+                            </div>
+                        `;
+                        simResults.appendChild(div);
+                    });
+                } catch (e) {
+                    simResults.classList.remove('hidden');
+                    simResults.innerHTML = `<div class="card" style="grid-column: span 3; text-align: center; color: var(--accent-red);">Error parsing simulation. Check console.</div>`;
+                    console.error(e);
+                }
+            } else {
+                simResults.classList.remove('hidden');
+                simResults.innerHTML = `<div class="card" style="grid-column: span 3; text-align: center; color: var(--text-muted);">Simulation failed or API key missing.</div>`;
+            }
+        });
+
+        // --- ASK THE STRATEGIST ---
+        const btnChat = document.getElementById('btn-chat');
+        const chatInput = document.getElementById('chatInput');
+        const chatResponse = document.getElementById('chat-response');
+
+        btnChat.addEventListener('click', async () => {
+            const question = chatInput.value;
+            if (!question) return;
+
+            chatResponse.classList.remove('hidden');
+            chatResponse.innerHTML = '<span class="typing-dots"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></span> Thinking...';
+
+            const systemPrompt = `You are a Strategic Designer pitching to the CEO of Groww. Your core philosophy: "Combinatorial Design" over "Personas", and "Resilience" over "Simplicity". Answer briefly (max 2 sentences). Be insightful, use terms like 'Tier-3 trust', 'Systemic failure', 'DPI'. Sound professional but visionary.`;
+
+            const reply = await runGemini(question, systemPrompt);
+            chatResponse.innerText = reply || "I couldn't reach the server. Please check your API key.";
+        });
+
+        // --- SMOOTH SCROLL FOR NAV LINKS ---
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
