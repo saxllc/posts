@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Context Tracing: Bridging Gaps in Digital Finance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #fdfaf6; color: #333; }
+        .chart-container { position: relative; width: 100%; max-width: 600px; margin: 0 auto; height: 300px; max-height: 400px; }
+        @media (min-width: 768px) { .chart-container { height: 350px; } }
+        
+        /* Custom Utilities for Diagram Nodes */
+        .node { transition: all 0.3s ease; }
+        .node:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+        .connector-line { transition: all 0.5s ease; }
+        
+        /* Fade In Animation */
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+    <!-- Chosen Palette: Warm Neutral (Sand/Paper) with Technical Accents (Slate/Teal) -->
+    <!-- Application Structure Plan: 
+         1. The Incident (Case Study): A concrete starting point using the Groww complaint to ground the user.
+         2. The Systemic Gap (Analysis): Visualizing the hidden friction in disconnected architectures.
+         3. The Context Trace (Solution): An interactive conceptual model showing how AI bridges the gap.
+         4. The UX Proposal (Future State): A mock interface demonstrating the user-consented resolution flow.
+         Rationale: Moving from specific pain -> abstract problem -> proposed solution -> concrete application follows a logical persuasive narrative.
+    -->
+    <!-- Visualization & Content Choices:
+         - Timeline Flow: HTML/CSS Grid. Goal: Show the breakdown. Interaction: Click to reveal status.
+         - Friction Chart: Chart.js Line Chart. Goal: Correlate complexity with failure. Interaction: Toggle datasets.
+         - Architecture Diagram: CSS/HTML Flexbox. Goal: Contrast current siloed state vs. connected trace. Interaction: "Activate Trace" button.
+         - Mock UX: HTML/JS Form. Goal: Demonstrate the consent/trust mechanism.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-[#fdfaf6] text-slate-800">
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-[#fdfaf6]/90 backdrop-blur-md border-b border-stone-200 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl font-bold text-slate-800 tracking-tight">Context<span class="text-teal-600">Trace</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
+                    <button onclick="scrollToSection('case-study')" class="hover:text-teal-600 transition-colors">The Incident</button>
+                    <button onclick="scrollToSection('analysis')" class="hover:text-teal-600 transition-colors">System Friction</button>
+                    <button onclick="scrollToSection('solution')" class="hover:text-teal-600 transition-colors">Proposed Architecture</button>
+                    <button onclick="scrollToSection('future-ux')" class="hover:text-teal-600 transition-colors">Future UX</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="max-w-4xl mx-auto px-4 pt-16 pb-12 text-center fade-in">
+        <h1 class="text-4xl md:text-5xl font-bold text-slate-900 mb-6 leading-tight">
+            Bridging the Cracks in <br><span class="text-teal-600">Heterogeneous Systems</span>
+        </h1>
+        <p class="text-lg md:text-xl text-slate-600 mb-8 max-w-2xl mx-auto">
+            When canonical user journeys span disconnected architectures, value falls through the cracks. 
+            Exploring how <strong>Generative AI-based Context Tracing</strong> can restore trust and continuity.
+        </p>
+        <div class="inline-flex gap-4">
+            <button onclick="scrollToSection('case-study')" class="px-6 py-3 bg-teal-600 text-white rounded-lg font-medium hover:bg-teal-700 transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                Explore the Case Study
+            </button>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 space-y-24">
+
+        <!-- SECTION 1: THE CASE STUDY -->
+        <section id="case-study" class="scroll-mt-24 fade-in">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4">The Incident: Where Handshakes Fail</h2>
+                <p class="text-slate-600">
+                    A real-world example of a "failed" state in a canonical journey. A user attempts to invest ₹10,000, 
+                    but the transaction vanishes between the Bank, the Gateway, and the Platform. 
+                    <strong>Click the nodes below to trace the user's perspective versus the system's reality.</strong>
+                </p>
+            </div>
+
+            <!-- Interactive Timeline/Flow -->
+            <div class="bg-white rounded-2xl shadow-sm border border-stone-200 p-6 md:p-10">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4 relative">
+                    <!-- Connecting Line Background -->
+                    <div class="absolute left-8 top-0 bottom-0 md:top-1/2 md:left-0 md:right-0 w-1 md:w-full md:h-1 bg-stone-200 -z-0"></div>
+
+                    <!-- Node 1: User -->
+                    <div class="node relative z-10 w-full md:w-1/4 cursor-pointer group" onclick="updateIncidentDetail('step1')">
+                        <div class="bg-white border-2 border-green-500 rounded-xl p-4 text-center h-full hover:bg-green-50 transition">
+                            <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3 text-green-700 font-bold">1</div>
+                            <h3 class="font-bold text-slate-800">Initiation</h3>
+                            <p class="text-xs text-slate-500 mt-1">Oct 10, 9:00 AM</p>
+                            <div class="mt-2 text-sm text-green-600 font-semibold">Started</div>
+                        </div>
+                    </div>
+
+                    <!-- Node 2: Bank -->
+                    <div class="node relative z-10 w-full md:w-1/4 cursor-pointer group" onclick="updateIncidentDetail('step2')">
+                        <div class="bg-white border-2 border-green-500 rounded-xl p-4 text-center h-full hover:bg-green-50 transition">
+                            <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3 text-green-700 font-bold">2</div>
+                            <h3 class="font-bold text-slate-800">Deutsche Bank</h3>
+                            <p class="text-xs text-slate-500 mt-1">Net Banking</p>
+                            <div class="mt-2 text-sm text-green-600 font-semibold">Debited</div>
+                        </div>
+                    </div>
+
+                    <!-- Node 3: Gateway -->
+                    <div class="node relative z-10 w-full md:w-1/4 cursor-pointer group" onclick="updateIncidentDetail('step3')">
+                        <div class="bg-white border-2 border-green-500 rounded-xl p-4 text-center h-full hover:bg-green-50 transition">
+                            <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3 text-green-700 font-bold">3</div>
+                            <h3 class="font-bold text-slate-800">Razorpay</h3>
+                            <p class="text-xs text-slate-500 mt-1">Intermediary</p>
+                            <div class="mt-2 text-sm text-green-600 font-semibold">Confirmed</div>
+                        </div>
+                    </div>
+
+                    <!-- Node 4: Platform (FAILURE) -->
+                    <div class="node relative z-10 w-full md:w-1/4 cursor-pointer group" onclick="updateIncidentDetail('step4')">
+                        <div class="bg-white border-2 border-red-500 rounded-xl p-4 text-center h-full hover:bg-red-50 transition">
+                            <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3 text-red-700 font-bold">4</div>
+                            <h3 class="font-bold text-slate-800">Groww</h3>
+                            <p class="text-xs text-slate-500 mt-1">Destination</p>
+                            <div class="mt-2 text-sm text-red-600 font-semibold">Failed?</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dynamic Detail Panel -->
+                <div id="incident-detail" class="mt-8 bg-stone-50 rounded-lg p-6 border-l-4 border-teal-500 transition-all duration-300">
+                    <h4 class="font-bold text-lg text-slate-800 mb-2">Select a stage above to see the breakdown.</h4>
+                    <p class="text-slate-600">Understanding the disconnected states of truth is key to solving the problem.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: SYSTEMIC FRICTION -->
+        <section id="analysis" class="scroll-mt-24 fade-in">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-3xl font-bold text-slate-800 mb-4">The Cost of Heterogeneity</h2>
+                    <p class="text-slate-600 mb-6 leading-relaxed">
+                        Modern architectures utilize "combinatorial" services. While this allows for scale and specialization, it creates 
+                        <strong>"Long Fat Tail"</strong> distributions of edge cases. As the number of handshakes between disconnected systems increases, 
+                        the probability of silent failures rises, creating user friction that standard support channels struggle to resolve.
+                    </p>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                        <h3 class="font-semibold text-slate-800 mb-3">Key Friction Indicators</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <span class="text-red-500 mr-2 font-bold">⚠</span>
+                                <span class="text-sm text-slate-600"><strong>Silent Drops:</strong> Async handshakes (webhooks) that time out or fail without retry logic.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-red-500 mr-2 font-bold">⚠</span>
+                                <span class="text-sm text-slate-600"><strong>Context Loss:</strong> Groww doesn't "know" what Razorpay "knows" until a batch reconciliation happens.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-red-500 mr-2 font-bold">⚠</span>
+                                <span class="text-sm text-slate-600"><strong>Trust Gap:</strong> The user holds the proof (emails/SMS), but the system has no way to ingest it.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Interactive Chart -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-slate-700">Friction vs. System Nodes</h3>
+                        <select id="chart-toggle" class="bg-stone-50 border border-stone-300 text-sm rounded-md px-2 py-1" onchange="updateChart()">
+                            <option value="probability">Failure Probability</option>
+                            <option value="time">Resolution Time</option>
+                        </select>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="frictionChart"></canvas>
+                    </div>
+                    <p class="text-xs text-center text-slate-400 mt-2">Simulated data illustrating combinatorial complexity risks.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: THE SOLUTION (Architecture) -->
+        <section id="solution" class="scroll-mt-24 fade-in">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4">Proposal: AI-Based Context Tracing</h2>
+                <p class="text-slate-600">
+                    A rhetorical journey engine that acts as a <strong>Context Trace</strong>. Instead of relying solely on API handshakes, 
+                    this layer uses Generative AI to "read" the user's evidence (emails, messages) and construct a verified narrative 
+                    to bridge the gap between primary and secondary entities.
+                </p>
+            </div>
+
+            <div class="bg-stone-900 rounded-2xl p-6 md:p-10 shadow-2xl relative overflow-hidden">
+                <!-- Control Panel -->
+                <div class="flex justify-between items-center mb-8 relative z-20">
+                    <h3 class="text-white font-bold text-lg">Architecture View</h3>
+                    <button onclick="toggleContextTrace()" id="trace-btn" class="px-4 py-2 bg-stone-700 text-teal-400 rounded border border-stone-600 hover:bg-stone-600 transition flex items-center gap-2">
+                        <span id="btn-icon">○</span> Activate Context Trace
+                    </button>
+                </div>
+
+                <!-- The Diagram -->
+                <div class="relative min-h-[400px] flex flex-col justify-center">
+                    
+                    <!-- Top Layer: The User Experience -->
+                    <div class="flex justify-between items-center mb-16 relative z-10">
+                        <div class="w-1/5 text-center">
+                            <div class="w-16 h-16 bg-blue-500/20 border border-blue-400 rounded-full mx-auto flex items-center justify-center text-2xl">👤</div>
+                            <p class="text-stone-300 mt-2 text-sm">User</p>
+                        </div>
+                        <div class="w-1/5 text-center opacity-30 transition-opacity duration-500" id="trace-path-1">
+                            <div class="text-teal-400 text-xs mb-1">Evidence (Email/SMS)</div>
+                            <div class="h-0.5 w-full bg-teal-500/50"></div>
+                        </div>
+                        <div class="w-1/5 text-center">
+                            <div class="w-20 h-20 bg-teal-500/10 border-2 border-teal-500 rounded-xl mx-auto flex items-center justify-center text-3xl shadow-[0_0_15px_rgba(20,184,166,0.3)] relative overflow-hidden">
+                                <div class="absolute inset-0 bg-teal-500/10 animate-pulse hidden" id="ai-pulse"></div>
+                                🧠
+                            </div>
+                            <p class="text-teal-400 mt-2 text-sm font-bold">GenAI Context Layer</p>
+                        </div>
+                        <div class="w-1/5 text-center opacity-30 transition-opacity duration-500" id="trace-path-2">
+                            <div class="text-teal-400 text-xs mb-1">Synthesized Truth</div>
+                            <div class="h-0.5 w-full bg-teal-500/50"></div>
+                        </div>
+                        <div class="w-1/5 text-center">
+                            <div class="w-16 h-16 bg-purple-500/20 border border-purple-400 rounded-full mx-auto flex items-center justify-center text-2xl">🏢</div>
+                            <p class="text-stone-300 mt-2 text-sm">Groww (Primary)</p>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Layer: The Broken Silos -->
+                    <div class="flex justify-center gap-8 relative z-10">
+                        <div class="p-4 bg-stone-800 border border-stone-700 rounded text-center w-32 opacity-50">
+                            <div class="text-stone-500 mb-1">Bank API</div>
+                            <div class="h-1 w-full bg-red-500/30"></div>
+                        </div>
+                        <div class="p-4 bg-stone-800 border border-stone-700 rounded text-center w-32 opacity-50">
+                            <div class="text-stone-500 mb-1">Gateway API</div>
+                            <div class="h-1 w-full bg-red-500/30"></div>
+                        </div>
+                        <div class="p-4 bg-stone-800 border border-stone-700 rounded text-center w-32 opacity-50">
+                            <div class="text-stone-500 mb-1">AMC API</div>
+                            <div class="h-1 w-full bg-red-500/30"></div>
+                        </div>
+                    </div>
+
+                    <!-- Overlay Explainer -->
+                    <div id="diagram-overlay" class="absolute inset-0 flex items-end justify-center pb-4 pointer-events-none">
+                        <div class="bg-stone-900/90 p-4 rounded text-stone-300 text-sm max-w-md text-center border border-stone-700">
+                            Current State: Disconnected silos rely on fragile 1:1 API handshakes.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: FUTURE UX (Mockup) -->
+        <section id="future-ux" class="scroll-mt-24 fade-in">
+            <div class="grid md:grid-cols-5 gap-8">
+                <div class="md:col-span-2">
+                    <h2 class="text-3xl font-bold text-slate-800 mb-4">Designing Trust</h2>
+                    <p class="text-slate-600 mb-6">
+                        How do we create a hierarchy of entities where the user consents to this tracing? The UX must be transparent.
+                    </p>
+                    <div class="space-y-4">
+                        <div class="bg-white p-4 rounded-lg border border-stone-200 shadow-sm">
+                            <h4 class="font-bold text-slate-800 text-sm mb-2">Primary Entity (Groww)</h4>
+                            <p class="text-sm text-slate-500">The natural entry point. Holds the customer relationship.</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg border border-stone-200 shadow-sm">
+                            <h4 class="font-bold text-slate-800 text-sm mb-2">Secondary Entities</h4>
+                            <p class="text-sm text-slate-500">Razorpay, Deutsche Bank. They provide the "breadcrumbs" via the Context Trace.</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg border-l-4 border-teal-500 shadow-sm">
+                            <h4 class="font-bold text-teal-700 text-sm mb-2">The "Rhetorical" Agent</h4>
+                            <p class="text-sm text-slate-500">
+                                Steelsman the user's case. It needs:
+                                <br>1. Consent to read relevant notifications.
+                                <br>2. Ability to parse specific transaction IDs.
+                                <br>3. Authority to submit a "Context Packet" to support.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Mockup -->
+                <div class="md:col-span-3">
+                    <div class="bg-white rounded-xl shadow-xl border border-stone-200 overflow-hidden flex flex-col h-full max-h-[600px]">
+                        <div class="bg-slate-50 border-b border-stone-200 p-4 flex justify-between items-center">
+                            <span class="font-bold text-slate-700">Groww Support Assistant</span>
+                            <span class="text-xs bg-teal-100 text-teal-800 px-2 py-1 rounded-full">AI Context Enabled</span>
+                        </div>
+                        
+                        <div id="chat-window" class="flex-1 p-6 overflow-y-auto space-y-4 bg-stone-50">
+                            <!-- Message 1 -->
+                            <div class="flex gap-3">
+                                <div class="w-8 h-8 rounded-full bg-teal-600 flex items-center justify-center text-white text-xs">AI</div>
+                                <div class="bg-white p-3 rounded-lg rounded-tl-none shadow-sm text-sm text-slate-700 max-w-[80%]">
+                                    I see a failed update for your ₹10,000 HDFC Flexi Cap investment. Would you like me to scan your linked email for payment confirmations from Razorpay or Deutsche Bank to resolve this?
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 border-t border-stone-200 bg-white">
+                            <div id="action-area" class="flex gap-2">
+                                <button onclick="simulateConsent()" class="flex-1 bg-teal-600 hover:bg-teal-700 text-white py-2 rounded-lg text-sm font-medium transition">
+                                    Allow Context Access
+                                </button>
+                                <button class="px-4 py-2 border border-slate-300 text-slate-600 rounded-lg text-sm hover:bg-slate-50">
+                                    Manual Upload
+                                </button>
+                            </div>
+                            <p class="text-[10px] text-center text-slate-400 mt-2">
+                                Access limited to transaction date (Oct 10) and keywords: "Groww", "Razorpay", "Deutsche".
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-12 text-center">
+        <div class="max-w-4xl mx-auto px-4">
+            <h3 class="text-white font-bold text-lg mb-4">ContextTrace</h3>
+            <p class="text-sm mb-6">Reflecting on architectures that serve population scale heterogeneity.</p>
+            <div class="text-xs text-slate-600">
+                Generated based on User Report Analysis &bull; No External Calls &bull; Single File SPA
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- Navigation Logic ---
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // --- Incident Detail Logic ---
+        const incidentData = {
+            step1: {
+                title: "User Initiation",
+                time: "Oct 10, 09:00 AM",
+                status: "Success",
+                desc: "User logs into Groww app, selects HDFC Flexi Cap Fund, and initiates a Net Banking transfer via Deutsche Bank.",
+                evidence: "App Log: Init_ID_88392"
+            },
+            step2: {
+                title: "Bank Debit",
+                time: "Oct 10, 09:02 AM",
+                status: "Success",
+                desc: "Deutsche Bank successfully debits ₹10,000. Money leaves the user's ecosystem.",
+                evidence: "Bank SMS: Ref INET/PAY/BSE...319"
+            },
+            step3: {
+                title: "Payment Gateway",
+                time: "Oct 10, 09:03 AM",
+                status: "Success",
+                desc: "Razorpay receives the funds and confirms delivery to Next Billion Technology (Groww's parent).",
+                evidence: "Email: 'Payment Successful' from Razorpay"
+            },
+            step4: {
+                title: "Platform Recognition",
+                time: "Oct 10, 09:05 AM",
+                status: "Failed",
+                desc: "The handshake fails. Groww's system does not receive/acknowledge the success callback. UI shows 'Payment Failed'.",
+                evidence: "User Perception: Frustration. Money gone, no units allocated."
+            }
+        };
+
+        function updateIncidentDetail(step) {
+            const data = incidentData[step];
+            const panel = document.getElementById('incident-detail');
+            
+            // Visual selection state logic could go here (adding borders etc)
+            
+            panel.innerHTML = `
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 fade-in">
+                    <div>
+                        <h4 class="font-bold text-xl text-slate-800">${data.title}</h4>
+                        <p class="text-sm text-slate-500">${data.time}</p>
+                    </div>
+                    <span class="px-3 py-1 rounded-full text-sm font-bold ${data.status === 'Success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">
+                        ${data.status}
+                    </span>
+                </div>
+                <p class="text-slate-700 mb-4 fade-in">${data.desc}</p>
+                <div class="bg-white p-3 rounded border border-stone-200 text-xs font-mono text-slate-500 fade-in">
+                    <strong>Evidence Trace:</strong> ${data.evidence}
+                </div>
+            `;
+        }
+
+        // --- Chart.js Implementation ---
+        let frictionChart;
+
+        function initChart() {
+            const ctx = document.getElementById('frictionChart').getContext('2d');
+            
+            const dataConfig = {
+                labels: ['1 System', '2 Systems', '3 Systems', '4 Systems (Groww case)', '5+ Systems'],
+                datasets: [{
+                    label: 'Probability of Failure (%)',
+                    data: [0.1, 1.5, 4.2, 12.5, 25.0],
+                    borderColor: '#0d9488', // Teal 600
+                    backgroundColor: 'rgba(13, 148, 136, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: '#0d9488',
+                    pointRadius: 6
+                }]
+            };
+
+            const chartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#1e293b',
+                        padding: 12,
+                        titleFont: { size: 14 },
+                        bodyFont: { size: 13 },
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.y + '% Chance of silent failure';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { borderDash: [2, 4], color: '#e2e8f0' },
+                        title: { display: true, text: 'Failure Probability' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            };
+
+            frictionChart = new Chart(ctx, {
+                type: 'line',
+                data: dataConfig,
+                options: chartOptions
+            });
+        }
+
+        function updateChart() {
+            const mode = document.getElementById('chart-toggle').value;
+            
+            if (mode === 'time') {
+                frictionChart.data.datasets[0].label = 'Resolution Time (Days)';
+                frictionChart.data.datasets[0].data = [0.1, 0.5, 2, 7, 14];
+                frictionChart.data.datasets[0].borderColor = '#ea580c'; // Orange
+                frictionChart.data.datasets[0].backgroundColor = 'rgba(234, 88, 12, 0.1)';
+                frictionChart.data.datasets[0].pointBorderColor = '#ea580c';
+                frictionChart.options.scales.y.title.text = 'Avg Resolution Time (Days)';
+                frictionChart.options.plugins.tooltip.callbacks.label = (ctx) => ctx.parsed.y + ' Days to resolve';
+            } else {
+                frictionChart.data.datasets[0].label = 'Probability of Failure (%)';
+                frictionChart.data.datasets[0].data = [0.1, 1.5, 4.2, 12.5, 25.0];
+                frictionChart.data.datasets[0].borderColor = '#0d9488';
+                frictionChart.data.datasets[0].backgroundColor = 'rgba(13, 148, 136, 0.1)';
+                frictionChart.data.datasets[0].pointBorderColor = '#0d9488';
+                frictionChart.options.scales.y.title.text = 'Failure Probability';
+                frictionChart.options.plugins.tooltip.callbacks.label = (ctx) => ctx.parsed.y + '% Chance of silent failure';
+            }
+            frictionChart.update();
+        }
+
+        // --- Architecture Diagram Interaction ---
+        let traceActive = false;
+        function toggleContextTrace() {
+            traceActive = !traceActive;
+            const btn = document.getElementById('trace-btn');
+            const icon = document.getElementById('btn-icon');
+            const path1 = document.getElementById('trace-path-1');
+            const path2 = document.getElementById('trace-path-2');
+            const aiPulse = document.getElementById('ai-pulse');
+            const overlay = document.getElementById('diagram-overlay');
+
+            if (traceActive) {
+                // Activate
+                btn.classList.add('bg-teal-900', 'border-teal-500');
+                btn.classList.remove('bg-stone-700');
+                icon.innerText = '●';
+                
+                path1.classList.remove('opacity-30');
+                path1.classList.add('opacity-100');
+                
+                setTimeout(() => {
+                    aiPulse.classList.remove('hidden');
+                }, 300);
+
+                setTimeout(() => {
+                    path2.classList.remove('opacity-30');
+                    path2.classList.add('opacity-100');
+                    overlay.innerHTML = `<div class="bg-teal-900/90 p-4 rounded text-teal-100 text-sm max-w-md text-center border border-teal-500 shadow-lg fade-in">
+                        <strong>Trace Active:</strong> The AI Agent has ingested user evidence, verified the Razorpay ID, and pushed a "Truth Packet" to Groww, bypassing the broken API.
+                    </div>`;
+                }, 800);
+
+            } else {
+                // Deactivate
+                btn.classList.remove('bg-teal-900', 'border-teal-500');
+                btn.classList.add('bg-stone-700');
+                icon.innerText = '○';
+                
+                path1.classList.add('opacity-30');
+                path1.classList.remove('opacity-100');
+                
+                path2.classList.add('opacity-30');
+                path2.classList.remove('opacity-100');
+                
+                aiPulse.classList.add('hidden');
+                
+                overlay.innerHTML = `<div class="bg-stone-900/90 p-4 rounded text-stone-300 text-sm max-w-md text-center border border-stone-700 fade-in">
+                    Current State: Disconnected silos rely on fragile 1:1 API handshakes.
+                </div>`;
+            }
+        }
+
+        // --- Mock UX Logic ---
+        function simulateConsent() {
+            const chatWindow = document.getElementById('chat-window');
+            const actionArea = document.getElementById('action-area');
+            
+            // Add user message
+            const userMsg = document.createElement('div');
+            userMsg.className = "flex gap-3 justify-end fade-in";
+            userMsg.innerHTML = `
+                <div class="bg-teal-600 p-3 rounded-lg rounded-tr-none shadow-sm text-sm text-white max-w-[80%]">
+                    Yes, access email context for transaction date Oct 10.
+                </div>
+                <div class="w-8 h-8 rounded-full bg-slate-300 flex items-center justify-center text-slate-600 text-xs">Me</div>
+            `;
+            chatWindow.appendChild(userMsg);
+            
+            // Disable buttons
+            actionArea.innerHTML = `<span class="text-teal-600 text-sm italic animate-pulse">Scanning context traces...</span>`;
+            
+            // Scroll to bottom
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+
+            // Simulate AI response sequence
+            setTimeout(() => {
+                const aiMsgProcessing = document.createElement('div');
+                aiMsgProcessing.className = "flex gap-3 fade-in";
+                aiMsgProcessing.innerHTML = `
+                    <div class="w-8 h-8 rounded-full bg-teal-600 flex items-center justify-center text-white text-xs">AI</div>
+                    <div class="bg-white p-3 rounded-lg rounded-tl-none shadow-sm text-sm text-slate-700 max-w-[80%]">
+                        Found 2 matches:<br>
+                        1. <strong>Razorpay:</strong> Success ID #9983 (Oct 10, 9:03 AM)<br>
+                        2. <strong>Deutsche Bank:</strong> Debit ID #319 (Oct 10, 9:02 AM)<br><br>
+                        Constructing "Context Packet" for Groww reconciliation...
+                    </div>
+                `;
+                chatWindow.appendChild(aiMsgProcessing);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            }, 1500);
+
+            setTimeout(() => {
+                const aiMsgDone = document.createElement('div');
+                aiMsgDone.className = "flex gap-3 fade-in";
+                aiMsgDone.innerHTML = `
+                    <div class="w-8 h-8 rounded-full bg-teal-600 flex items-center justify-center text-white text-xs">AI</div>
+                    <div class="bg-white border border-teal-200 p-3 rounded-lg rounded-tl-none shadow-sm text-sm text-slate-700 max-w-[80%]">
+                        <strong>Resolution Proposed:</strong><br>
+                        I have verified the funds reached "Next Billion Tech".<br>
+                        Creating support ticket with "Verified Evidence" priority.<br>
+                        Estimated NAV allocation: <strong>Oct 10</strong>.
+                    </div>
+                `;
+                chatWindow.appendChild(aiMsgDone);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+                
+                actionArea.innerHTML = `<button class="w-full bg-slate-100 text-slate-500 py-2 rounded-lg text-sm cursor-not-allowed">Ticket Created #99281</button>`;
+            }, 3500);
+        }
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initChart();
+            // Initialize with first incident step
+            updateIncidentDetail('step1');
+        });
+
+    </script>
+</body>
+</html>
