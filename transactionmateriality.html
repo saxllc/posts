@@ -1,0 +1,2494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction Materiality | Emotional Embedding for DPI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #0a0a0f;
+            --bg-surface: #12121a;
+            --bg-card: rgba(255,255,255,0.03);
+            --bg-card-hover: rgba(255,255,255,0.06);
+            --text-primary: #f0f0f5;
+            --text-secondary: rgba(255,255,255,0.65);
+            --text-muted: rgba(255,255,255,0.4);
+            --accent-green: #4ade80;
+            --accent-green-light: #86efac;
+            --accent-green-dim: rgba(74,222,128,0.12);
+            --accent-red: #f87171;
+            --accent-red-light: #fca5a5;
+            --accent-red-dim: rgba(248,113,113,0.12);
+            --accent-amber: #fbbf24;
+            --accent-amber-dim: rgba(251,191,36,0.12);
+            --accent-blue: #60a5fa;
+            --accent-blue-dim: rgba(96,165,250,0.12);
+            --accent-purple: #a78bfa;
+            --accent-purple-dim: rgba(167,139,250,0.12);
+            --border-subtle: rgba(255,255,255,0.08);
+            --border-medium: rgba(255,255,255,0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Space Grotesk', system-ui, sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Utility Classes */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .serif {
+            font-family: 'Instrument Serif', Georgia, serif;
+        }
+
+        /* Scroll Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-60px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal-left.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(60px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal-right.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal-scale.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .stagger-1 { transition-delay: 0.1s; }
+        .stagger-2 { transition-delay: 0.2s; }
+        .stagger-3 { transition-delay: 0.3s; }
+        .stagger-4 { transition-delay: 0.4s; }
+        .stagger-5 { transition-delay: 0.5s; }
+        .stagger-6 { transition-delay: 0.6s; }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 80px 24px;
+            position: relative;
+            overflow: hidden;
+            background: 
+                radial-gradient(ellipse 100% 70% at 50% 0%, rgba(74,222,128,0.06) 0%, transparent 50%),
+                radial-gradient(ellipse 80% 50% at 80% 80%, rgba(248,113,113,0.05) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 40% at 20% 60%, rgba(96,165,250,0.04) 0%, transparent 50%),
+                linear-gradient(180deg, var(--bg-deep) 0%, #0f1419 100%);
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 24px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            opacity: 0;
+            animation: fadeInDown 0.8s ease 0.2s forwards;
+        }
+
+        .hero-badge span {
+            color: var(--accent-green);
+        }
+
+        .hero-title {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: clamp(48px, 10vw, 96px);
+            font-weight: 400;
+            line-height: 1.05;
+            margin-bottom: 24px;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.4s forwards;
+        }
+
+        .hero-title em {
+            font-style: italic;
+            background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(16px, 2.5vw, 20px);
+            font-weight: 300;
+            color: var(--text-secondary);
+            max-width: 640px;
+            margin-bottom: 48px;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.6s forwards;
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+            justify-content: center;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.8s forwards;
+        }
+
+        .hero-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .hero-meta-item .material-symbols-outlined {
+            font-size: 18px;
+            color: var(--accent-blue);
+        }
+
+        .scroll-cue {
+            position: absolute;
+            bottom: 48px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            opacity: 0;
+            animation: fadeInUp 1s ease 1s forwards;
+        }
+
+        .scroll-cue span {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .scroll-cue .arrow {
+            width: 24px;
+            height: 24px;
+            border-right: 2px solid var(--text-muted);
+            border-bottom: 2px solid var(--text-muted);
+            transform: rotate(45deg);
+            animation: bounceArrow 2s ease-in-out infinite;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounceArrow {
+            0%, 100% { transform: rotate(45deg) translateY(0); }
+            50% { transform: rotate(45deg) translateY(8px); }
+        }
+
+        /* Part Label */
+        .part-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        /* Section Styling */
+        section {
+            padding: 120px 24px;
+        }
+
+        .section-header {
+            margin-bottom: 64px;
+        }
+
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent-blue);
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 400;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        .section-intro {
+            font-size: 17px;
+            color: var(--text-secondary);
+            max-width: 720px;
+            line-height: 1.8;
+        }
+
+        /* Architecture Section */
+        .architecture-section {
+            background: linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-surface) 50%, var(--bg-deep) 100%);
+        }
+
+        .architecture-diagram {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 48px;
+            margin-top: 48px;
+            overflow: hidden;
+        }
+
+        .arch-layers {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .arch-layer {
+            padding: 32px;
+            border-radius: 12px;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .arch-layer:hover {
+            transform: translateX(8px);
+        }
+
+        .arch-layer.rhetorical {
+            background: linear-gradient(135deg, var(--accent-purple-dim) 0%, rgba(167,139,250,0.05) 100%);
+            border-left: 4px solid var(--accent-purple);
+        }
+
+        .arch-layer.canonical {
+            background: linear-gradient(135deg, var(--accent-blue-dim) 0%, rgba(96,165,250,0.05) 100%);
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .arch-layer.residual {
+            background: linear-gradient(135deg, var(--accent-green-dim) 0%, rgba(74,222,128,0.05) 100%);
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .arch-layer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .arch-layer-title {
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .arch-layer-subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .arch-layer-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.08);
+            color: var(--text-secondary);
+        }
+
+        .arch-layer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
+
+        .arch-layer-item {
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .arch-layer-item::before {
+            content: '•';
+            color: var(--text-muted);
+        }
+
+        .arch-connector {
+            display: flex;
+            justify-content: center;
+            padding: 8px 0;
+        }
+
+        .arch-connector svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--text-muted);
+        }
+
+        /* Timeline Section */
+        .timeline-section {
+            background: var(--bg-deep);
+        }
+
+        .timeline-container {
+            position: relative;
+            padding: 48px 0;
+        }
+
+        .timeline-track {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                var(--accent-purple) 0%, 
+                var(--accent-blue) 25%, 
+                var(--accent-green) 50%, 
+                var(--accent-amber) 75%, 
+                var(--text-muted) 100%);
+            opacity: 0.4;
+            transform: translateY(-50%);
+        }
+
+        .timeline-states {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            z-index: 1;
+        }
+
+        .timeline-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            max-width: 140px;
+        }
+
+        .timeline-node {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .timeline-node:hover {
+            transform: scale(1.15);
+        }
+
+        .timeline-node.intent {
+            background: var(--accent-purple-dim);
+            border: 2px solid var(--accent-purple);
+            color: var(--accent-purple);
+        }
+
+        .timeline-node.consent {
+            background: var(--accent-blue-dim);
+            border: 2px solid var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .timeline-node.execute {
+            background: var(--accent-green-dim);
+            border: 2px solid var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        .timeline-node.record {
+            background: var(--accent-amber-dim);
+            border: 2px solid var(--accent-amber);
+            color: var(--accent-amber);
+        }
+
+        .timeline-node.aging {
+            background: rgba(255,255,255,0.05);
+            border: 2px solid var(--text-muted);
+            color: var(--text-muted);
+        }
+
+        .timeline-node .material-symbols-outlined {
+            font-size: 22px;
+        }
+
+        .timeline-label {
+            font-size: 12px;
+            font-weight: 500;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+
+        .timeline-desc {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-align: center;
+            max-width: 100px;
+        }
+
+        /* Transaction Card Demo */
+        .card-demo-section {
+            background: linear-gradient(180deg, var(--bg-surface) 0%, var(--bg-deep) 100%);
+        }
+
+        .card-demo-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+            margin-top: 48px;
+        }
+
+        @media (max-width: 900px) {
+            .card-demo-container {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+        }
+
+        .card-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .control-group {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .control-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-label .material-symbols-outlined {
+            font-size: 16px;
+        }
+
+        /* Lifecycle Slider */
+        .lifecycle-slider {
+            width: 100%;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, 
+                var(--accent-purple) 0%, 
+                var(--accent-blue) 25%, 
+                var(--accent-green) 50%, 
+                var(--accent-amber) 75%, 
+                var(--text-muted) 100%);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .lifecycle-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            transition: transform 0.2s ease;
+        }
+
+        .lifecycle-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .lifecycle-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        /* Emotion Buttons */
+        .emotion-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .emotion-btn {
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-family: 'Space Grotesk', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .emotion-btn:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .emotion-btn.active {
+            border-color: currentColor;
+        }
+
+        .emotion-btn.relief {
+            color: var(--accent-green);
+        }
+
+        .emotion-btn.relief.active {
+            background: var(--accent-green-dim);
+        }
+
+        .emotion-btn.anxious {
+            color: var(--accent-red);
+        }
+
+        .emotion-btn.anxious.active {
+            background: var(--accent-red-dim);
+        }
+
+        .emotion-btn.confused {
+            color: var(--accent-amber);
+        }
+
+        .emotion-btn.confused.active {
+            background: var(--accent-amber-dim);
+        }
+
+        .emotion-btn.neutral {
+            color: var(--text-secondary);
+        }
+
+        .emotion-btn.neutral.active {
+            background: rgba(255,255,255,0.08);
+        }
+
+        /* Transaction Card */
+        .card-preview {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+            perspective: 1000px;
+        }
+
+        .transaction-card {
+            width: 320px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .transaction-card.state-intent {
+            opacity: 0.6;
+            border: 2px dashed var(--accent-purple);
+            background: linear-gradient(135deg, var(--accent-purple-dim) 0%, transparent 100%);
+            transform: scale(0.95);
+            filter: blur(1px);
+        }
+
+        .transaction-card.state-consent {
+            opacity: 0.85;
+            border: 2px solid var(--accent-blue);
+            background: linear-gradient(135deg, var(--accent-blue-dim) 0%, var(--bg-card) 100%);
+            transform: scale(0.98);
+        }
+
+        .transaction-card.state-execute {
+            opacity: 1;
+            border: 2px solid var(--accent-green);
+            background: linear-gradient(135deg, var(--accent-green-dim) 0%, var(--bg-card) 100%);
+            transform: scale(1);
+            box-shadow: 0 20px 60px rgba(74,222,128,0.15);
+        }
+
+        .transaction-card.state-record {
+            opacity: 1;
+            border: 1px solid var(--border-medium);
+            background: var(--bg-card);
+            transform: scale(1);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .transaction-card.state-aging {
+            opacity: 0.7;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-card);
+            transform: scale(0.96);
+            filter: saturate(0.6);
+            border-radius: 20px;
+        }
+
+        /* Emotion overlays */
+        .transaction-card.emotion-relief {
+            background: linear-gradient(135deg, rgba(74,222,128,0.15) 0%, var(--bg-card) 100%);
+            border-color: var(--accent-green);
+        }
+
+        .transaction-card.emotion-anxious {
+            background: linear-gradient(135deg, rgba(248,113,113,0.15) 0%, var(--bg-card) 100%);
+            border-color: var(--accent-red);
+        }
+
+        .transaction-card.emotion-confused {
+            background: linear-gradient(135deg, rgba(251,191,36,0.15) 0%, var(--bg-card) 100%);
+            border-color: var(--accent-amber);
+            transform: rotate(-1deg);
+        }
+
+        /* Crumple effect */
+        .transaction-card.crumpled {
+            transform: perspective(500px) rotateX(5deg) rotateY(-3deg) scale(0.9);
+            filter: saturate(0.5) brightness(0.8);
+            border-radius: 24px 8px 20px 12px;
+            box-shadow: 
+                inset 0 0 30px rgba(0,0,0,0.3),
+                0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .transaction-card.crumpled::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.03) 45%, transparent 50%),
+                linear-gradient(-45deg, transparent 40%, rgba(0,0,0,0.1) 45%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .card-header {
+            padding: 20px 20px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .card-merchant {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .merchant-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .merchant-name {
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .merchant-category {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .card-timestamp {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: var(--text-muted);
+            text-align: right;
+        }
+
+        .card-body {
+            padding: 24px 20px;
+        }
+
+        .card-amount {
+            font-size: 36px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .card-status {
+            font-size: 13px;
+            color: var(--accent-green);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+
+        .card-status .material-symbols-outlined {
+            font-size: 16px;
+        }
+
+        .card-details {
+            display: grid;
+            gap: 12px;
+            font-size: 13px;
+        }
+
+        .card-detail-row {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .card-detail-label {
+            color: var(--text-muted);
+        }
+
+        .card-detail-value {
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+        }
+
+        .card-footer {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-emotion-tag {
+            font-size: 11px;
+            padding: 6px 12px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .card-emotion-tag.relief {
+            background: var(--accent-green-dim);
+            color: var(--accent-green);
+        }
+
+        .card-emotion-tag.anxious {
+            background: var(--accent-red-dim);
+            color: var(--accent-red);
+        }
+
+        .card-emotion-tag.confused {
+            background: var(--accent-amber-dim);
+            color: var(--accent-amber);
+        }
+
+        .card-emotion-tag.neutral {
+            background: rgba(255,255,255,0.05);
+            color: var(--text-muted);
+        }
+
+        .card-confidence {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .confidence-bar {
+            width: 40px;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: var(--accent-green);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        /* Visual Language Section */
+        .visual-language-section {
+            background: var(--bg-deep);
+        }
+
+        .visual-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 48px;
+        }
+
+        .visual-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.3s ease;
+        }
+
+        .visual-card:hover {
+            background: var(--bg-card-hover);
+            transform: translateY(-4px);
+        }
+
+        .visual-card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .visual-card-icon.color {
+            background: linear-gradient(135deg, var(--accent-green-dim) 0%, var(--accent-red-dim) 100%);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .visual-card-icon.texture {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-medium);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .visual-card-icon.texture::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 2px,
+                rgba(255,255,255,0.05) 2px,
+                rgba(255,255,255,0.05) 4px
+            );
+        }
+
+        .visual-card-icon.form {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-medium);
+        }
+
+        .visual-card-icon.opacity {
+            background: linear-gradient(90deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.1) 100%);
+        }
+
+        .visual-card-title {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .visual-card-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .visual-mapping {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .visual-mapping-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .visual-mapping-indicator {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+
+        .visual-mapping-indicator.green {
+            background: var(--accent-green);
+        }
+
+        .visual-mapping-indicator.red {
+            background: var(--accent-red);
+        }
+
+        .visual-mapping-indicator.amber {
+            background: var(--accent-amber);
+        }
+
+        .visual-mapping-indicator.smooth {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .visual-mapping-indicator.rough {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .visual-mapping-indicator.rough::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.4'/%3E%3C/svg%3E");
+        }
+
+        .visual-mapping-indicator.sharp {
+            background: var(--bg-surface);
+            border: 1px solid var(--text-muted);
+        }
+
+        .visual-mapping-indicator.rounded {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+        }
+
+        .visual-mapping-indicator.crumpled-mini {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px 4px 6px 2px;
+            transform: rotate(-3deg);
+        }
+
+        /* Buckets Section */
+        .buckets-section {
+            background: linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-surface) 100%);
+        }
+
+        .buckets-demo {
+            display: flex;
+            gap: 24px;
+            margin-top: 48px;
+            overflow-x: auto;
+            padding-bottom: 24px;
+        }
+
+        .bucket {
+            min-width: 280px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .bucket:hover {
+            border-color: var(--border-medium);
+            transform: translateY(-4px);
+        }
+
+        .bucket-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .bucket-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .bucket-icon.fear {
+            background: var(--accent-red-dim);
+            color: var(--accent-red);
+        }
+
+        .bucket-icon.medical {
+            background: var(--accent-blue-dim);
+            color: var(--accent-blue);
+        }
+
+        .bucket-icon.family {
+            background: var(--accent-purple-dim);
+            color: var(--accent-purple);
+        }
+
+        .bucket-icon.agent {
+            background: var(--accent-amber-dim);
+            color: var(--accent-amber);
+        }
+
+        .bucket-title {
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .bucket-count {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .bucket-cards {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .mini-card {
+            background: var(--bg-surface);
+            border-radius: 10px;
+            padding: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .mini-card:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .mini-card.red-tint {
+            border-left: 3px solid var(--accent-red);
+        }
+
+        .mini-card.green-tint {
+            border-left: 3px solid var(--accent-green);
+        }
+
+        .mini-card.amber-tint {
+            border-left: 3px solid var(--accent-amber);
+        }
+
+        .mini-card.blue-tint {
+            border-left: 3px solid var(--accent-blue);
+        }
+
+        .mini-card-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .mini-card-merchant {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .mini-card-date {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        .mini-card-amount {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* Feedback Loop Section */
+        .feedback-section {
+            background: var(--bg-surface);
+        }
+
+        .feedback-diagram {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 48px;
+            margin-top: 48px;
+        }
+
+        .feedback-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .feedback-node {
+            flex: 1;
+            min-width: 200px;
+            max-width: 280px;
+            padding: 24px;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feedback-node:hover {
+            transform: translateY(-4px);
+        }
+
+        .feedback-node.rhetorical {
+            background: var(--accent-purple-dim);
+            border: 1px solid rgba(167,139,250,0.3);
+        }
+
+        .feedback-node.canonical {
+            background: var(--accent-blue-dim);
+            border: 1px solid rgba(96,165,250,0.3);
+        }
+
+        .feedback-node.residual {
+            background: var(--accent-green-dim);
+            border: 1px solid rgba(74,222,128,0.3);
+        }
+
+        .feedback-node.telemetry {
+            background: var(--accent-amber-dim);
+            border: 1px solid rgba(251,191,36,0.3);
+        }
+
+        .feedback-node-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 24px;
+        }
+
+        .feedback-node.rhetorical .feedback-node-icon {
+            background: rgba(167,139,250,0.2);
+            color: var(--accent-purple);
+        }
+
+        .feedback-node.canonical .feedback-node-icon {
+            background: rgba(96,165,250,0.2);
+            color: var(--accent-blue);
+        }
+
+        .feedback-node.residual .feedback-node-icon {
+            background: rgba(74,222,128,0.2);
+            color: var(--accent-green);
+        }
+
+        .feedback-node.telemetry .feedback-node-icon {
+            background: rgba(251,191,36,0.2);
+            color: var(--accent-amber);
+        }
+
+        .feedback-node-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .feedback-node-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .feedback-arrow {
+            color: var(--text-muted);
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .feedback-insight {
+            margin-top: 32px;
+            padding: 24px;
+            background: rgba(251,191,36,0.08);
+            border-left: 3px solid var(--accent-amber);
+            border-radius: 0 12px 12px 0;
+        }
+
+        .feedback-insight-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--accent-amber);
+            margin-bottom: 8px;
+        }
+
+        .feedback-insight-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* GATO Connection Section */
+        .gato-section {
+            background: linear-gradient(180deg, var(--bg-surface) 0%, var(--bg-deep) 100%);
+        }
+
+        .gato-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            margin-top: 48px;
+        }
+
+        @media (max-width: 768px) {
+            .gato-comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .gato-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.3s ease;
+        }
+
+        .gato-card:hover {
+            border-color: var(--border-medium);
+        }
+
+        .gato-card.audio {
+            border-top: 3px solid var(--accent-purple);
+        }
+
+        .gato-card.emotional {
+            border-top: 3px solid var(--accent-green);
+        }
+
+        .gato-card-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .gato-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .gato-card.audio .gato-card-icon {
+            background: var(--accent-purple-dim);
+            color: var(--accent-purple);
+        }
+
+        .gato-card.emotional .gato-card-icon {
+            background: var(--accent-green-dim);
+            color: var(--accent-green);
+        }
+
+        .gato-card-title {
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .gato-card-subtitle {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .gato-card-body {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        .gato-features {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .gato-feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .gato-feature .material-symbols-outlined {
+            font-size: 18px;
+            color: var(--accent-green);
+            flex-shrink: 0;
+        }
+
+        /* Synthesis Table */
+        .synthesis-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 48px;
+        }
+
+        .synthesis-table th,
+        .synthesis-table td {
+            padding: 20px 24px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .synthesis-table th {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-weight: 500;
+            background: var(--bg-card);
+        }
+
+        .synthesis-table td:first-child {
+            font-weight: 500;
+            color: var(--accent-blue);
+        }
+
+        .synthesis-table td:nth-child(2) {
+            color: var(--text-secondary);
+        }
+
+        .synthesis-table td:last-child {
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .synthesis-table tr {
+            transition: background 0.3s ease;
+        }
+
+        .synthesis-table tbody tr:hover {
+            background: rgba(255,255,255,0.02);
+        }
+
+        /* Footer */
+        footer {
+            padding: 80px 24px;
+            text-align: center;
+            border-top: 1px solid var(--border-subtle);
+            background: var(--bg-deep);
+        }
+
+        .footer-quote {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: clamp(24px, 4vw, 32px);
+            font-style: italic;
+            max-width: 700px;
+            margin: 0 auto 32px;
+            line-height: 1.4;
+        }
+
+        .footer-quote em {
+            color: var(--accent-green);
+        }
+
+        .footer-meta {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .footer-link {
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--accent-blue);
+        }
+
+        .footer-link .material-symbols-outlined {
+            font-size: 16px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            section {
+                padding: 80px 20px;
+            }
+
+            .architecture-diagram {
+                padding: 24px;
+            }
+
+            .arch-layer {
+                padding: 20px;
+            }
+
+            .timeline-states {
+                flex-wrap: wrap;
+                gap: 24px;
+                justify-content: center;
+            }
+
+            .timeline-track {
+                display: none;
+            }
+
+            .card-demo-container {
+                gap: 32px;
+            }
+
+            .transaction-card {
+                width: 100%;
+                max-width: 320px;
+            }
+
+            .feedback-flow {
+                flex-direction: column;
+            }
+
+            .feedback-arrow {
+                transform: rotate(90deg);
+            }
+
+            .synthesis-table {
+                font-size: 13px;
+            }
+
+            .synthesis-table th,
+            .synthesis-table td {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-badge">
+            <span class="material-symbols-outlined" style="font-size: 14px;">layers</span>
+            Designness Architecture Extension
+            <span>•</span>
+            <span>Residual Layer</span>
+        </div>
+        <h1 class="hero-title">Transaction<br><em>Materiality</em></h1>
+        <p class="hero-subtitle">
+            Treating digital transactions as material artifacts with physical properties—
+            color, texture, form, opacity—that encode emotional metadata across their lifecycle.
+        </p>
+        <div class="hero-meta">
+            <div class="hero-meta-item">
+                <span class="material-symbols-outlined">fingerprint</span>
+                User-Generated Meta Content
+            </div>
+            <div class="hero-meta-item">
+                <span class="material-symbols-outlined">public</span>
+                Population-Scale DPI
+            </div>
+            <div class="hero-meta-item">
+                <span class="material-symbols-outlined">psychology</span>
+                Affective Telemetry
+            </div>
+        </div>
+        <div class="scroll-cue">
+            <span>Scroll to explore</span>
+            <div class="arrow"></div>
+        </div>
+    </section>
+
+    <!-- Architecture Section -->
+    <section class="architecture-section">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="part-label">Part 01</div>
+                <div class="section-label">Three-Layer Architecture</div>
+                <h2 class="section-title">Completing the Temporal Arc</h2>
+                <p class="section-intro">
+                    GATO introduced the Rhetorical (before) and Canonical (during) layers. 
+                    We now add the <strong>Residual Layer</strong>—user-generated emotional metadata 
+                    that captures how transactions <em>felt</em>, not just what they did.
+                </p>
+            </div>
+
+            <div class="architecture-diagram reveal">
+                <div class="arch-layers">
+                    <div class="arch-layer rhetorical reveal-left stagger-1">
+                        <div class="arch-layer-header">
+                            <div>
+                                <div class="arch-layer-title">Rhetorical Layer</div>
+                                <div class="arch-layer-subtitle">Before • AI-Generated • GATO</div>
+                            </div>
+                            <div class="arch-layer-badge">Generative, Adaptive</div>
+                        </div>
+                        <div class="arch-layer-content">
+                            <div class="arch-layer-item">Context inference</div>
+                            <div class="arch-layer-item">Language selection</div>
+                            <div class="arch-layer-item">Audio tooltips</div>
+                            <div class="arch-layer-item">Trust building</div>
+                            <div class="arch-layer-item">Complexity reduction</div>
+                            <div class="arch-layer-item">Personalized guidance</div>
+                        </div>
+                    </div>
+
+                    <div class="arch-connector">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 5v14M19 12l-7 7-7-7"/>
+                        </svg>
+                    </div>
+
+                    <div class="arch-layer canonical reveal-left stagger-2">
+                        <div class="arch-layer-header">
+                            <div>
+                                <div class="arch-layer-title">Canonical Layer</div>
+                                <div class="arch-layer-subtitle">During • Server-Driven UI • SDUI</div>
+                            </div>
+                            <div class="arch-layer-badge">Deterministic, Certified</div>
+                        </div>
+                        <div class="arch-layer-content">
+                            <div class="arch-layer-item">Data collection forms</div>
+                            <div class="arch-layer-item">Field validation</div>
+                            <div class="arch-layer-item">Authentication flows</div>
+                            <div class="arch-layer-item">Consent capture</div>
+                            <div class="arch-layer-item">Transaction execution</div>
+                            <div class="arch-layer-item">Audit trail</div>
+                        </div>
+                    </div>
+
+                    <div class="arch-connector">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 5v14M19 12l-7 7-7-7"/>
+                        </svg>
+                    </div>
+
+                    <div class="arch-layer residual reveal-left stagger-3">
+                        <div class="arch-layer-header">
+                            <div>
+                                <div class="arch-layer-title">Residual Layer</div>
+                                <div class="arch-layer-subtitle">After • User-Generated • Emotional Trace</div>
+                            </div>
+                            <div class="arch-layer-badge">Affective, Additive</div>
+                        </div>
+                        <div class="arch-layer-content">
+                            <div class="arch-layer-item">Emotional encoding</div>
+                            <div class="arch-layer-item">Gesture-based tagging</div>
+                            <div class="arch-layer-item">Confidence scoring</div>
+                            <div class="arch-layer-item">User criticality flags</div>
+                            <div class="arch-layer-item">Bucket organization</div>
+                            <div class="arch-layer-item">Aging & resolution</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section class="timeline-section">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="part-label">Part 02</div>
+                <div class="section-label">Transaction Lifecycle</div>
+                <h2 class="section-title">States Over Time</h2>
+                <p class="section-intro">
+                    A transaction isn't a point-event—it's a temporal object that moves through 
+                    distinct states, each with visual and material properties that communicate 
+                    its status and emotional significance.
+                </p>
+            </div>
+
+            <div class="timeline-container reveal">
+                <div class="timeline-track"></div>
+                <div class="timeline-states">
+                    <div class="timeline-state reveal stagger-1">
+                        <div class="timeline-node intent">
+                            <span class="material-symbols-outlined">lightbulb</span>
+                        </div>
+                        <div class="timeline-label">Intent</div>
+                        <div class="timeline-desc">Need emerges, potential energy</div>
+                    </div>
+                    <div class="timeline-state reveal stagger-2">
+                        <div class="timeline-node consent">
+                            <span class="material-symbols-outlined">verified</span>
+                        </div>
+                        <div class="timeline-label">Consent</div>
+                        <div class="timeline-desc">Commitment made, crystallization</div>
+                    </div>
+                    <div class="timeline-state reveal stagger-3">
+                        <div class="timeline-node execute">
+                            <span class="material-symbols-outlined">bolt</span>
+                        </div>
+                        <div class="timeline-label">Execute</div>
+                        <div class="timeline-desc">Peak presence, full saturation</div>
+                    </div>
+                    <div class="timeline-state reveal stagger-4">
+                        <div class="timeline-node record">
+                            <span class="material-symbols-outlined">receipt_long</span>
+                        </div>
+                        <div class="timeline-label">Record</div>
+                        <div class="timeline-desc">Fresh artifact, sharp fidelity</div>
+                    </div>
+                    <div class="timeline-state reveal stagger-5">
+                        <div class="timeline-node aging">
+                            <span class="material-symbols-outlined">hourglass_empty</span>
+                        </div>
+                        <div class="timeline-label">Aging</div>
+                        <div class="timeline-desc">Fade, crumple, or resolve</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Card Demo Section -->
+    <section class="card-demo-section">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="part-label">Part 03</div>
+                <div class="section-label">Interactive Demo</div>
+                <h2 class="section-title">Experience Transaction Materiality</h2>
+                <p class="section-intro">
+                    Manipulate the transaction card to see how lifecycle state and emotional 
+                    encoding transform its visual properties—color, texture, form, and opacity.
+                </p>
+            </div>
+
+            <div class="card-demo-container">
+                <div class="card-controls reveal-left">
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span class="material-symbols-outlined">timeline</span>
+                            Lifecycle Stage
+                        </div>
+                        <input type="range" class="lifecycle-slider" id="lifecycleSlider" min="0" max="4" value="3" step="1">
+                        <div class="lifecycle-labels">
+                            <span>Intent</span>
+                            <span>Consent</span>
+                            <span>Execute</span>
+                            <span>Record</span>
+                            <span>Aging</span>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span class="material-symbols-outlined">mood</span>
+                            Emotional Encoding
+                        </div>
+                        <div class="emotion-buttons">
+                            <button class="emotion-btn neutral active" data-emotion="neutral">
+                                <span>○</span> Neutral
+                            </button>
+                            <button class="emotion-btn relief" data-emotion="relief">
+                                <span>●</span> Relief
+                            </button>
+                            <button class="emotion-btn anxious" data-emotion="anxious">
+                                <span>●</span> Anxious
+                            </button>
+                            <button class="emotion-btn confused" data-emotion="confused">
+                                <span>●</span> Confused
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span class="material-symbols-outlined">gesture</span>
+                            Resolution State
+                        </div>
+                        <div class="emotion-buttons">
+                            <button class="emotion-btn neutral active" data-resolution="normal" id="normalBtn">
+                                Normal
+                            </button>
+                            <button class="emotion-btn" data-resolution="crumpled" id="crumpleBtn" style="color: var(--accent-red);">
+                                <span class="material-symbols-outlined" style="font-size: 16px;">texture</span>
+                                Crumpled
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="control-group" style="background: var(--accent-blue-dim); border-color: rgba(96,165,250,0.2);">
+                        <div class="control-label" style="color: var(--accent-blue);">
+                            <span class="material-symbols-outlined">info</span>
+                            Current State
+                        </div>
+                        <div id="stateDescription" style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+                            <strong>Record</strong> — Fresh transaction artifact with sharp edges and full opacity. Ready for emotional encoding.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-preview reveal-right">
+                    <div class="transaction-card state-record" id="transactionCard">
+                        <div class="card-header">
+                            <div class="card-merchant">
+                                <div class="merchant-icon">VM</div>
+                                <div>
+                                    <div class="merchant-name">Vijay Medical Store</div>
+                                    <div class="merchant-category">Healthcare • Pharmacy</div>
+                                </div>
+                            </div>
+                            <div class="card-timestamp">
+                                2 Jan 2026<br>11:34 AM
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-amount">₹2,450</div>
+                            <div class="card-status">
+                                <span class="material-symbols-outlined">check_circle</span>
+                                Payment successful
+                            </div>
+                            <div class="card-details">
+                                <div class="card-detail-row">
+                                    <span class="card-detail-label">UPI ID</span>
+                                    <span class="card-detail-value">vijaymedical@upi</span>
+                                </div>
+                                <div class="card-detail-row">
+                                    <span class="card-detail-label">Transaction ID</span>
+                                    <span class="card-detail-value">UPI/537829461023</span>
+                                </div>
+                                <div class="card-detail-row">
+                                    <span class="card-detail-label">Account</span>
+                                    <span class="card-detail-value">HDFC ••••4521</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="card-emotion-tag neutral" id="emotionTag">
+                                <span>○</span> No emotion tagged
+                            </div>
+                            <div class="card-confidence">
+                                AI Confidence
+                                <div class="confidence-bar">
+                                    <div class="confidence-fill" style="width: 85%;"></div>
+                                </div>
+                                85%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Visual Language Section -->
+    <section class="visual-language-section">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="part-label">Part 04</div>
+                <div class="section-label">Visual Language System</div>
+                <h2 class="section-title">The Grammar of Materiality</h2>
+                <p class="section-intro">
+                    Four visual dimensions encode transaction state and emotion—creating 
+                    a pre-linguistic grammar that communicates across literacy levels.
+                </p>
+            </div>
+
+            <div class="visual-grid">
+                <div class="visual-card reveal stagger-1">
+                    <div class="visual-card-icon color">🎨</div>
+                    <div class="visual-card-title">Color</div>
+                    <div class="visual-card-desc">
+                        Emotional valence encoded through color wash. Leverages ecological 
+                        associations—traffic signals, nature, universal metaphors.
+                    </div>
+                    <div class="visual-mapping">
+                        <div class="visual-mapping-item">
+                            <div class="visual-mapping-indicator green"></div>
+                            Relief, safety, confidence
+                        </div>
+                        <div class="visual-mapping-item">
+                            <div class="visual-mapping-indicator red"></div>
+                            Anxiety, worry, fear
+                        </div>
+                        <div class="visual-mapping-item">
+                            <div class="visual-mapping-indicator amber"></div>
+                            Confusion, uncertainty
+                        </div>
+                    </div>
+                </div>
+
+                <div class="visual-card reveal stagger-2">
+                    <div class="visual-card-icon texture">◐</div>
+                    <div class="visual-card-title">Texture</div>
+                    <div class="visual-card-desc">
+                        AI confidence and certainty rendered as surface quality. 
+                        High confidence is smooth; uncertainty introduces grain and noise.
+                    </div>
+                    <div class="visual-mapping">
+                        <div class="visual-mapping-item">
+                            <div class="visual-mapping-indicator smooth"></div>
+                            High confidence (smooth, matte)
+                        </div>
+                        <div class="visual-mapping-item">
+                            <div class="visual-mapping-indicator rough"></div>
+                            Low confidence (grainy, noisy)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="visual-card reveal stagger-3">
+                    <div class="visual-card-icon form">◇</div>
+                    <div class="visual-card-title">Form</div>
+                    <div class="visual-card-desc">
+                        Lifecycle state expressed through shape—from sharp crystalline 
+                        active states to soft diffuse aging, to crumpled unresolved.
+                    </div>
+                    <div class="visual-mapping">
+                        <div class="visual-mapping-item">
+                            <div class="visual-mapping-indicator sharp"></div>
+                            Active (sharp, crystalline)
+                        </div>
+                        <div class="visual-mapping-item">
+                            <div class="visual-mapping-indicator rounded"></div>
+                            Aging (soft, rounded)
+                        </div>
+                        <div class="visual-mapping-item">
+                            <div class="visual-mapping-indicator crumpled-mini"></div>
+                            Unresolved (crumpled, folded)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="visual-card reveal stagger-4">
+                    <div class="visual-card-icon opacity">◔</div>
+                    <div class="visual-card-title">Opacity</div>
+                    <div class="visual-card-desc">
+                        Recency and relevance through transparency. Recent transactions 
+                        are vivid; historical ones fade toward archive.
+                    </div>
+                    <div class="visual-mapping">
+                        <div class="visual-mapping-item">
+                            <div class="visual-mapping-indicator" style="background: white;"></div>
+                            Recent (full opacity, vivid)
+                        </div>
+                        <div class="visual-mapping-item">
+                            <div class="visual-mapping-indicator" style="background: rgba(255,255,255,0.5);"></div>
+                            Historical (fading, translucent)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Buckets Section -->
+    <section class="buckets-section">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="part-label">Part 05</div>
+                <div class="section-label">Emotional Buckets</div>
+                <h2 class="section-title">Organizing by Feeling</h2>
+                <p class="section-intro">
+                    User-defined mnemonics transform transaction history into emotionally rich galleries. 
+                    "Show me my reds" becomes a fear review; "Things for Mom" becomes a relational archive.
+                </p>
+            </div>
+
+            <div class="buckets-demo">
+                <div class="bucket reveal stagger-1">
+                    <div class="bucket-header">
+                        <div class="bucket-icon fear">
+                            <span class="material-symbols-outlined">warning</span>
+                        </div>
+                        <div>
+                            <div class="bucket-title">"Show me my reds"</div>
+                            <div class="bucket-count">Fear Review • 4 items</div>
+                        </div>
+                    </div>
+                    <div class="bucket-cards">
+                        <div class="mini-card red-tint">
+                            <div class="mini-card-info">
+                                <div class="mini-card-merchant">Ration Shop POS</div>
+                                <div class="mini-card-date">28 Dec • Confused</div>
+                            </div>
+                            <div class="mini-card-amount">₹340</div>
+                        </div>
+                        <div class="mini-card red-tint">
+                            <div class="mini-card-info">
+                                <div class="mini-card-merchant">ATM Withdrawal</div>
+                                <div class="mini-card-date">25 Dec • Anxious</div>
+                            </div>
+                            <div class="mini-card-amount">₹5,000</div>
+                        </div>
+                        <div class="mini-card red-tint">
+                            <div class="mini-card-info">
+                                <div class="mini-card-merchant">Unknown Merchant</div>
+                                <div class="mini-card-date">22 Dec • Worried</div>
+                            </div>
+                            <div class="mini-card-amount">₹1,200</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bucket reveal stagger-2">
+                    <div class="bucket-header">
+                        <div class="bucket-icon medical">
+                            <span class="material-symbols-outlined">local_hospital</span>
+                        </div>
+                        <div>
+                            <div class="bucket-title">Medical</div>
+                            <div class="bucket-count">Domain Bucket • 7 items</div>
+                        </div>
+                    </div>
+                    <div class="bucket-cards">
+                        <div class="mini-card green-tint">
+                            <div class="mini-card-info">
+                                <div class="mini-card-merchant">Vijay Medical Store</div>
+                                <div class="mini-card-date">2 Jan • Relief</div>
+                            </div>
+                            <div class="mini-card-amount">₹2,450</div>
+                        </div>
+                        <div class="mini-card green-tint">
+                            <div class="mini-card-info">
+                                <div class="mini-card-merchant">Apollo Pharmacy</div>
+                                <div class="mini-card-date">30 Dec • Relief</div>
+                            </div>
+                            <div class="mini-card-amount">₹890</div>
+                        </div>
+                        <div class="mini-card amber-tint">
+                            <div class="mini-card-info">
+                                <div class="mini-card-merchant">City Hospital</div>
+                                <div class="mini-card-date">15 Dec • Anxious</div>
+                            </div>
+                            <div class="mini-card-amount">₹15,000</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bucket reveal stagger-3">
+                    <div class="bucket-header">
+                        <div class="bucket-icon family">
+                            <span class="material-symbols-outlined">favorite</span>
+                        </div>
+                        <div>
+                            <div class="bucket-title">"Things for Amma"</div>
+                            <div class="bucket-count">Relational Bucket • 12 items</div>
+                        </div>
+                    </div>
+                    <div class="bucket-cards">
+                        <div class="mini-card green-tint">
+                            <div class="mini-card-info">
+                                <div class="mini-card-merchant">Saree Palace</div>
+                                <div class="mini-card-date">1 Jan • Proud</div>
+                            </div>
+                            <div class="mini-card-amount">₹4,500</div>
+                        </div>
+                        <div class="mini-card green-tint">
+                            <div class="mini-card-info">
+                                <div class="mini-card-merchant">BSNL Recharge</div>
+                                <div class="mini-card-date">28 Dec • Caring</div>
+                            </div>
+                            <div class="mini-card-amount">₹299</div>
+                        </div>
+                        <div class="mini-card blue-tint">
+                            <div class="mini-card-info">
+                                <div class="mini-card-merchant">Eye Specialist</div>
+                                <div class="mini-card-date">20 Dec • Concerned</div>
+                            </div>
+                            <div class="mini-card-amount">₹1,800</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bucket reveal stagger-4">
+                    <div class="bucket-header">
+                        <div class="bucket-icon agent">
+                            <span class="material-symbols-outlined">person_pin</span>
+                        </div>
+                        <div>
+                            <div class="bucket-title">"Ravi handled"</div>
+                            <div class="bucket-count">Agent-Mediated • 5 items</div>
+                        </div>
+                    </div>
+                    <div class="bucket-cards">
+                        <div class="mini-card amber-tint">
+                            <div class="mini-card-info">
+                                <div class="mini-card-merchant">Electricity Bill</div>
+                                <div class="mini-card-date">29 Dec • Delegated</div>
+                            </div>
+                            <div class="mini-card-amount">₹2,100</div>
+                        </div>
+                        <div class="mini-card amber-tint">
+                            <div class="mini-card-info">
+                                <div class="mini-card-merchant">Gas Cylinder</div>
+                                <div class="mini-card-date">25 Dec • Delegated</div>
+                            </div>
+                            <div class="mini-card-amount">₹1,050</div>
+                        </div>
+                        <div class="mini-card green-tint">
+                            <div class="mini-card-info">
+                                <div class="mini-card-merchant">Property Tax</div>
+                                <div class="mini-card-date">20 Dec • Grateful</div>
+                            </div>
+                            <div class="mini-card-amount">₹8,400</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feedback Loop Section -->
+    <section class="feedback-section">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="part-label">Part 06</div>
+                <div class="section-label">System Intelligence</div>
+                <h2 class="section-title">The Feedback Loop</h2>
+                <p class="section-intro">
+                    Emotional metadata flows back to the Rhetorical Layer—enabling GATO to 
+                    reference past emotional patterns and provide anticipatory guidance.
+                </p>
+            </div>
+
+            <div class="feedback-diagram reveal">
+                <div class="feedback-flow">
+                    <div class="feedback-node rhetorical">
+                        <div class="feedback-node-icon">
+                            <span class="material-symbols-outlined">record_voice_over</span>
+                        </div>
+                        <div class="feedback-node-title">Rhetorical</div>
+                        <div class="feedback-node-desc">GATO audio guidance adapts to emotional history</div>
+                    </div>
+                    <div class="feedback-arrow">→</div>
+                    <div class="feedback-node canonical">
+                        <div class="feedback-node-icon">
+                            <span class="material-symbols-outlined">verified_user</span>
+                        </div>
+                        <div class="feedback-node-title">Canonical</div>
+                        <div class="feedback-node-desc">SDUI transaction executed</div>
+                    </div>
+                    <div class="feedback-arrow">→</div>
+                    <div class="feedback-node residual">
+                        <div class="feedback-node-icon">
+                            <span class="material-symbols-outlined">gesture</span>
+                        </div>
+                        <div class="feedback-node-title">Residual</div>
+                        <div class="feedback-node-desc">User encodes emotion via gesture</div>
+                    </div>
+                    <div class="feedback-arrow">→</div>
+                    <div class="feedback-node telemetry">
+                        <div class="feedback-node-icon">
+                            <span class="material-symbols-outlined">analytics</span>
+                        </div>
+                        <div class="feedback-node-title">Telemetry</div>
+                        <div class="feedback-node-desc">Patterns aggregated and fed back</div>
+                    </div>
+                </div>
+
+                <div class="feedback-insight">
+                    <div class="feedback-insight-title">Example Inference</div>
+                    <div class="feedback-insight-text">
+                        Pattern detected: "Ration shop POS transactions cluster RED across 47% of users in Block A."<br>
+                        <strong>Inference:</strong> UX friction point. GATO pre-emptively offers extended guidance 
+                        when ration shop context is detected. System flags for UX team review.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GATO Connection Section -->
+    <section class="gato-section">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="part-label">Part 07</div>
+                <div class="section-label">Multimodal Complement</div>
+                <h2 class="section-title">Two Sides of User-Generated Meta</h2>
+                <p class="section-intro">
+                    GATO provides AI-generated audio guidance before transactions. 
+                    Emotional Embedding captures user-generated affect after transactions. 
+                    Together they complete the experiential picture.
+                </p>
+            </div>
+
+            <div class="gato-comparison">
+                <div class="gato-card audio reveal-left">
+                    <div class="gato-card-header">
+                        <div class="gato-card-icon">
+                            <span class="material-symbols-outlined">volume_up</span>
+                        </div>
+                        <div>
+                            <div class="gato-card-title">GATO Audio Tips</div>
+                            <div class="gato-card-subtitle">AI-Generated • Pre-Transaction</div>
+                        </div>
+                    </div>
+                    <div class="gato-card-body">
+                        Generative Audio-Tooltip Overlay provides contextual explanations 
+                        in 22+ languages, helping users understand what they're about to do 
+                        without requiring literacy or technical familiarity.
+                    </div>
+                    <div class="gato-features">
+                        <div class="gato-feature">
+                            <span class="material-symbols-outlined">check_circle</span>
+                            Zero UI modification required
+                        </div>
+                        <div class="gato-feature">
+                            <span class="material-symbols-outlined">check_circle</span>
+                            Context-aware explanations via SLM
+                        </div>
+                        <div class="gato-feature">
+                            <span class="material-symbols-outlined">check_circle</span>
+                            Graceful degradation to canonical
+                        </div>
+                        <div class="gato-feature">
+                            <span class="material-symbols-outlined">check_circle</span>
+                            Reduces form abandonment
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gato-card emotional reveal-right">
+                    <div class="gato-card-header">
+                        <div class="gato-card-icon">
+                            <span class="material-symbols-outlined">gesture</span>
+                        </div>
+                        <div>
+                            <div class="gato-card-title">Emotional Embedding</div>
+                            <div class="gato-card-subtitle">User-Generated • Post-Transaction</div>
+                        </div>
+                    </div>
+                    <div class="gato-card-body">
+                        Gesture-based emotional encoding captures how users felt about 
+                        transactions—creating a rich affective layer that informs future 
+                        guidance and reveals systemic UX friction points.
+                    </div>
+                    <div class="gato-features">
+                        <div class="gato-feature">
+                            <span class="material-symbols-outlined">check_circle</span>
+                            Pre-linguistic motor patterns
+                        </div>
+                        <div class="gato-feature">
+                            <span class="material-symbols-outlined">check_circle</span>
+                            Additive to canonical records
+                        </div>
+                        <div class="gato-feature">
+                            <span class="material-symbols-outlined">check_circle</span>
+                            Feeds back to rhetorical layer
+                        </div>
+                        <div class="gato-feature">
+                            <span class="material-symbols-outlined">check_circle</span>
+                            Creates fear telemetry signal
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Synthesis Section -->
+    <section style="background: var(--bg-deep);">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="part-label">Part 08</div>
+                <div class="section-label">Framework Synthesis</div>
+                <h2 class="section-title">Design Principles</h2>
+                <p class="section-intro">
+                    The complete mapping from transaction lifecycle to visual materiality—
+                    a pre-linguistic grammar for billion-user emotional telemetry.
+                </p>
+            </div>
+
+            <table class="synthesis-table reveal">
+                <thead>
+                    <tr>
+                        <th>Lifecycle Phase</th>
+                        <th>Visual Expression</th>
+                        <th>Design Rationale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Intent / Need</td>
+                        <td>Translucent, soft edges, pulsing</td>
+                        <td>Potential energy, not yet committed</td>
+                    </tr>
+                    <tr>
+                        <td>Consent / Commit</td>
+                        <td>Crystallizing, edges sharpening</td>
+                        <td>Decision made, form emerging</td>
+                    </tr>
+                    <tr>
+                        <td>Execution</td>
+                        <td>Peak saturation, full presence</td>
+                        <td>Maximum attention, action moment</td>
+                    </tr>
+                    <tr>
+                        <td>Fresh Record</td>
+                        <td>Sharp corners, high fidelity</td>
+                        <td>Artifact crystallized, ready for encoding</td>
+                    </tr>
+                    <tr>
+                        <td>Emotional Encoding</td>
+                        <td>Color wash (green/red/amber)</td>
+                        <td>User-generated affective metadata</td>
+                    </tr>
+                    <tr>
+                        <td>AI Confidence Scoring</td>
+                        <td>Texture (smooth/grainy)</td>
+                        <td>System certainty rendered as surface quality</td>
+                    </tr>
+                    <tr>
+                        <td>Aging</td>
+                        <td>Desaturation, softening, rounding</td>
+                        <td>Time decay, moving toward archive</td>
+                    </tr>
+                    <tr>
+                        <td>Resolution / Fade</td>
+                        <td>Transparency, dissolution</td>
+                        <td>Completed, no longer requiring attention</td>
+                    </tr>
+                    <tr>
+                        <td>Unresolved / Crumple</td>
+                        <td>3D fold, distortion, shadow</td>
+                        <td>Won't let you forget—needs attention</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="reveal">
+                <p class="footer-quote">
+                    "Emotional residue is <em>data</em>. The million journeys aren't just 
+                    functional paths but affective trajectories."
+                </p>
+                <div class="footer-meta">
+                    Transaction Materiality Framework • UIDAI Designness Architecture • Sri Srinivasan • January 2026
+                </div>
+                <div class="footer-links">
+                    <a href="https://saxllc.github.io/posts/newgato.html" class="footer-link">
+                        <span class="material-symbols-outlined">link</span>
+                        GATO & Designness Architecture
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll-triggered reveal animations
+        function reveal() {
+            const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
+            
+            for (let i = 0; i < reveals.length; i++) {
+                const windowHeight = window.innerHeight;
+                const elementTop = reveals[i].getBoundingClientRect().top;
+                const elementVisible = 100;
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add('active');
+                }
+            }
+        }
+
+        window.addEventListener('scroll', reveal);
+        window.addEventListener('load', reveal);
+
+        // Transaction Card Demo Logic
+        const lifecycleSlider = document.getElementById('lifecycleSlider');
+        const transactionCard = document.getElementById('transactionCard');
+        const emotionTag = document.getElementById('emotionTag');
+        const stateDescription = document.getElementById('stateDescription');
+        const emotionButtons = document.querySelectorAll('.emotion-btn[data-emotion]');
+        const resolutionButtons = document.querySelectorAll('.emotion-btn[data-resolution]');
+
+        const lifecycleStates = ['intent', 'consent', 'execute', 'record', 'aging'];
+        const stateDescriptions = {
+            intent: '<strong>Intent</strong> — Emerging need, potential energy. Transaction is translucent, edges soft, form not yet crystallized.',
+            consent: '<strong>Consent</strong> — Commitment made, crystallizing. Edges sharpening, form solidifying, decision locked in.',
+            execute: '<strong>Execute</strong> — Peak presence, action moment. Full saturation, maximum visual weight, the doing.',
+            record: '<strong>Record</strong> — Fresh artifact with sharp edges and full opacity. Ready for emotional encoding.',
+            aging: '<strong>Aging</strong> — Time decay in progress. Desaturation, corners rounding, opacity fading toward archive.'
+        };
+
+        const emotionConfigs = {
+            neutral: { class: 'neutral', tag: '<span>○</span> No emotion tagged', tagClass: 'neutral' },
+            relief: { class: 'relief', tag: '<span>●</span> Feeling: Relieved', tagClass: 'relief' },
+            anxious: { class: 'anxious', tag: '<span>●</span> Feeling: Anxious', tagClass: 'anxious' },
+            confused: { class: 'confused', tag: '<span>●</span> Feeling: Confused', tagClass: 'confused' }
+        };
+
+        let currentEmotion = 'neutral';
+        let currentResolution = 'normal';
+
+        function updateCard() {
+            const stateIndex = parseInt(lifecycleSlider.value);
+            const state = lifecycleStates[stateIndex];
+            
+            // Remove all state classes
+            transactionCard.classList.remove('state-intent', 'state-consent', 'state-execute', 'state-record', 'state-aging');
+            transactionCard.classList.remove('emotion-relief', 'emotion-anxious', 'emotion-confused');
+            transactionCard.classList.remove('crumpled');
+            
+            // Add current state
+            transactionCard.classList.add('state-' + state);
+            
+            // Add emotion if applicable (only for record and aging states)
+            if ((state === 'record' || state === 'aging') && currentEmotion !== 'neutral') {
+                transactionCard.classList.add('emotion-' + currentEmotion);
+            }
+            
+            // Add crumple if applicable
+            if (currentResolution === 'crumpled' && state === 'aging') {
+                transactionCard.classList.add('crumpled');
+            }
+            
+            // Update emotion tag
+            const emotion = emotionConfigs[currentEmotion];
+            emotionTag.innerHTML = emotion.tag;
+            emotionTag.className = 'card-emotion-tag ' + emotion.tagClass;
+            
+            // Update description
+            stateDescription.innerHTML = stateDescriptions[state];
+        }
+
+        lifecycleSlider.addEventListener('input', updateCard);
+
+        emotionButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                emotionButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentEmotion = btn.dataset.emotion;
+                updateCard();
+            });
+        });
+
+        resolutionButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                resolutionButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentResolution = btn.dataset.resolution;
+                updateCard();
+            });
+        });
+
+        // Timeline node interactions
+        const timelineNodes = document.querySelectorAll('.timeline-node');
+        timelineNodes.forEach((node, index) => {
+            node.addEventListener('click', () => {
+                lifecycleSlider.value = index;
+                updateCard();
+            });
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
