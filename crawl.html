@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Website Crawler</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+
+        .content {
+            padding: 2rem;
+        }
+
+        .config-section {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border: 2px solid #e2e8f0;
+        }
+
+        .config-section h2 {
+            font-size: 1.25rem;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .btn-stop {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            margin-top: 0;
+        }
+
+        .status-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            margin-bottom: 2rem;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e293b;
+            display: block;
+        }
+
+        .stat-card .label {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-top: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .log-section {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .log-entry {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #334155;
+        }
+
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+
+        .log-entry.success {
+            color: #86efac;
+        }
+
+        .log-entry.error {
+            color: #fca5a5;
+        }
+
+        .log-entry.warning {
+            color: #fde047;
+        }
+
+        .log-entry.info {
+            color: #7dd3fc;
+        }
+
+        .log-entry .timestamp {
+            color: #94a3b8;
+            margin-right: 0.5rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            transition: width 0.3s;
+            border-radius: 4px;
+        }
+
+        .alert {
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border: 2px solid;
+        }
+
+        .alert-warning {
+            background: #fef3c7;
+            border-color: #fbbf24;
+        }
+
+        .alert-info {
+            background: #dbeafe;
+            border-color: #3b82f6;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            border-color: #ef4444;
+        }
+
+        .alert h3 {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .alert-warning h3 { color: #92400e; }
+        .alert-info h3 { color: #1e40af; }
+        .alert-error h3 { color: #991b1b; }
+
+        .alert p {
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .alert-warning p { color: #78350f; }
+        .alert-info p { color: #1e3a8a; }
+        .alert-error p { color: #7f1d1d; }
+
+        .download-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        .help-text {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-top: 0.25rem;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🕷️ Website Crawler - Universal</h1>
+            <p>Browser-based sitemap generator for any website</p>
+        </div>
+
+        <div class="content">
+            <div class="alert alert-info" id="diagnosticAlert" style="display: none;">
+                <h3>🔍 Diagnostic Information</h3>
+                <p id="diagnosticText"></p>
+            </div>
+
+            <div class="alert alert-warning">
+                <h3>⚠️ Browser Crawler Limitations</h3>
+                <p>
+                    <strong>This tool works best for testing small sections of the website.</strong> 
+                    Browser-based crawlers face CORS restrictions that can cause failures.
+                    <br><br>
+                    <strong>If you experience failures:</strong>
+                    <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                        <li>Check the Activity Log for specific errors</li>
+                        <li>Try the "Direct Mode" (no CORS proxy - may fail on some sites)</li>
+                        <li>Reduce "Max Pages" for testing</li>
+                        <li>For production work: Use the Python version</li>
+                    </ul>
+                </p>
+            </div>
+
+            <div class="alert alert-info">
+                <h3>🚀 Quick Start</h3>
+                <p>
+                    <strong>Example URLs to try:</strong><br>
+                    • <code style="background: rgba(0,0,0,0.1); padding: 2px 6px; border-radius: 3px;">https://uidai.gov.in/en/</code> - UIDAI website<br>
+                    • <code style="background: rgba(0,0,0,0.1); padding: 2px 6px; border-radius: 3px;">https://example.com/</code> - Any website homepage<br>
+                    • <code style="background: rgba(0,0,0,0.1); padding: 2px 6px; border-radius: 3px;">https://docs.python.org/3/</code> - Python documentation<br>
+                    <br>
+                    <strong>Tips:</strong>
+                    <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                        <li>Start with Max Pages = 20-30 for testing</li>
+                        <li>The crawler automatically finds all linked pages</li>
+                        <li>URLs must include http:// or https://</li>
+                        <li>Trailing slashes are handled automatically</li>
+                    </ul>
+                </p>
+            </div>
+
+            <div class="config-section">
+                <h2>⚙️ Configuration</h2>
+                <div class="input-group">
+                    <label for="baseUrl">Starting URL</label>
+                    <input type="text" id="baseUrl" value="" placeholder="https://example.com/ or https://uidai.gov.in/en/">
+                    <div class="help-text">Enter the starting point for the crawl - will discover and crawl all pages under this URL</div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="crawlMode">Crawl Mode</label>
+                    <select id="crawlMode">
+                        <option value="proxy">CORS Proxy Mode (Recommended)</option>
+                        <option value="direct">Direct Mode (May fail due to CORS)</option>
+                    </select>
+                    <div class="help-text">Proxy mode uses a third-party service to bypass CORS</div>
+                </div>
+
+                <div class="settings-grid">
+                    <div class="input-group">
+                        <label for="minDelay">Min Delay (seconds)</label>
+                        <input type="number" id="minDelay" value="2" min="0.5" step="0.5">
+                    </div>
+                    <div class="input-group">
+                        <label for="maxDelay">Max Delay (seconds)</label>
+                        <input type="number" id="maxDelay" value="4" min="0.5" step="0.5">
+                    </div>
+                    <div class="input-group">
+                        <label for="maxPages">Max Pages</label>
+                        <input type="number" id="maxPages" value="50" min="5" step="5">
+                        <div class="help-text">Start small for testing</div>
+                    </div>
+                    <div class="input-group">
+                        <label for="timeout">Request Timeout (seconds)</label>
+                        <input type="number" id="timeout" value="30" min="10" step="5">
+                    </div>
+                </div>
+            </div>
+
+            <div class="status-section">
+                <h2>📊 Status</h2>
+                <div class="status-grid">
+                    <div class="stat-card">
+                        <span class="value" id="pagesCount">0</span>
+                        <span class="label">Pages Crawled</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="value" id="queueCount">0</span>
+                        <span class="label">Queue Size</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="value" id="failedCount">0</span>
+                        <span class="label">Failed</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="value" id="depthCount">0</span>
+                        <span class="label">Max Depth</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="value" id="successRate">0%</span>
+                        <span class="label">Success Rate</span>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <button class="btn" id="startBtn" onclick="startCrawl()">
+                Start Crawling
+            </button>
+            <button class="btn btn-stop" id="stopBtn" onclick="stopCrawl()" style="display: none;">
+                Stop Crawling
+            </button>
+            
+            <div class="download-buttons" id="downloadBtns" style="display: none;">
+                <button class="btn btn-download" onclick="downloadExcel()">
+                    📥 Download Excel
+                </button>
+                <button class="btn btn-download" onclick="downloadCSV()">
+                    📄 Download CSV
+                </button>
+            </div>
+
+            <div class="status-section" style="margin-top: 2rem;">
+                <h2>📝 Activity Log</h2>
+                <div class="log-section" id="logSection">
+                    <div class="log-entry">Ready to start crawling...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let crawlData = {
+            pages: [],
+            visited: new Set(),
+            failed: {},
+            queue: [],
+            isRunning: false,
+            maxDepth: 0,
+            attemptedPages: 0
+        };
+
+        function log(message, type = 'info') {
+            const logSection = document.getElementById('logSection');
+            const timestamp = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.innerHTML = `<span class="timestamp">[${timestamp}]</span>${message}`;
+            logSection.appendChild(entry);
+            logSection.scrollTop = logSection.scrollHeight;
+        }
+
+        function updateStats() {
+            document.getElementById('pagesCount').textContent = crawlData.pages.length;
+            document.getElementById('queueCount').textContent = crawlData.queue.length;
+            document.getElementById('failedCount').textContent = Object.keys(crawlData.failed).length;
+            document.getElementById('depthCount').textContent = crawlData.maxDepth;
+            
+            const successRate = crawlData.attemptedPages > 0 
+                ? Math.round((crawlData.pages.length / crawlData.attemptedPages) * 100) 
+                : 0;
+            document.getElementById('successRate').textContent = successRate + '%';
+            
+            const maxPages = parseInt(document.getElementById('maxPages').value);
+            const progress = Math.min((crawlData.pages.length / maxPages) * 100, 100);
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function showDiagnostic(message, type = 'info') {
+            const alert = document.getElementById('diagnosticAlert');
+            const text = document.getElementById('diagnosticText');
+            alert.className = `alert alert-${type}`;
+            text.innerHTML = message;
+            alert.style.display = 'block';
+        }
+
+        function normalizeUrl(url, baseUrl) {
+            try {
+                const parsed = new URL(url, baseUrl);
+                parsed.hash = '';
+                let normalized = parsed.href;
+                if (normalized.endsWith('/') && normalized !== baseUrl) {
+                    normalized = normalized.slice(0, -1);
+                }
+                return normalized;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function isValidUrl(url, baseUrl) {
+            try {
+                const base = new URL(baseUrl);
+                const target = new URL(url);
+                
+                if (target.hostname !== base.hostname) return false;
+                if (!url.startsWith(baseUrl)) return false;
+                
+                const skipExtensions = ['.pdf', '.jpg', '.jpeg', '.png', '.gif', '.zip', 
+                                       '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx',
+                                       '.css', '.js', '.json', '.xml', '.txt'];
+                if (skipExtensions.some(ext => url.toLowerCase().endsWith(ext))) return false;
+                
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        function parsePathHierarchy(path) {
+            if (!path) return ['Home'];
+            const parts = path.split('/').filter(p => p);
+            return parts.length > 0 ? parts : ['Home'];
+        }
+
+        function getPageDepth(url, baseUrl) {
+            const path = new URL(url).pathname.replace(new URL(baseUrl).pathname, '');
+            return parsePathHierarchy(path).length;
+        }
+
+        async function fetchWithProxy(url, timeout) {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+            try {
+                const proxies = [
+                    'https://api.allorigins.win/raw?url=',
+                    'https://corsproxy.io/?',
+                ];
+
+                for (const proxy of proxies) {
+                    try {
+                        const response = await fetch(proxy + encodeURIComponent(url), {
+                            signal: controller.signal
+                        });
+                        
+                        if (response.ok) {
+                            clearTimeout(timeoutId);
+                            return await response.text();
+                        }
+                    } catch (e) {
+                        if (e.name === 'AbortError') throw new Error('Timeout');
+                        continue;
+                    }
+                }
+                
+                throw new Error('All CORS proxies failed');
+            } finally {
+                clearTimeout(timeoutId);
+            }
+        }
+
+        async function fetchDirect(url, timeout) {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+            try {
+                const response = await fetch(url, {
+                    signal: controller.signal,
+                    mode: 'cors'
+                });
+                
+                if (response.ok) {
+                    return await response.text();
+                }
+                
+                throw new Error(`HTTP ${response.status}`);
+            } catch (e) {
+                if (e.name === 'AbortError') throw new Error('Timeout');
+                throw e;
+            } finally {
+                clearTimeout(timeoutId);
+            }
+        }
+
+        function extractLinks(html, currentUrl, baseUrl) {
+            try {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const links = new Set();
+                
+                doc.querySelectorAll('a[href]').forEach(anchor => {
+                    const href = anchor.getAttribute('href');
+                    const absolute = normalizeUrl(href, currentUrl);
+                    if (absolute && isValidUrl(absolute, baseUrl)) {
+                        links.add(absolute);
+                    }
+                });
+                
+                return Array.from(links);
+            } catch (e) {
+                log(`  ⚠️ Link extraction error: ${e.message}`, 'warning');
+                return [];
+            }
+        }
+
+        function extractTitle(html) {
+            try {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                const titleTag = doc.querySelector('title');
+                if (titleTag) return titleTag.textContent.trim();
+                
+                const h1Tag = doc.querySelector('h1');
+                if (h1Tag) return h1Tag.textContent.trim();
+                
+                return 'No Title';
+            } catch (e) {
+                return 'No Title';
+            }
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function startCrawl() {
+            const baseUrl = document.getElementById('baseUrl').value.trim();
+            
+            // Validate URL
+            if (!baseUrl) {
+                alert('Please enter a starting URL!');
+                return;
+            }
+            
+            try {
+                new URL(baseUrl);
+            } catch (e) {
+                alert('Please enter a valid URL (must start with http:// or https://)');
+                return;
+            }
+            
+            const minDelay = parseFloat(document.getElementById('minDelay').value) * 1000;
+            const maxDelay = parseFloat(document.getElementById('maxDelay').value) * 1000;
+            const maxPages = parseInt(document.getElementById('maxPages').value);
+            const timeout = parseInt(document.getElementById('timeout').value) * 1000;
+            const crawlMode = document.getElementById('crawlMode').value;
+
+            // Reset data
+            crawlData = {
+                pages: [],
+                visited: new Set([baseUrl]),
+                failed: {},
+                queue: [baseUrl],
+                isRunning: true,
+                maxDepth: 0,
+                attemptedPages: 0
+            };
+
+            // Update UI
+            document.getElementById('startBtn').style.display = 'none';
+            document.getElementById('stopBtn').style.display = 'block';
+            document.getElementById('downloadBtns').style.display = 'none';
+            document.getElementById('logSection').innerHTML = '';
+            document.getElementById('diagnosticAlert').style.display = 'none';
+            
+            log('🚀 Starting crawl of ' + baseUrl, 'success');
+            log(`⚙️ Mode: ${crawlMode === 'proxy' ? 'CORS Proxy' : 'Direct'}`, 'info');
+            log(`⏱️ Delays: ${minDelay/1000}-${maxDelay/1000}s, Timeout: ${timeout/1000}s`, 'info');
+            log(`📊 Max pages: ${maxPages}`, 'info');
+
+            const fetchFunction = crawlMode === 'proxy' ? fetchWithProxy : fetchDirect;
+            let consecutiveFailures = 0;
+
+            while (crawlData.queue.length > 0 && crawlData.isRunning && crawlData.pages.length < maxPages) {
+                const url = crawlData.queue.shift();
+                crawlData.attemptedPages++;
+                
+                log(`🌐 [${crawlData.pages.length + 1}] ${url.substring(0, 80)}...`);
+                updateStats();
+
+                try {
+                    const html = await fetchFunction(url, timeout);
+                    const title = extractTitle(html);
+                    const path = new URL(url).pathname.replace(new URL(baseUrl).pathname, '').replace(/^\//, '');
+                    const depth = getPageDepth(url, baseUrl);
+                    
+                    crawlData.maxDepth = Math.max(crawlData.maxDepth, depth);
+                    
+                    crawlData.pages.push({
+                        url: url,
+                        path: path,
+                        title: title,
+                        status: 200
+                    });
+
+                    log(`  ✅ ${title.substring(0, 60)}`, 'success');
+                    consecutiveFailures = 0;
+
+                    // Extract and queue new links
+                    const links = extractLinks(html, url, baseUrl);
+                    let newLinks = 0;
+                    
+                    links.forEach(link => {
+                        if (!crawlData.visited.has(link)) {
+                            crawlData.visited.add(link);
+                            crawlData.queue.push(link);
+                            newLinks++;
+                        }
+                    });
+
+                    if (newLinks > 0) {
+                        log(`  🔗 Found ${newLinks} new links`);
+                    }
+
+                    updateStats();
+
+                    // Human-like delay
+                    const delayTime = Math.random() * (maxDelay - minDelay) + minDelay;
+                    await delay(delayTime);
+
+                } catch (error) {
+                    consecutiveFailures++;
+                    log(`  ❌ ${error.message}`, 'error');
+                    crawlData.failed[url] = error.message;
+                    updateStats();
+
+                    // If too many consecutive failures, show diagnostic
+                    if (consecutiveFailures >= 3) {
+                        showDiagnostic(
+                            `<strong>Multiple consecutive failures detected!</strong><br><br>
+                            This usually means:<br>
+                            • CORS proxies are being blocked or rate-limited<br>
+                            • The website has anti-bot protection<br>
+                            • Network connectivity issues<br><br>
+                            <strong>Recommendation:</strong> Stop the crawl and try:<br>
+                            1. Reducing "Max Pages" to a smaller number<br>
+                            2. Switching to "Direct Mode" (may work better for some sites)<br>
+                            3. Using the Python version for reliable results`,
+                            'error'
+                        );
+                    }
+
+                    // Small delay before continuing after error
+                    await delay(2000);
+                }
+            }
+
+            crawlData.isRunning = false;
+            document.getElementById('stopBtn').style.display = 'none';
+            document.getElementById('startBtn').style.display = 'block';
+            document.getElementById('downloadBtns').style.display = 'grid';
+
+            log('✅ Crawl complete!', 'success');
+            log(`📄 Total pages: ${crawlData.pages.length}`, 'success');
+            log(`❌ Failed: ${Object.keys(crawlData.failed).length}`, Object.keys(crawlData.failed).length > 0 ? 'warning' : 'info');
+            log(`📊 Success rate: ${document.getElementById('successRate').textContent}`, 'info');
+
+            if (crawlData.pages.length === 0) {
+                showDiagnostic(
+                    `<strong>No pages were successfully crawled.</strong><br><br>
+                    This indicates a fundamental connectivity issue:<br>
+                    • CORS restrictions are blocking all requests<br>
+                    • The website may require authentication<br>
+                    • Network/firewall is blocking the crawler<br><br>
+                    <strong>Solution:</strong> Use the Python version which doesn't have CORS restrictions.`,
+                    'error'
+                );
+            } else if (crawlData.pages.length < 10 && Object.keys(crawlData.failed).length > 5) {
+                showDiagnostic(
+                    `<strong>Low success rate detected.</strong><br><br>
+                    The crawler is working but facing many failures. This is common with browser-based crawlers.<br><br>
+                    <strong>Current results are usable</strong> but incomplete. For comprehensive crawling, use the Python version.`,
+                    'warning'
+                );
+            }
+        }
+
+        function stopCrawl() {
+            crawlData.isRunning = false;
+            document.getElementById('stopBtn').style.display = 'none';
+            document.getElementById('startBtn').style.display = 'block';
+            document.getElementById('downloadBtns').style.display = 'grid';
+            log('⏸️ Crawl stopped by user', 'warning');
+        }
+
+        function downloadExcel() {
+            if (crawlData.pages.length === 0) {
+                alert('No pages to export!');
+                return;
+            }
+
+            const wb = XLSX.utils.book_new();
+
+            // Summary sheet
+            const summaryData = [
+                ['Crawl Summary', ''],
+                ['Total Pages', crawlData.pages.length],
+                ['Total Attempted', crawlData.attemptedPages],
+                ['Total Visited', crawlData.visited.size],
+                ['Failed URLs', Object.keys(crawlData.failed).length],
+                ['Success Rate', document.getElementById('successRate').textContent],
+                ['Maximum Depth', crawlData.maxDepth],
+                ['Base URL', document.getElementById('baseUrl').value],
+                ['Crawl Date', new Date().toLocaleString()]
+            ];
+            const summaryWS = XLSX.utils.aoa_to_sheet(summaryData);
+            XLSX.utils.book_append_sheet(wb, summaryWS, 'Summary');
+
+            // Sitemap sheet
+            const maxDepth = Math.max(...crawlData.pages.map(p => parsePathHierarchy(p.path).length));
+            const headers = ['Full URL', 'Page Title', 'Status'];
+            for (let i = 1; i <= maxDepth; i++) {
+                headers.push(`Level ${i}`);
+            }
+
+            const sitemapData = [headers];
+            crawlData.pages.sort((a, b) => a.path.localeCompare(b.path)).forEach(page => {
+                const row = [page.url, page.title, page.status];
+                const hierarchy = parsePathHierarchy(page.path);
+                hierarchy.forEach(level => row.push(level));
+                sitemapData.push(row);
+            });
+
+            const sitemapWS = XLSX.utils.aoa_to_sheet(sitemapData);
+            XLSX.utils.book_append_sheet(wb, sitemapWS, 'Sitemap');
+
+            // Failed URLs sheet
+            if (Object.keys(crawlData.failed).length > 0) {
+                const failedData = [['URL', 'Error']];
+                Object.entries(crawlData.failed).forEach(([url, error]) => {
+                    failedData.push([url, error]);
+                });
+                const failedWS = XLSX.utils.aoa_to_sheet(failedData);
+                XLSX.utils.book_append_sheet(wb, failedWS, 'Failed URLs');
+            }
+
+            const filename = `sitemap_${new URL(document.getElementById('baseUrl').value).hostname}_${new Date().toISOString().split('T')[0]}.xlsx`;
+            XLSX.writeFile(wb, filename);
+            
+            log(`📥 Excel downloaded: ${filename}`, 'success');
+        }
+
+        function downloadCSV() {
+            if (crawlData.pages.length === 0) {
+                alert('No pages to export!');
+                return;
+            }
+
+            const maxDepth = Math.max(...crawlData.pages.map(p => parsePathHierarchy(p.path).length));
+            const headers = ['Full URL', 'Page Title', 'Status'];
+            for (let i = 1; i <= maxDepth; i++) {
+                headers.push(`Level ${i}`);
+            }
+
+            let csv = headers.join(',') + '\n';
+
+            const sortedPages = [...crawlData.pages].sort((a, b) => a.path.localeCompare(b.path));
+
+            sortedPages.forEach(page => {
+                const row = [];
+                row.push(escapeCSV(page.url));
+                row.push(escapeCSV(page.title));
+                row.push(page.status);
+                
+                const hierarchy = parsePathHierarchy(page.path);
+                hierarchy.forEach(level => {
+                    row.push(escapeCSV(level));
+                });
+                
+                while (row.length < headers.length) {
+                    row.push('');
+                }
+                
+                csv += row.join(',') + '\n';
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            const filename = `sitemap_${new URL(document.getElementById('baseUrl').value).hostname}_${new Date().toISOString().split('T')[0]}.csv`;
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            log(`📄 CSV downloaded: ${filename}`, 'success');
+        }
+
+        function escapeCSV(value) {
+            if (value === null || value === undefined) return '';
+            const stringValue = String(value);
+            if (stringValue.includes(',') || stringValue.includes('\n') || stringValue.includes('"')) {
+                return '"' + stringValue.replace(/"/g, '""') + '"';
+            }
+            return stringValue;
+        }
+    </script>
+</body>
+</html>
