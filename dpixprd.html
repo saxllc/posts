@@ -314,9 +314,9 @@
             <h2><span class="material-icons">public</span> Ecosystem Vision</h2>
             <p>DPIx is not just an app; it is the <strong>Agentic Glue</strong> that binds India Stack components into coherent user journeys.</p>
             <div class="stack-layer layer-digilocker">
-                <span class="stack-label" style="color: var(--digilocker)">The Vault</span>
-                <h4><span class="material-icons" style="color: var(--digilocker);">folder</span> DigiLocker (Storage)</h4>
-                <p style="margin-bottom: 0;"><strong>Role:</strong> Secure, government-backed vault for journey evidence bundles. Transaction receipts, warranty cards, consent records.</p>
+                <span class="stack-label" style="color: var(--digilocker)">The Vault + Inbox</span>
+                <h4><span class="material-icons" style="color: var(--digilocker);">folder</span> DigiLocker (Storage + Orchestration)</h4>
+                <p style="margin-bottom: 0;"><strong>Evolved Role:</strong> From static document storage to <strong>dynamic transaction inbox</strong>. Banks, gateways, and services push transaction emails to <code>user@digilocker.gov.in</code>. DigiLocker becomes the trusted evidence aggregator that DPIx reads from.</p>
             </div>
             <div class="stack-layer layer-aadhaar">
                 <span class="stack-label" style="color: var(--aadhaar)">The Key</span>
@@ -337,31 +337,181 @@
 
         <section id="architecture">
             <h2><span class="material-icons">account_tree</span> The "Intent Weave" Architecture</h2>
-            <p>How DPIx stitches apps together using Android Intents and iOS Universal Links, without requiring a backend server.</p>
+            <p>How DPIx stitches apps together using Android Intents and iOS Universal Links, with DigiLocker as the evidence orchestrator.</p>
             <div class="diagram-box">
-                <svg viewBox="0 0 700 350" width="100%">
+                <svg viewBox="0 0 750 400" width="100%">
                     <defs><linearGradient id="dpixGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#8b5cf6"/><stop offset="100%" style="stop-color:#6d28d9"/></linearGradient></defs>
-                    <circle cx="350" cy="175" r="55" fill="url(#dpixGrad)" />
-                    <text x="350" y="170" fill="white" text-anchor="middle" font-weight="bold" font-size="13">DPIx</text>
-                    <text x="350" y="188" fill="white" text-anchor="middle" font-size="10" opacity="0.8">Agent</text>
-                    <g transform="translate(350, 45)"><rect x="-55" y="-28" width="110" height="56" rx="10" fill="#1f2937" stroke="#e43d30" stroke-width="2"/><text x="0" y="-3" fill="#e43d30" text-anchor="middle" font-weight="bold" font-size="12">mAadhaar</text><text x="0" y="12" fill="#94a3b8" text-anchor="middle" font-size="9">Identity</text><path d="M 0 28 L 0 75" stroke="#e43d30" stroke-width="2" stroke-dasharray="5,3"/></g>
-                    <g transform="translate(120, 175)"><rect x="-55" y="-28" width="110" height="56" rx="10" fill="#1f2937" stroke="#22c55e" stroke-width="2"/><text x="0" y="-3" fill="#22c55e" text-anchor="middle" font-weight="bold" font-size="12">UPI Apps</text><text x="0" y="12" fill="#94a3b8" text-anchor="middle" font-size="9">GPay / PhonePe</text><path d="M 55 0 L 150 0" stroke="#22c55e" stroke-width="2" stroke-dasharray="5,3"/></g>
-                    <g transform="translate(580, 175)"><rect x="-55" y="-28" width="110" height="56" rx="10" fill="#1f2937" stroke="#00baf2" stroke-width="2"/><text x="0" y="-3" fill="#00baf2" text-anchor="middle" font-weight="bold" font-size="12">DigiLocker</text><text x="0" y="12" fill="#94a3b8" text-anchor="middle" font-size="9">Storage</text><path d="M -55 0 L -150 0" stroke="#00baf2" stroke-width="2" stroke-dasharray="5,3"/></g>
-                    <g transform="translate(200, 305)"><rect x="-50" y="-22" width="100" height="44" rx="10" fill="#1f2937" stroke="#8b5cf6" stroke-width="2"/><text x="0" y="-2" fill="#8b5cf6" text-anchor="middle" font-weight="bold" font-size="10">Local LLM</text><text x="0" y="12" fill="#94a3b8" text-anchor="middle" font-size="8">Gemma 3n</text><path d="M 20 -22 L 310 -75" stroke="#8b5cf6" stroke-width="1.5" stroke-dasharray="4,3"/></g>
-                    <g transform="translate(500, 305)"><rect x="-50" y="-22" width="100" height="44" rx="10" fill="#1f2937" stroke="#8b5cf6" stroke-width="2"/><text x="0" y="-2" fill="#8b5cf6" text-anchor="middle" font-weight="bold" font-size="10">Signal Listener</text><text x="0" y="12" fill="#94a3b8" text-anchor="middle" font-size="8">SMS / Notifs</text><path d="M -20 -22 L -110 -75" stroke="#8b5cf6" stroke-width="1.5" stroke-dasharray="4,3"/></g>
+                    
+                    <!-- DigiLocker as central hub -->
+                    <rect x="290" y="140" width="170" height="80" rx="12" fill="#1f2937" stroke="#00baf2" stroke-width="3"/>
+                    <text x="375" y="170" fill="#00baf2" text-anchor="middle" font-weight="bold" font-size="13">DigiLocker</text>
+                    <text x="375" y="188" fill="#94a3b8" text-anchor="middle" font-size="10">Transaction Inbox + Vault</text>
+                    <text x="375" y="205" fill="#64748b" text-anchor="middle" font-size="8">user@digilocker.gov.in</text>
+                    
+                    <!-- DPIx Agent below DigiLocker -->
+                    <circle cx="375" cy="310" r="45" fill="url(#dpixGrad)" />
+                    <text x="375" y="305" fill="white" text-anchor="middle" font-weight="bold" font-size="12">DPIx</text>
+                    <text x="375" y="320" fill="white" text-anchor="middle" font-size="9" opacity="0.8">Agent</text>
+                    <path d="M 375 220 L 375 265" stroke="#00baf2" stroke-width="2"/>
+                    <polygon points="375,265 370,255 380,255" fill="#00baf2"/>
+                    <text x="390" y="245" fill="#00baf2" font-size="8">API Read</text>
+                    
+                    <!-- Bank pushing emails -->
+                    <g transform="translate(80, 100)">
+                        <rect x="-50" y="-25" width="100" height="50" rx="8" fill="#1f2937" stroke="#22c55e" stroke-width="2"/>
+                        <text x="0" y="-3" fill="#22c55e" text-anchor="middle" font-weight="bold" font-size="11">Banks</text>
+                        <text x="0" y="12" fill="#94a3b8" text-anchor="middle" font-size="8">SBI, HDFC, ICICI</text>
+                    </g>
+                    <path d="M 130 100 L 290 160" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="5,3"/>
+                    <text x="180" y="115" fill="#22c55e" font-size="7" transform="rotate(15, 180, 115)">PUSH email</text>
+                    
+                    <!-- Payment Gateway pushing -->
+                    <g transform="translate(80, 200)">
+                        <rect x="-50" y="-25" width="100" height="50" rx="8" fill="#1f2937" stroke="#22c55e" stroke-width="2"/>
+                        <text x="0" y="-3" fill="#22c55e" text-anchor="middle" font-weight="bold" font-size="11">Gateways</text>
+                        <text x="0" y="12" fill="#94a3b8" text-anchor="middle" font-size="8">Razorpay, Juspay</text>
+                    </g>
+                    <path d="M 130 200 L 290 180" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="5,3"/>
+                    <text x="180" y="205" fill="#22c55e" font-size="7" transform="rotate(-8, 180, 205)">PUSH email</text>
+                    
+                    <!-- Service Providers pushing -->
+                    <g transform="translate(670, 100)">
+                        <rect x="-50" y="-25" width="100" height="50" rx="8" fill="#1f2937" stroke="#f59e0b" stroke-width="2"/>
+                        <text x="0" y="-3" fill="#f59e0b" text-anchor="middle" font-weight="bold" font-size="11">Services</text>
+                        <text x="0" y="12" fill="#94a3b8" text-anchor="middle" font-size="8">Groww, Zerodha</text>
+                    </g>
+                    <path d="M 620 100 L 460 160" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="5,3"/>
+                    <text x="560" y="115" fill="#f59e0b" font-size="7" transform="rotate(-15, 560, 115)">PUSH email</text>
+                    
+                    <!-- mAadhaar Intent -->
+                    <g transform="translate(670, 200)">
+                        <rect x="-50" y="-25" width="100" height="50" rx="8" fill="#1f2937" stroke="#e43d30" stroke-width="2"/>
+                        <text x="0" y="-3" fill="#e43d30" text-anchor="middle" font-weight="bold" font-size="11">mAadhaar</text>
+                        <text x="0" y="12" fill="#94a3b8" text-anchor="middle" font-size="8">Auth Intent</text>
+                    </g>
+                    <path d="M 620 220 L 420 310" stroke="#e43d30" stroke-width="1.5" stroke-dasharray="5,3"/>
+                    <text x="540" y="265" fill="#e43d30" font-size="7">Intent call</text>
+                    
+                    <!-- UPI Intent -->
+                    <g transform="translate(80, 310)">
+                        <rect x="-50" y="-25" width="100" height="50" rx="8" fill="#1f2937" stroke="#22c55e" stroke-width="2"/>
+                        <text x="0" y="-3" fill="#22c55e" text-anchor="middle" font-weight="bold" font-size="11">UPI Apps</text>
+                        <text x="0" y="12" fill="#94a3b8" text-anchor="middle" font-size="8">GPay, PhonePe</text>
+                    </g>
+                    <path d="M 130 310 L 330 310" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="5,3"/>
+                    <text x="210" y="300" fill="#22c55e" font-size="7">Intent call</text>
+                    
+                    <!-- User at bottom -->
+                    <g transform="translate(375, 385)">
+                        <circle cx="0" cy="0" r="15" fill="#e0e6ed" />
+                        <text x="0" y="4" fill="#1f2937" text-anchor="middle" font-size="12">👤</text>
+                    </g>
+                    <path d="M 375 355 L 375 370" stroke="white" stroke-width="2" />
+                    
+                    <!-- Legend -->
+                    <g transform="translate(600, 350)">
+                        <text x="0" y="0" fill="#94a3b8" font-size="8">── Push (email)</text>
+                        <text x="0" y="15" fill="#94a3b8" font-size="8">── Intent (app-to-app)</text>
+                    </g>
                 </svg>
             </div>
-            <h3>Data Flow Specification</h3>
+            <h3>Data Flow Specification (Push Model)</h3>
             <table class="spec-table">
-                <thead><tr><th>Signal Source</th><th>Data Captured</th><th>Storage</th></tr></thead>
+                <thead><tr><th>Signal Source</th><th>Push Mechanism</th><th>Data Captured</th><th>Storage</th></tr></thead>
                 <tbody>
-                    <tr><td>SMS Listener</td><td>Bank debit alerts, OTP messages, transaction IDs</td><td>On-device encrypted DB</td></tr>
-                    <tr><td>Notification Listener</td><td>App notifications from UPI, investment, e-commerce apps</td><td>On-device encrypted DB</td></tr>
-                    <tr><td>Intent Callbacks</td><td><code>KYC_Token</code>, <code>Txn_Ref_ID</code>, <code>DigiLocker_URI</code></td><td>On-device + DigiLocker</td></tr>
-                    <tr><td>Local LLM</td><td>Journey narrative, user queries, explanations</td><td>Ephemeral (not persisted)</td></tr>
+                    <tr><td><strong>Banks</strong></td><td>Email to <code>user@digilocker.gov.in</code></td><td>Debit/credit alerts, transaction IDs, timestamps</td><td>DigiLocker Inbox</td></tr>
+                    <tr><td><strong>Payment Gateways</strong></td><td>Email to DigiLocker</td><td>Payment confirmations, merchant details, status</td><td>DigiLocker Inbox</td></tr>
+                    <tr><td><strong>Service Providers</strong></td><td>Email to DigiLocker</td><td>Order confirmations, policy documents, receipts</td><td>DigiLocker Inbox</td></tr>
+                    <tr><td><strong>DPIx Agent</strong></td><td>DigiLocker API (read)</td><td>Aggregated journey signals, correlated timeline</td><td>On-device (ephemeral)</td></tr>
+                    <tr><td><strong>mAadhaar</strong></td><td>App Intent (callback)</td><td><code>KYC_Token</code>, authentication proof</td><td>On-device + DigiLocker</td></tr>
+                    <tr><td><strong>UPI Apps</strong></td><td>App Intent (callback)</td><td><code>Txn_Ref_ID</code>, payment confirmation</td><td>On-device + DigiLocker</td></tr>
                 </tbody>
             </table>
             <div class="alert alert-success"><span class="material-icons">security</span><div><strong>Privacy by Design:</strong> All signal processing happens on-device. No data leaves the phone unless the user explicitly chooses to store evidence in DigiLocker.</div></div>
+
+            <h3>Why Push, Not Pull: The Technical Reality</h3>
+            <p>Mobile operating systems (Android and iOS) increasingly restrict apps from reading other apps' notifications or SMS for privacy reasons. A "pull" model where DPIx scrapes signals from other apps is technically fragile and policy-constrained.</p>
+            
+            <div class="problem-callout" style="border-left-color: var(--warning); background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.05));">
+                <h4 style="color: #fcd34d;"><span class="material-icons">warning</span> The Pull Model Problem</h4>
+                <p style="margin-bottom: 0;">NotificationListenerService (Android) and UNUserNotificationCenter (iOS) require explicit user permissions and are subject to OS-level restrictions. Apps like banking apps actively prevent notification reading. This makes pull-based evidence gathering unreliable at scale.</p>
+            </div>
+
+            <p><strong>The solution: Push-based evidence forwarding.</strong></p>
+
+            <div class="stack-layer layer-dpix">
+                <span class="stack-label" style="color: var(--dpix)">Push Model</span>
+                <h4><span class="material-icons" style="color: var(--dpix);">forward_to_inbox</span> DigiLocker as Transaction Inbox</h4>
+                <p style="margin-bottom: 0.5rem;">Instead of DPIx pulling signals, each system <strong>pushes</strong> transaction evidence to a designated DigiLocker email address (e.g., <code>user@digilocker.gov.in</code>). DigiLocker evolves from static document storage into a <strong>dynamic transaction inbox</strong>.</p>
+                <p style="margin-bottom: 0; color: var(--text-muted);">Banks, payment gateways, and service providers already send transaction emails. Routing these to DigiLocker creates a trusted, verifiable evidence stream that DPIx can orchestrate.</p>
+            </div>
+
+            <div class="before-after">
+                <div class="before-after-card before">
+                    <div class="before-after-label">Pull Model (Fragile)</div>
+                    <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">• DPIx requests SMS permission</p>
+                    <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">• DPIx requests notification access</p>
+                    <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">• OS blocks sensitive app notifications</p>
+                    <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">• Banks update apps, break scraping</p>
+                    <p style="font-size: 0.9rem; margin-bottom: 0; color: var(--error);">• Unreliable, policy-constrained</p>
+                </div>
+                <div class="before-after-card after">
+                    <div class="before-after-label">Push Model (Robust)</div>
+                    <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">• User sets DigiLocker as transaction inbox</p>
+                    <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">• Banks email receipts to DigiLocker</p>
+                    <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">• Payment gateways push confirmations</p>
+                    <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">• DPIx reads from trusted DigiLocker API</p>
+                    <p style="font-size: 0.9rem; margin-bottom: 0; color: var(--success);">• Reliable, government-backed, scalable</p>
+                </div>
+            </div>
+
+            <h3>Strategic Evaluation: India Stack Integration</h3>
+            <p>By anchoring the "Digital Dropbox" in DigiLocker (already the trusted national repository) and using Aadhaar/UPI purely as "Intent Rails," <strong>DPIx evolves from a standalone app into the Experience Layer (Layer 4) of India Stack.</strong></p>
+            <p>This transforms DPIx from a "utility tool" into a <strong>Protocol for Journey Evidence</strong>.</p>
+
+            <table class="comparison-table" style="margin-top: 1.5rem;">
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Current Role</th>
+                        <th>Proposed Role in DPIx</th>
+                        <th style="text-align: center;">Verdict</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong style="color: var(--digilocker);">DigiLocker</strong></td>
+                        <td>Static Document Storage (PAN, DL, Marksheets)</td>
+                        <td><strong>Dynamic Evidence Vault.</strong> Stores "Transaction Receipts" as Verifiable Credentials (VCs). Becomes the transaction inbox.</td>
+                        <td style="text-align: center;"><span style="font-size: 1.5rem;">🟢</span><br><span style="font-size: 0.75rem; color: var(--success);">Game Changer</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong style="color: var(--aadhaar);">Aadhaar App</strong></td>
+                        <td>Identity Management (eKYC, OTP)</td>
+                        <td><strong>Auth Provider (Intent).</strong> "Log in with Aadhaar" via app-to-app intent (Biometric/FaceID).</td>
+                        <td style="text-align: center;"><span style="font-size: 1.5rem;">🟡</span><br><span style="font-size: 0.75rem; color: var(--warning);">Requires Update</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong style="color: var(--upi);">UPI Apps</strong></td>
+                        <td>Payments (GPay, PhonePe, Paytm)</td>
+                        <td><strong>Payment Executor (Intent).</strong> DPIx constructs the payment string, UPI app executes it.</td>
+                        <td style="text-align: center;"><span style="font-size: 1.5rem;">🟢</span><br><span style="font-size: 0.75rem; color: var(--success);">Works Today</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong style="color: var(--dpix);">DPIx Agent</strong></td>
+                        <td>N/A (Does not exist)</td>
+                        <td><strong>The Weaver.</strong> Stitches Auth Token + Payment Ref + Service Promise into a single "Journey Artifact".</td>
+                        <td style="text-align: center;"><span style="font-size: 1.5rem;">🟢</span><br><span style="font-size: 0.75rem; color: var(--dpix-light);">Missing Link</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="alert alert-info" style="margin-top: 1.5rem;">
+                <span class="material-icons">lightbulb</span>
+                <div>
+                    <strong>Key Insight:</strong> The Aadhaar App currently relies on OTP and biometric devices. For DPIx to work seamlessly, Aadhaar needs to expose standardized public APIs for app-to-app authentication intents. This is a policy decision, not a technical limitation.
+                </div>
+            </div>
         </section>
 
         <section id="journeys">
