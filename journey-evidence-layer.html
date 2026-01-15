@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journey Evidence Layer: Bridging Payment & Ownership in DPI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+        }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* Architecture Diagram Styles */
+        .component-box {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .component-box:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(56, 189, 248, 0.3);
+        }
+
+        .flow-arrow {
+            animation: flowPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes flowPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .evidence-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border-left: 4px solid #818cf8;
+            transition: all 0.3s ease;
+        }
+
+        .evidence-card:hover {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+            border-left-width: 6px;
+        }
+
+        /* Tab System */
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+        .tab-button.active {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            color: white;
+        }
+
+        /* Code Block */
+        .code-block {
+            background: #1e293b;
+            border-radius: 8px;
+            padding: 16px;
+            overflow-x: auto;
+        }
+
+        /* Risk Matrix */
+        .risk-cell {
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+        .risk-cell:hover {
+            transform: scale(1.05);
+            z-index: 10;
+        }
+        .risk-high { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; }
+        .risk-medium { background: rgba(251, 191, 36, 0.2); border: 1px solid #fbbf24; }
+        .risk-low { background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100">
+
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border-b border-slate-700 sticky top-0 z-50 backdrop-blur-lg bg-opacity-90">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Journey Evidence Layer</h1>
+                    <p class="text-sm text-slate-400 mt-1">Architecture Design Document v1.0</p>
+                </div>
+                <div class="flex gap-4">
+                    <span class="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-xs font-semibold">DPI</span>
+                    <span class="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-xs font-semibold">Digilocker</span>
+                    <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-semibold">DEPA</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-12 space-y-16">
+
+        <!-- Executive Summary -->
+        <section class="bg-slate-800/50 rounded-2xl p-8 border border-slate-700">
+            <h2 class="text-3xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Executive Summary</h2>
+            <div class="space-y-4 text-slate-300 leading-relaxed">
+                <p class="text-lg">
+                    The <strong class="text-blue-400">Journey Evidence Layer</strong> is a DPI-based architectural pattern that bridges the gap between
+                    payment initiation and ownership verification by creating a <strong>verifiable chain of transaction evidence</strong>.
+                </p>
+                <div class="grid md:grid-cols-3 gap-6 mt-6">
+                    <div class="bg-slate-900/50 rounded-lg p-6 border border-slate-700">
+                        <div class="text-3xl mb-3">🏦</div>
+                        <h3 class="font-bold text-white mb-2">Digilocker as Vault</h3>
+                        <p class="text-sm text-slate-400">Transaction Verifiable Credentials repository</p>
+                    </div>
+                    <div class="bg-slate-900/50 rounded-lg p-6 border border-slate-700">
+                        <div class="text-3xl mb-3">🔄</div>
+                        <h3 class="font-bold text-white mb-2">DPIx as Orchestrator</h3>
+                        <p class="text-sm text-slate-400">Agent coordinating Aadhaar, UPI, and services</p>
+                    </div>
+                    <div class="bg-slate-900/50 rounded-lg p-6 border border-slate-700">
+                        <div class="text-3xl mb-3">🔐</div>
+                        <h3 class="font-bold text-white mb-2">DEPA for Consent</h3>
+                        <p class="text-sm text-slate-400">Privacy-preserving evidence sharing</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Problem Statement -->
+        <section>
+            <h2 class="text-3xl font-bold mb-8 bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent">The Payment-Ownership Gap</h2>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-slate-800/50 rounded-xl p-6 border border-red-500/30">
+                    <h3 class="text-xl font-bold text-red-400 mb-4 flex items-center gap-2">
+                        <span>⚠️</span> The Problem
+                    </h3>
+                    <ul class="space-y-3 text-slate-300">
+                        <li class="flex items-start gap-3">
+                            <span class="text-red-400 font-bold">1.</span>
+                            <span>User pays via UPI → Money debited ✓</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="text-red-400 font-bold">2.</span>
+                            <span>Payment gateway confirms → Email sent ✓</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="text-red-400 font-bold">3.</span>
+                            <span>Service delivery fails → Webhook timeout ✗</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="text-red-400 font-bold">4.</span>
+                            <span>Evidence scattered → User has SMS/email, system can't ingest ✗</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-slate-800/50 rounded-xl p-6 border border-green-500/30">
+                    <h3 class="text-xl font-bold text-green-400 mb-4 flex items-center gap-2">
+                        <span>✓</span> The Solution
+                    </h3>
+                    <ul class="space-y-3 text-slate-300">
+                        <li class="flex items-start gap-3">
+                            <span class="text-green-400 font-bold">→</span>
+                            <span><strong>Capture</strong> payment confirmations at source</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="text-green-400 font-bold">→</span>
+                            <span><strong>Store</strong> as verifiable credentials in Digilocker</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="text-green-400 font-bold">→</span>
+                            <span><strong>Share</strong> via DEPA consent when needed</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="text-green-400 font-bold">→</span>
+                            <span><strong>Resolve</strong> disputes in minutes, not days</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Case Study -->
+            <div class="mt-8 bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-xl p-6 border border-orange-500/30">
+                <h3 class="text-xl font-bold text-orange-400 mb-4">📊 Real-World Case: Groww Investment Failure</h3>
+                <div class="grid md:grid-cols-4 gap-4 text-sm">
+                    <div class="bg-slate-900/50 rounded-lg p-4">
+                        <div class="text-green-400 font-bold mb-2">Step 1: User Initiates</div>
+                        <p class="text-slate-400">₹10,000 investment via Net Banking</p>
+                    </div>
+                    <div class="bg-slate-900/50 rounded-lg p-4">
+                        <div class="text-green-400 font-bold mb-2">Step 2: Bank Debits</div>
+                        <p class="text-slate-400">Deutsche Bank confirms debit</p>
+                    </div>
+                    <div class="bg-slate-900/50 rounded-lg p-4">
+                        <div class="text-green-400 font-bold mb-2">Step 3: Gateway OK</div>
+                        <p class="text-slate-400">Razorpay sends confirmation email</p>
+                    </div>
+                    <div class="bg-slate-900/50 rounded-lg p-4">
+                        <div class="text-red-400 font-bold mb-2">Step 4: Groww Fails</div>
+                        <p class="text-slate-400">Webhook timeout, no units allocated</p>
+                    </div>
+                </div>
+                <p class="mt-4 text-slate-400 italic">
+                    <strong class="text-orange-400">Current State:</strong> User has email/SMS proof, but Groww system has no mechanism to ingest it.
+                    Resolution takes 7-14 days through manual reconciliation.
+                </p>
+            </div>
+        </section>
+
+        <!-- Architecture Overview -->
+        <section>
+            <h2 class="text-3xl font-bold mb-8 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Architecture Overview</h2>
+
+            <div class="bg-slate-800/50 rounded-2xl p-8 border border-slate-700">
+                <!-- Main Architecture Diagram -->
+                <div class="space-y-8">
+                    <!-- User Layer -->
+                    <div class="text-center">
+                        <div class="inline-block bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl p-6 shadow-lg component-box">
+                            <div class="text-4xl mb-2">👤</div>
+                            <div class="font-bold text-white">User</div>
+                            <div class="text-xs text-blue-100 mt-1">Journey Initiator</div>
+                        </div>
+                    </div>
+
+                    <!-- Arrow Down -->
+                    <div class="flex justify-center">
+                        <svg class="w-6 h-12 text-cyan-400 flow-arrow" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 4v16m0 0l-6-6m6 6l6-6"/>
+                        </svg>
+                    </div>
+
+                    <!-- DPIx Orchestrator -->
+                    <div class="text-center">
+                        <div class="inline-block bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl p-6 shadow-lg component-box">
+                            <div class="text-4xl mb-2">🔄</div>
+                            <div class="font-bold text-white">DPIx Agent</div>
+                            <div class="text-xs text-purple-100 mt-1">Orchestration Layer</div>
+                        </div>
+                    </div>
+
+                    <!-- Arrow Down to Three Components -->
+                    <div class="flex justify-center">
+                        <svg class="w-6 h-12 text-purple-400 flow-arrow" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 4v16m0 0l-6-6m6 6l6-6"/>
+                        </svg>
+                    </div>
+
+                    <!-- DPI Components -->
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl p-6 border border-green-500/30 component-box">
+                            <div class="text-3xl mb-2">🔐</div>
+                            <div class="font-bold text-green-400">Aadhaar</div>
+                            <div class="text-xs text-slate-400 mt-2">Identity & Authentication</div>
+                            <div class="text-xs text-slate-500 mt-2 mono">eKYC Intent</div>
+                        </div>
+                        <div class="bg-gradient-to-br from-blue-500/20 to-indigo-500/20 rounded-xl p-6 border border-blue-500/30 component-box">
+                            <div class="text-3xl mb-2">💳</div>
+                            <div class="font-bold text-blue-400">UPI</div>
+                            <div class="text-xs text-slate-400 mt-2">Payment Rails</div>
+                            <div class="text-xs text-slate-500 mt-2 mono">Payment Intent</div>
+                        </div>
+                        <div class="bg-gradient-to-br from-yellow-500/20 to-orange-500/20 rounded-xl p-6 border border-yellow-500/30 component-box">
+                            <div class="text-3xl mb-2">📦</div>
+                            <div class="font-bold text-yellow-400">Digilocker</div>
+                            <div class="text-xs text-slate-400 mt-2">Evidence Vault</div>
+                            <div class="text-xs text-slate-500 mt-2 mono">Storage API</div>
+                        </div>
+                    </div>
+
+                    <!-- Arrow Down -->
+                    <div class="flex justify-center">
+                        <svg class="w-6 h-12 text-indigo-400 flow-arrow" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 4v16m0 0l-6-6m6 6l6-6"/>
+                        </svg>
+                    </div>
+
+                    <!-- DEPA Consent -->
+                    <div class="text-center">
+                        <div class="inline-block bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl p-6 shadow-lg component-box">
+                            <div class="text-4xl mb-2">🛡️</div>
+                            <div class="font-bold text-white">DEPA Consent Layer</div>
+                            <div class="text-xs text-indigo-100 mt-1">Privacy-Preserving Access</div>
+                        </div>
+                    </div>
+
+                    <!-- Arrow Down -->
+                    <div class="flex justify-center">
+                        <svg class="w-6 h-12 text-purple-400 flow-arrow" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 4v16m0 0l-6-6m6 6l6-6"/>
+                        </svg>
+                    </div>
+
+                    <!-- Service Provider -->
+                    <div class="text-center">
+                        <div class="inline-block bg-gradient-to-br from-orange-500 to-red-500 rounded-xl p-6 shadow-lg component-box">
+                            <div class="text-4xl mb-2">🏢</div>
+                            <div class="font-bold text-white">Service Provider</div>
+                            <div class="text-xs text-orange-100 mt-1">(e.g., Groww, PhonePe)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+                    <p class="text-sm text-blue-300">
+                        <strong>Key Insight:</strong> DPIx does NOT store data. Digilocker is the vault. DPIx is the agent that orchestrates the intent flow
+                        across Aadhaar (auth), UPI (payment), and Digilocker (evidence storage).
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Transaction Flow -->
+        <section>
+            <h2 class="text-3xl font-bold mb-8 bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">Transaction Flows</h2>
+
+            <!-- Tab System -->
+            <div class="flex gap-2 mb-6">
+                <button class="tab-button active px-6 py-3 rounded-lg font-semibold" onclick="showFlow('happy')">
+                    ✓ Happy Path
+                </button>
+                <button class="tab-button px-6 py-3 rounded-lg font-semibold bg-slate-800" onclick="showFlow('failure')">
+                    ⚠️ Failure Path
+                </button>
+            </div>
+
+            <!-- Happy Path Flow -->
+            <div id="flow-happy" class="flow-content bg-slate-800/50 rounded-xl p-8 border border-slate-700">
+                <h3 class="text-xl font-bold text-green-400 mb-6">Normal Transaction Flow (Happy Path)</h3>
+                <div class="space-y-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold">1</div>
+                        <div class="flex-1 bg-slate-900/50 rounded-lg p-4">
+                            <div class="font-bold text-white">User Initiates Investment</div>
+                            <div class="text-sm text-slate-400 mt-1">Opens Groww app, selects fund, clicks "Invest ₹10,000"</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold">2</div>
+                        <div class="flex-1 bg-slate-900/50 rounded-lg p-4">
+                            <div class="font-bold text-white">DPIx Launches UPI Intent</div>
+                            <div class="text-sm text-slate-400 mt-1">
+                                <code class="mono text-xs">upi://pay?pa=groww@razorpay&am=10000</code>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold">3</div>
+                        <div class="flex-1 bg-slate-900/50 rounded-lg p-4">
+                            <div class="font-bold text-white">UPI Payment Success</div>
+                            <div class="text-sm text-slate-400 mt-1">Returns signed receipt: <code class="mono text-xs">UPI_TXN_ABC123</code></div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold">4</div>
+                        <div class="flex-1 bg-slate-900/50 rounded-lg p-4">
+                            <div class="font-bold text-white">DPIx Stores Evidence in Digilocker</div>
+                            <div class="text-sm text-slate-400 mt-1">Creates Transaction Evidence document in Private Space (encrypted)</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold">5</div>
+                        <div class="flex-1 bg-slate-900/50 rounded-lg p-4">
+                            <div class="font-bold text-white">Groww Receives Notification</div>
+                            <div class="text-sm text-slate-400 mt-1">Webhook delivers payment confirmation → Units allocated</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold">6</div>
+                        <div class="flex-1 bg-slate-900/50 rounded-lg p-4 border border-green-500/30">
+                            <div class="font-bold text-green-400">✓ Transaction Complete</div>
+                            <div class="text-sm text-slate-400 mt-1">User sees success, evidence stored for future reference</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Failure Path Flow -->
+            <div id="flow-failure" class="flow-content hidden bg-slate-800/50 rounded-xl p-8 border border-slate-700">
+                <h3 class="text-xl font-bold text-orange-400 mb-6">Failed Transaction Flow (with Recovery)</h3>
+                <div class="space-y-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold">1</div>
+                        <div class="flex-1 bg-slate-900/50 rounded-lg p-4">
+                            <div class="font-bold text-white">Payment Succeeds, Evidence Stored</div>
+                            <div class="text-sm text-slate-400 mt-1">UPI confirms, DPIx writes to Digilocker ✓</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center font-bold">2</div>
+                        <div class="flex-1 bg-slate-900/50 rounded-lg p-4 border border-red-500/30">
+                            <div class="font-bold text-red-400">✗ Webhook Fails</div>
+                            <div class="text-sm text-slate-400 mt-1">Groww doesn't receive callback (timeout/network issue)</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold">3</div>
+                        <div class="flex-1 bg-slate-900/50 rounded-lg p-4">
+                            <div class="font-bold text-white">User Sees "Payment Failed"</div>
+                            <div class="text-sm text-slate-400 mt-1">Groww UI shows error, but money is debited</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold">4</div>
+                        <div class="flex-1 bg-slate-900/50 rounded-lg p-4">
+                            <div class="font-bold text-white">User Opens DPIx for Evidence</div>
+                            <div class="text-sm text-slate-400 mt-1">DPIx retrieves transaction proof from Digilocker</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-8 h-8 rounded-full bg-purple-500 text-white flex items-center justify-center font-bold">5</div>
+                        <div class="flex-1 bg-slate-900/50 rounded-lg p-4">
+                            <div class="font-bold text-white">User Grants DEPA Consent</div>
+                            <div class="text-sm text-slate-400 mt-1">Authorizes Groww to access UPI transaction evidence</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-8 h-8 rounded-full bg-purple-500 text-white flex items-center justify-center font-bold">6</div>
+                        <div class="flex-1 bg-slate-900/50 rounded-lg p-4">
+                            <div class="font-bold text-white">Groww Retrieves Evidence via DEPA</div>
+                            <div class="text-sm text-slate-400 mt-1">Accesses Digilocker with user consent, verifies payment</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold">7</div>
+                        <div class="flex-1 bg-slate-900/50 rounded-lg p-4 border border-green-500/30">
+                            <div class="font-bold text-green-400">✓ Manual Reconciliation → Units Allocated</div>
+                            <div class="text-sm text-slate-400 mt-1">Resolution time: Minutes instead of days</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Digilocker Schema -->
+        <section>
+            <h2 class="text-3xl font-bold mb-8 bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">Transaction Evidence Schema</h2>
+
+            <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
+                <h3 class="text-lg font-bold text-yellow-400 mb-4">Digilocker Storage Structure</h3>
+                <div class="code-block">
+<pre class="text-sm text-slate-300 mono"><span class="text-blue-400">{</span>
+  <span class="text-purple-400">"documentType"</span>: <span class="text-green-400">"TransactionEvidence"</span>,
+  <span class="text-purple-400">"version"</span>: <span class="text-green-400">"1.0"</span>,
+  <span class="text-purple-400">"transactionId"</span>: <span class="text-green-400">"JOURNEY_2026011509030001"</span>,
+  <span class="text-purple-400">"userId"</span>: <span class="text-green-400">"aadhaar_hash_xxxxx"</span>,
+  <span class="text-purple-400">"timestamp"</span>: <span class="text-green-400">"2026-01-15T09:03:00Z"</span>,
+  <span class="text-purple-400">"evidence"</span>: <span class="text-blue-400">{</span>
+    <span class="text-purple-400">"payment"</span>: <span class="text-blue-400">{</span>
+      <span class="text-purple-400">"provider"</span>: <span class="text-green-400">"UPI"</span>,
+      <span class="text-purple-400">"transactionId"</span>: <span class="text-green-400">"UPI_ABC123"</span>,
+      <span class="text-purple-400">"amount"</span>: <span class="text-yellow-400">10000</span>,
+      <span class="text-purple-400">"currency"</span>: <span class="text-green-400">"INR"</span>,
+      <span class="text-purple-400">"signature"</span>: <span class="text-green-400">"signed_by_upi_app_base64..."</span>
+    <span class="text-blue-400">}</span>,
+    <span class="text-purple-400">"service"</span>: <span class="text-blue-400">{</span>
+      <span class="text-purple-400">"provider"</span>: <span class="text-green-400">"Groww"</span>,
+      <span class="text-purple-400">"serviceType"</span>: <span class="text-green-400">"Investment"</span>,
+      <span class="text-purple-400">"orderId"</span>: <span class="text-green-400">"GROWW_INV_88392"</span>,
+      <span class="text-purple-400">"status"</span>: <span class="text-green-400">"pending"</span>
+    <span class="text-blue-400">}</span>
+  <span class="text-blue-400">}</span>,
+  <span class="text-purple-400">"metadata"</span>: <span class="text-blue-400">{</span>
+    <span class="text-purple-400">"encryption"</span>: <span class="text-green-400">"AES256_user_key"</span>,
+    <span class="text-purple-400">"retention"</span>: <span class="text-green-400">"7_years"</span>
+  <span class="text-blue-400">}</span>
+<span class="text-blue-400">}</span></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Security & Privacy -->
+        <section>
+            <h2 class="text-3xl font-bold mb-8 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Security & Privacy</h2>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Private Spaces -->
+                <div class="evidence-card rounded-xl p-6">
+                    <h3 class="text-lg font-bold text-purple-400 mb-4 flex items-center gap-2">
+                        <span>🔐</span> Private Spaces
+                    </h3>
+                    <ul class="space-y-2 text-sm text-slate-300">
+                        <li class="flex items-start gap-2">
+                            <span class="text-purple-400">→</span>
+                            <span>User-controlled encryption (key derived from passphrase/biometric)</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-purple-400">→</span>
+                            <span>Evidence stored in encrypted container</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-purple-400">→</span>
+                            <span>Decryption only on-device when user accesses</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-purple-400">→</span>
+                            <span>Recovery via social MPC (multi-party computation)</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- DEPA Consent -->
+                <div class="evidence-card rounded-xl p-6">
+                    <h3 class="text-lg font-bold text-indigo-400 mb-4 flex items-center gap-2">
+                        <span>🛡️</span> DEPA Consent
+                    </h3>
+                    <ul class="space-y-2 text-sm text-slate-300">
+                        <li class="flex items-start gap-2">
+                            <span class="text-indigo-400">→</span>
+                            <span>Purpose-limited access (e.g., "Investment reconciliation")</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-indigo-400">→</span>
+                            <span>Time-bound (7-30 days depending on use case)</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-indigo-400">→</span>
+                            <span>Granular field selection (only share required data)</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-indigo-400">→</span>
+                            <span>Revocable at any time by user</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- SPOF Mitigation -->
+            <div class="mt-6 bg-gradient-to-br from-red-500/10 to-orange-500/10 rounded-xl p-6 border border-red-500/30">
+                <h3 class="text-lg font-bold text-red-400 mb-4">⚠️ Mitigating Single Point of Failure (SPOF)</h3>
+                <div class="grid md:grid-cols-3 gap-4 text-sm">
+                    <div class="bg-slate-900/50 rounded-lg p-4">
+                        <div class="font-bold text-white mb-2">Backup to User Storage</div>
+                        <p class="text-slate-400">Export encrypted evidence to user's cloud (Google Drive, iCloud)</p>
+                    </div>
+                    <div class="bg-slate-900/50 rounded-lg p-4">
+                        <div class="font-bold text-white mb-2">Multi-Issuer Model</div>
+                        <p class="text-slate-400">Service providers also store evidence, cross-verify with Digilocker</p>
+                    </div>
+                    <div class="bg-slate-900/50 rounded-lg p-4">
+                        <div class="font-bold text-white mb-2">Blockchain Anchoring</div>
+                        <p class="text-slate-400">Hash stored on public blockchain for tamper-proof timestamp (future)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Risk Matrix -->
+        <section>
+            <h2 class="text-3xl font-bold mb-8 bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent">Risk Analysis</h2>
+
+            <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
+                <div class="grid grid-cols-4 gap-2">
+                    <!-- Header Row -->
+                    <div class="p-4 font-bold text-center bg-slate-900 rounded-lg">Impact →<br>Likelihood ↓</div>
+                    <div class="p-4 font-bold text-center bg-slate-900 rounded-lg text-green-400">Low</div>
+                    <div class="p-4 font-bold text-center bg-slate-900 rounded-lg text-yellow-400">Medium</div>
+                    <div class="p-4 font-bold text-center bg-slate-900 rounded-lg text-red-400">High</div>
+
+                    <!-- High Likelihood -->
+                    <div class="p-4 font-bold text-center bg-slate-900 rounded-lg text-red-400">High</div>
+                    <div class="risk-cell risk-medium rounded-lg">
+                        <span>UX<br>Complexity</span>
+                    </div>
+                    <div class="risk-cell risk-high rounded-lg">
+                        <span>Adoption<br>Friction</span>
+                    </div>
+                    <div class="risk-cell risk-high rounded-lg">
+                        <span>Intent Call<br>Unavailability</span>
+                    </div>
+
+                    <!-- Medium Likelihood -->
+                    <div class="p-4 font-bold text-center bg-slate-900 rounded-lg text-yellow-400">Medium</div>
+                    <div class="risk-cell risk-low rounded-lg">
+                        <span>Data<br>Formatting</span>
+                    </div>
+                    <div class="risk-cell risk-medium rounded-lg">
+                        <span>Latency<br>Issues</span>
+                    </div>
+                    <div class="risk-cell risk-high rounded-lg">
+                        <span>SPOF<br>Risk</span>
+                    </div>
+
+                    <!-- Low Likelihood -->
+                    <div class="p-4 font-bold text-center bg-slate-900 rounded-lg text-green-400">Low</div>
+                    <div class="risk-cell risk-low rounded-lg">
+                        <span>Minor<br>Bugs</span>
+                    </div>
+                    <div class="risk-cell risk-low rounded-lg">
+                        <span>Schema<br>Mismatch</span>
+                    </div>
+                    <div class="risk-cell risk-medium rounded-lg">
+                        <span>Privacy<br>Breach</span>
+                    </div>
+                </div>
+
+                <div class="mt-6 grid md:grid-cols-2 gap-4 text-sm">
+                    <div class="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
+                        <h4 class="font-bold text-red-400 mb-2">High Priority Mitigations</h4>
+                        <ul class="space-y-1 text-slate-300">
+                            <li>→ SPOF: Private Spaces + backups</li>
+                            <li>→ Intent unavailability: Use existing eKYC providers</li>
+                            <li>→ Adoption friction: Gradual rollout, high-value use cases first</li>
+                        </ul>
+                    </div>
+                    <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
+                        <h4 class="font-bold text-yellow-400 mb-2">Medium Priority Mitigations</h4>
+                        <ul class="space-y-1 text-slate-300">
+                            <li>→ Latency: Async architecture, don't block main flow</li>
+                            <li>→ Privacy: E2E encryption, consent management</li>
+                            <li>→ UX: User testing, iterative refinement</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Implementation Roadmap -->
+        <section>
+            <h2 class="text-3xl font-bold mb-8 bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Implementation Roadmap</h2>
+
+            <div class="space-y-6">
+                <div class="bg-slate-800/50 rounded-xl p-6 border-l-4 border-cyan-500">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-bold text-cyan-400">Phase 1: Foundation</h3>
+                        <span class="text-sm text-slate-400">Months 1-3</span>
+                    </div>
+                    <ul class="space-y-2 text-sm text-slate-300">
+                        <li class="flex items-start gap-2">
+                            <span class="text-cyan-400 font-bold">□</span>
+                            <span>Define Transaction Evidence schema with NPCI/UIDAI working group</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-cyan-400 font-bold">□</span>
+                            <span>Implement Private Spaces in Digilocker (POC)</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-cyan-400 font-bold">□</span>
+                            <span>Build DPIx agent prototype (Android, integrate with UPI)</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-cyan-400 font-bold">□</span>
+                            <span>Partner with eKYC provider for Aadhaar auth (interim solution)</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-slate-800/50 rounded-xl p-6 border-l-4 border-blue-500">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-bold text-blue-400">Phase 2: Integration</h3>
+                        <span class="text-sm text-slate-400">Months 4-6</span>
+                    </div>
+                    <ul class="space-y-2 text-sm text-slate-300">
+                        <li class="flex items-start gap-2">
+                            <span class="text-blue-400 font-bold">□</span>
+                            <span>DEPA consent flow implementation with AA (Account Aggregator)</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-blue-400 font-bold">□</span>
+                            <span>On-device AI for receipt parsing (integrate SLM like Gemma Nano)</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-blue-400 font-bold">□</span>
+                            <span>Pilot with one service provider (Groww or PhonePe)</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-blue-400 font-bold">□</span>
+                            <span>Implement backup/recovery mechanisms (MPC-based social recovery)</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-slate-800/50 rounded-xl p-6 border-l-4 border-purple-500">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-bold text-purple-400">Phase 3: Scale</h3>
+                        <span class="text-sm text-slate-400">Months 7-12</span>
+                    </div>
+                    <ul class="space-y-2 text-sm text-slate-300">
+                        <li class="flex items-start gap-2">
+                            <span class="text-purple-400 font-bold">□</span>
+                            <span>Multi-service provider integration (investment, insurance, e-commerce)</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-purple-400 font-bold">□</span>
+                            <span>Analytics dashboard for journey completion rates</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-purple-400 font-bold">□</span>
+                            <span>Advocate for native Aadhaar auth intent API with UIDAI</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-purple-400 font-bold">□</span>
+                            <span>Public launch with marketing campaign</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Insights -->
+        <section>
+            <h2 class="text-3xl font-bold mb-8 bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">Key Insights</h2>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-xl p-6 border border-blue-500/30">
+                    <div class="text-3xl mb-3">💡</div>
+                    <h3 class="text-lg font-bold text-blue-400 mb-3">Standardization as Public Good</h3>
+                    <p class="text-sm text-slate-300 leading-relaxed">
+                        Transaction evidence should be treated as a <strong>public utility</strong>—standardized formats,
+                        interoperable across providers, user-controlled like identity and payments.
+                    </p>
+                </div>
+
+                <div class="bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl p-6 border border-purple-500/30">
+                    <div class="text-3xl mb-3">🎯</div>
+                    <h3 class="text-lg font-bold text-purple-400 mb-3">DPIx as Orchestrator, Not Store</h3>
+                    <p class="text-sm text-slate-300 leading-relaxed">
+                        DPIx doesn't compete with Digilocker—it's the <strong>intent weaving agent</strong> that makes
+                        the entire journey coherent, capturing evidence and writing to the vault.
+                    </p>
+                </div>
+
+                <div class="bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-xl p-6 border border-green-500/30">
+                    <div class="text-3xl mb-3">🔐</div>
+                    <h3 class="text-lg font-bold text-green-400 mb-3">Privacy by Design</h3>
+                    <p class="text-sm text-slate-300 leading-relaxed">
+                        Private Spaces with user-key encryption ensure that even if Digilocker is compromised,
+                        sensitive transaction evidence remains <strong>protected</strong>.
+                    </p>
+                </div>
+
+                <div class="bg-gradient-to-br from-orange-500/10 to-red-500/10 rounded-xl p-6 border border-orange-500/30">
+                    <div class="text-3xl mb-3">⚡</div>
+                    <h3 class="text-lg font-bold text-orange-400 mb-3">Minutes, Not Days</h3>
+                    <p class="text-sm text-slate-300 leading-relaxed">
+                        By making evidence machine-readable and consent-accessible, dispute resolution time drops from
+                        <strong>7-14 days to minutes</strong>.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-700 py-8 mt-16">
+        <div class="max-w-7xl mx-auto px-6 text-center text-slate-400 text-sm">
+            <div class="mb-4">
+                <span class="font-bold text-white">Journey Evidence Layer</span> - Architecture Design Document
+            </div>
+            <div class="space-y-1">
+                <p>Version 1.0 | January 2026 | Draft for Review</p>
+                <p>Author: Sridhar Dhulipala | Principal Design Advisor, UIDAI</p>
+                <p class="text-xs text-slate-500 mt-4">References: vault1.html, bharatux.html, dpwr.html</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function showFlow(flowType) {
+            // Hide all flows
+            document.querySelectorAll('.flow-content').forEach(el => el.classList.add('hidden'));
+            // Show selected flow
+            document.getElementById(`flow-${flowType}`).classList.remove('hidden');
+
+            // Update tab buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+                btn.classList.add('bg-slate-800');
+            });
+            event.target.classList.add('active');
+            event.target.classList.remove('bg-slate-800');
+        }
+    </script>
+</body>
+</html>
