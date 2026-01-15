@@ -764,6 +764,13 @@
             
             <div class="sim-form">
                 <div class="form-group">
+                    <label>Google API Key:</label>
+                    <input type="password" id="apiKeyInput" placeholder="Enter your Google Gemini API key">
+                    <small style="color: #64748b; font-size: 12px; display: block; margin-top: 4px;">
+                        Get your API key from <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color: var(--accent);">Google AI Studio</a>. Your key is stored locally.
+                    </small>
+                </div>
+                <div class="form-group">
                     <label>Define User Context:</label>
                     <input type="text" id="simContext" placeholder="e.g. 70-year-old farmer, speaks Marathi, low digital literacy">
                 </div>
@@ -797,14 +804,15 @@
     <script type="module">
         import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
 
-        const apiKey = "AIzaSyC2RS_A8c4BElYV3k2xkGM75UdObxRHBYM"; // Added at runtime
-        const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-preview-09-2025" });
-
         // --- FEATURE 1: SIMULATOR LOGIC ---
-        
+
         window.openSimModal = function() {
             document.getElementById('simModal').style.display = 'flex';
+            // Load saved API key from localStorage
+            const savedKey = localStorage.getItem('gemini_api_key');
+            if (savedKey) {
+                document.getElementById('apiKeyInput').value = savedKey;
+            }
         }
 
         window.closeSimModal = function() {
@@ -812,6 +820,17 @@
         }
 
         window.runSimulation = async function() {
+            const apiKeyInput = document.getElementById('apiKeyInput').value.trim();
+
+            // Validate API key
+            if (!apiKeyInput) {
+                alert('Please enter your Google Gemini API key to continue.');
+                return;
+            }
+
+            // Save API key to localStorage for convenience
+            localStorage.setItem('gemini_api_key', apiKeyInput);
+
             const context = document.getElementById('simContext').value || "70-year-old farmer, speaks Marathi, low digital literacy";
             const task = document.getElementById('simTask').value;
             const spinner = document.getElementById('simSpinner');
@@ -819,6 +838,10 @@
 
             spinner.style.display = 'inline-block';
             resultArea.style.display = 'none';
+
+            // Initialize API with user-provided key
+            const genAI = new GoogleGenerativeAI(apiKeyInput);
+            const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-preview-09-2025" });
 
             const prompt = `
                 You are the 'Intelligent UX Engine' described in a high-level pitch deck. 
@@ -848,7 +871,11 @@
 
             } catch (error) {
                 console.error("Gemini Error:", error);
-                alert("Simulation failed. Please try again.");
+                if (error.message && error.message.includes('API key')) {
+                    alert("Invalid API key. Please check your Google Gemini API key and try again.");
+                } else {
+                    alert("Simulation failed. Please check your API key and try again.");
+                }
             } finally {
                 spinner.style.display = 'none';
             }
