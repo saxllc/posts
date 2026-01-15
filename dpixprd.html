@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DPIx | Product Requirements Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f1115;
+            --bg-card: #181b21;
+            --bg-sidebar: #0a0c10;
+            --bg-surface: #1e2128;
+            --text-main: #e0e6ed;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+            --digilocker: #00baf2;
+            --aadhaar: #e43d30;
+            --upi: #22c55e;
+            --dpix: #8b5cf6;
+            --dpix-light: #a78bfa;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --success: #10b981;
+            --border: #2d3748;
+            --border-light: #3d4758;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Roboto', system-ui, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.7;
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 280px;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            z-index: 100;
+        }
+        .brand { font-family: 'Google Sans', sans-serif; font-size: 1.75rem; font-weight: 700; color: var(--dpix); margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem; }
+        .brand .material-icons { font-size: 2rem; }
+        .tagline { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem; }
+        .version-badge { display: inline-block; padding: 4px 10px; background: rgba(139, 92, 246, 0.15); border: 1px solid var(--dpix); border-radius: 20px; font-size: 0.7rem; color: var(--dpix-light); margin-bottom: 2rem; }
+        .nav-section { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-dim); margin: 1.5rem 0 0.75rem 1rem; font-weight: 500; }
+        .nav-links a { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 1rem; color: var(--text-muted); text-decoration: none; border-radius: 8px; margin-bottom: 2px; transition: all 0.2s ease; font-size: 0.9rem; }
+        .nav-links a .material-icons { font-size: 1.25rem; opacity: 0.7; }
+        .nav-links a:hover { background-color: rgba(139, 92, 246, 0.1); color: var(--text-main); }
+        .nav-links a.active { background-color: rgba(139, 92, 246, 0.15); color: var(--dpix-light); border-left: 3px solid var(--dpix); }
+        .nav-links a.active .material-icons { opacity: 1; color: var(--dpix); }
+        main { flex: 1; padding: 3rem 4rem; max-width: 1000px; margin-left: 280px; }
+        section { padding-top: 2rem; margin-bottom: 4rem; animation: fadeInUp 0.6s ease forwards; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        h1 { font-family: 'Google Sans', sans-serif; font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; background: linear-gradient(135deg, var(--dpix-light), var(--dpix)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        h2 { font-family: 'Google Sans', sans-serif; font-size: 1.6rem; margin-top: 0; margin-bottom: 1.5rem; color: white; display: flex; align-items: center; gap: 0.75rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border); }
+        h2 .material-icons { color: var(--dpix); font-size: 1.4rem; }
+        h3 { font-family: 'Google Sans', sans-serif; color: var(--dpix-light); margin-top: 2rem; margin-bottom: 1rem; font-size: 1.2rem; font-weight: 500; }
+        h4 { color: var(--text-main); margin-top: 1.5rem; margin-bottom: 0.75rem; font-size: 1rem; font-weight: 500; }
+        p { margin-bottom: 1rem; color: var(--text-muted); }
+        p strong { color: var(--text-main); }
+        .header-badges { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+        .badge { padding: 5px 14px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .badge-digilocker { background: var(--digilocker); color: black; }
+        .badge-aadhaar { background: var(--aadhaar); color: white; }
+        .badge-upi { background: var(--upi); color: black; }
+        .badge-dpix { background: var(--dpix); color: white; }
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; transition: all 0.3s ease; }
+        .card:hover { border-color: var(--border-light); transform: translateY(-2px); }
+        .stack-layer { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; position: relative; overflow: hidden; transition: all 0.3s ease; }
+        .stack-layer:hover { transform: translateX(4px); }
+        .stack-label { position: absolute; top: 12px; right: 15px; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; }
+        .layer-upi { border-left: 4px solid var(--upi); background: linear-gradient(90deg, rgba(34,197,94,0.08), transparent); }
+        .layer-aadhaar { border-left: 4px solid var(--aadhaar); background: linear-gradient(90deg, rgba(228,61,48,0.08), transparent); }
+        .layer-digilocker { border-left: 4px solid var(--digilocker); background: linear-gradient(90deg, rgba(0,186,242,0.08), transparent); }
+        .layer-dpix { border-left: 4px solid var(--dpix); background: linear-gradient(90deg, rgba(139,92,246,0.12), transparent); }
+        .stack-layer h4 { margin-top: 0; display: flex; align-items: center; gap: 0.5rem; }
+        .problem-callout { background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05)); border: 1px solid rgba(239, 68, 68, 0.3); border-left: 4px solid var(--error); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
+        .problem-callout h4 { color: #fca5a5; margin-top: 0; display: flex; align-items: center; gap: 0.5rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+        .stat-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
+        .stat-number { font-family: 'Google Sans', sans-serif; font-size: 2rem; font-weight: 700; color: var(--dpix-light); margin-bottom: 0.25rem; }
+        .stat-label { font-size: 0.8rem; color: var(--text-muted); }
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem; }
+        .comparison-table th { background: var(--bg-surface); color: var(--text-main); padding: 1rem; text-align: left; border-bottom: 2px solid var(--border); font-weight: 500; }
+        .comparison-table td { padding: 1rem; border-bottom: 1px solid var(--border); color: var(--text-muted); }
+        .comparison-table tr:hover td { background: rgba(139, 92, 246, 0.05); }
+        .comparison-table .highlight { color: var(--dpix-light); font-weight: 500; }
+        .diagram-box { background: var(--bg-surface); padding: 2rem; border-radius: 12px; display: flex; justify-content: center; margin: 2rem 0; border: 1px solid var(--border); overflow-x: auto; }
+        .flow-step { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem; padding: 1.25rem; background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border); transition: all 0.3s ease; }
+        .flow-step:hover { border-color: var(--border-light); transform: translateX(4px); }
+        .step-number { width: 32px; height: 32px; background: var(--dpix); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.85rem; flex-shrink: 0; color: white; }
+        .step-content { flex: 1; }
+        .step-content strong { color: white; display: block; margin-bottom: 0.25rem; font-size: 1rem; }
+        .step-content p { color: var(--text-muted); font-size: 0.9rem; margin: 0; }
+        .journey-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; position: relative; overflow: hidden; }
+        .journey-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+        .journey-card.fintech::before { background: var(--upi); }
+        .journey-card.healthcare::before { background: var(--aadhaar); }
+        .journey-card.education::before { background: var(--digilocker); }
+        .journey-card.government::before { background: var(--warning); }
+        .journey-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+        .journey-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .journey-card.fintech .journey-icon { background: rgba(34,197,94,0.15); }
+        .journey-card.healthcare .journey-icon { background: rgba(228,61,48,0.15); }
+        .journey-card.education .journey-icon { background: rgba(0,186,242,0.15); }
+        .journey-card.government .journey-icon { background: rgba(245,158,11,0.15); }
+        .journey-title { font-family: 'Google Sans', sans-serif; font-size: 1.1rem; color: white; margin: 0; }
+        .journey-subtitle { font-size: 0.85rem; color: var(--text-muted); }
+        .journey-timeline { display: flex; gap: 0.5rem; margin: 1rem 0; flex-wrap: wrap; }
+        .timeline-step { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 0.75rem; font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem; }
+        .timeline-step .material-icons { font-size: 1rem; }
+        .timeline-arrow { color: var(--text-dim); display: flex; align-items: center; }
+        .persona-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin: 1.5rem 0; }
+        .persona-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; transition: all 0.3s ease; }
+        .persona-card:hover { border-color: var(--dpix); transform: translateY(-4px); }
+        .persona-avatar { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, var(--dpix), var(--dpix-light)); display: flex; align-items: center; justify-content: center; font-size: 1.75rem; margin-bottom: 1rem; }
+        .persona-name { font-family: 'Google Sans', sans-serif; font-size: 1.1rem; color: white; margin-bottom: 0.25rem; }
+        .persona-role { font-size: 0.85rem; color: var(--dpix-light); margin-bottom: 1rem; }
+        .persona-quote { font-style: italic; color: var(--text-muted); font-size: 0.9rem; padding-left: 1rem; border-left: 2px solid var(--dpix); }
+        .phone-mockup-container { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin: 2rem 0; }
+        .phone-mockup { width: 260px; background: #1a1a1a; border-radius: 32px; padding: 10px; border: 3px solid #333; position: relative; }
+        .phone-mockup::before { content: ''; position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 70px; height: 20px; background: #000; border-radius: 10px; z-index: 10; }
+        .phone-screen { background: var(--bg-dark); border-radius: 24px; height: 480px; overflow: hidden; position: relative; }
+        .md-status-bar { height: 24px; display: flex; justify-content: flex-end; align-items: center; padding: 0 16px; font-size: 0.7rem; color: var(--text-muted); }
+        .md-app-bar { height: 48px; padding: 0 12px; display: flex; align-items: center; gap: 12px; }
+        .md-app-bar .material-icons { color: var(--text-muted); font-size: 1.25rem; }
+        .md-app-bar-title { font-family: 'Google Sans', sans-serif; font-size: 1rem; font-weight: 500; color: white; }
+        .md-list-item { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-bottom: 1px solid var(--border); }
+        .md-list-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .md-list-icon .material-icons { font-size: 1.1rem; }
+        .md-list-content { flex: 1; }
+        .md-list-title { font-size: 0.9rem; font-weight: 500; color: var(--text-main); margin-bottom: 2px; }
+        .md-list-subtitle { font-size: 0.75rem; color: var(--text-muted); }
+        .md-fab { position: absolute; bottom: 20px; right: 12px; width: 48px; height: 48px; background: var(--dpix); border-radius: 14px; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; transition: all 0.3s ease; }
+        .md-fab:hover { transform: scale(1.1); }
+        .md-fab .material-icons { font-size: 1.3rem; }
+        .md-chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--bg-surface); border-radius: 16px; font-size: 0.75rem; color: var(--text-muted); }
+        .md-chip .material-icons { font-size: 0.9rem; }
+        .chat-bubble { max-width: 85%; padding: 10px 14px; border-radius: 16px; margin-bottom: 8px; font-size: 0.85rem; line-height: 1.4; }
+        .chat-bubble.user { background: var(--dpix); color: white; margin-left: auto; border-bottom-right-radius: 4px; }
+        .chat-bubble.assistant { background: var(--bg-surface); color: var(--text-main); border-bottom-left-radius: 4px; }
+        .code-block { background: #1e1e2e; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; margin: 1rem 0; overflow-x: auto; font-family: 'Roboto Mono', monospace; font-size: 0.8rem; color: #cdd6f4; }
+        .code-comment { color: #6c7086; }
+        .code-keyword { color: #cba6f7; }
+        .code-string { color: #a6e3a1; }
+        .code-property { color: #89b4fa; }
+        .spec-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.85rem; }
+        .spec-table th { background: var(--bg-surface); color: var(--text-main); padding: 0.75rem 1rem; text-align: left; font-weight: 500; border-bottom: 1px solid var(--border); }
+        .spec-table td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); color: var(--text-muted); vertical-align: top; }
+        .spec-table code { background: var(--bg-surface); padding: 2px 6px; border-radius: 4px; font-family: 'Roboto Mono', monospace; font-size: 0.75rem; color: var(--dpix-light); }
+        .alert { padding: 1rem 1.25rem; border-radius: 8px; margin: 1rem 0; display: flex; align-items: flex-start; gap: 0.75rem; }
+        .alert .material-icons { font-size: 1.25rem; flex-shrink: 0; margin-top: 2px; }
+        .alert-info { background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3); }
+        .alert-info .material-icons { color: var(--dpix); }
+        .alert-warning { background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); }
+        .alert-warning .material-icons { color: var(--warning); }
+        .alert-success { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .alert-success .material-icons { color: var(--success); }
+        .language-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 1rem 0; }
+        .language-chip { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; text-align: center; font-size: 0.8rem; color: var(--text-muted); cursor: pointer; transition: all 0.2s ease; }
+        .language-chip:hover { border-color: var(--dpix); color: var(--dpix-light); }
+        .language-chip.active { background: var(--dpix); border-color: var(--dpix); color: white; }
+        .before-after { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.5rem 0; }
+        .before-after-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
+        .before-after-card.before { border-top: 3px solid var(--error); }
+        .before-after-card.after { border-top: 3px solid var(--success); }
+        .before-after-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem; font-weight: 600; }
+        .before-after-card.before .before-after-label { color: var(--error); }
+        .before-after-card.after .before-after-label { color: var(--success); }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--border-light); }
+        @media (max-width: 900px) {
+            .sidebar { display: none; }
+            main { margin-left: 0; padding: 2rem; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .persona-grid { grid-template-columns: 1fr; }
+            .before-after { grid-template-columns: 1fr; }
+            .phone-mockup-container { flex-direction: column; align-items: center; }
+            .language-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="brand"><span class="material-icons">hub</span>DPIx</div>
+        <div class="tagline">The Experience Protocol for India Stack</div>
+        <div class="version-badge">PRD v2.0 | January 2026</div>
+        <div class="nav-section">Context</div>
+        <nav class="nav-links">
+            <a href="#problem" class="active"><span class="material-icons">warning</span>The Problem</a>
+            <a href="#positioning"><span class="material-icons">layers</span>DPI Positioning</a>
+        </nav>
+        <div class="nav-section">Architecture</div>
+        <nav class="nav-links">
+            <a href="#vision"><span class="material-icons">public</span>Ecosystem Vision</a>
+            <a href="#architecture"><span class="material-icons">account_tree</span>Intent Weave</a>
+            <a href="#journeys"><span class="material-icons">timeline</span>Journey Examples</a>
+        </nav>
+        <div class="nav-section">Experience</div>
+        <nav class="nav-links">
+            <a href="#kya-likha-hai"><span class="material-icons">translate</span>"Kya Likha Hai"</a>
+            <a href="#personas"><span class="material-icons">people</span>User Personas</a>
+        </nav>
+        <div class="nav-section">Specifications</div>
+        <nav class="nav-links">
+            <a href="#technical"><span class="material-icons">code</span>Technical Specs</a>
+            <a href="#governance"><span class="material-icons">gavel</span>Governance</a>
+        </nav>
+    </aside>
+
+    <main>
+        <header style="margin-bottom: 3rem;">
+            <div class="header-badges">
+                <span class="badge badge-dpix">Experience Layer</span>
+                <span class="badge badge-digilocker">DigiLocker</span>
+                <span class="badge badge-aadhaar">Aadhaar</span>
+                <span class="badge badge-upi">UPI</span>
+            </div>
+            <h1>DPIx: Journey Intelligence</h1>
+            <p style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 0;">The missing stitch in India Stack. An edge-based experience layer that watches, correlates, explains, and acts.</p>
+        </header>
+
+        <section id="problem">
+            <h2><span class="material-icons">warning</span> The Problem: Screenshot Stitchers</h2>
+            <div class="card" style="background: linear-gradient(135deg, var(--bg-card), var(--bg-surface));">
+                <h4 style="margin-top: 0; color: white;">The Guruprasad Story</h4>
+                <p>At 10:42 AM, Guruprasad tapped 'Pay' on his mutual fund SIP. His bank instantly sent an SMS: ₹10,000 debited. But the investment app showed 'payment failed.'</p>
+                <p><strong>Three systems. Three different answers. His money sat in limbo for days.</strong></p>
+                <p style="margin-bottom: 0;">His bank said success. The payment gateway said failure. The mutual fund said failure. All were technically correct within their own systems.</p>
+            </div>
+            <div class="problem-callout">
+                <h4><span class="material-icons">error_outline</span> This is not a bug. It is the architecture.</h4>
+                <p style="margin-bottom: 0;">India's financial systems operate on fundamentally different clocks. OTPs expire in 60 seconds. UPI sessions timeout in 180 seconds. Mutual fund NAV allocation follows T+1 or T+2 rules. Each clock is rational for its purpose. <strong>No clock accounts for the others.</strong></p>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-number">13L+</div><div class="stat-label">Annual RBI complaints</div></div>
+                <div class="stat-card"><div class="stat-number">60K+</div><div class="stat-label">Annual SEBI complaints</div></div>
+                <div class="stat-card"><div class="stat-number">7 days</div><div class="stat-label">"Deemed success" limbo</div></div>
+            </div>
+            <p>Behind every complaint is someone assembling screenshots and SMS confirmations, presenting them to institutions that already possess the data but will not correlate it. <strong>The user becomes a screenshot stitcher</strong>, the human integration layer between systems that refuse to acknowledge each other's clocks.</p>
+            <div class="before-after">
+                <div class="before-after-card before">
+                    <div class="before-after-label">Before: User as Integration Layer</div>
+                    <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">• Check bank app → screenshot</p>
+                    <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">• Check UPI app → screenshot</p>
+                    <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">• Check investment app → screenshot</p>
+                    <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">• Call customer care → explain</p>
+                    <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">• Post on social media → hope</p>
+                    <p style="font-size: 0.9rem; margin-bottom: 0; color: var(--error);">• Wait 3-7 days → anxiety</p>
+                </div>
+                <div class="before-after-card after">
+                    <div class="before-after-label">After: DPIx as Integration Layer</div>
+                    <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">• Tap "?" button</p>
+                    <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">• Ask "Kya likha hai?"</p>
+                    <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">• Receive explanation in your language</p>
+                    <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">• Get timeline for resolution</p>
+                    <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">• Auto-assembled evidence ready</p>
+                    <p style="font-size: 0.9rem; margin-bottom: 0; color: var(--success);">• Proactive alerts if action needed</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="positioning">
+            <h2><span class="material-icons">layers</span> DPI Positioning: The Three-Tier Ontology</h2>
+            <p>The Centre for Digital Public Infrastructure (CDPI), co-chaired by Pramod Varma, notes that the foundational DPI categories are <strong>"not an exhaustive list"</strong>. What is the gap?</p>
+            <div class="alert alert-info"><span class="material-icons">lightbulb</span><div><strong>Key Insight:</strong> India Stack handles flows of identity, money, and data. But no layer handles <em>journey continuity</em> across these flows. This is the "missing stitch."</div></div>
+            <h3>The Emerging Ontology of DPIs</h3>
+            <div class="stack-layer layer-aadhaar">
+                <span class="stack-label" style="color: var(--aadhaar)">Tier 1</span>
+                <h4><span class="material-icons" style="color: var(--aadhaar);">foundation</span> Foundational DPIs</h4>
+                <p style="margin-bottom: 0.5rem;"><strong>What they do:</strong> Establish core capabilities that institutions adopt</p>
+                <p style="margin-bottom: 0; color: var(--text-muted);">Aadhaar (identity) • UPI (payments) • DigiLocker (documents) • eSign (trust)</p>
+            </div>
+            <div class="stack-layer layer-digilocker">
+                <span class="stack-label" style="color: var(--digilocker)">Tier 2</span>
+                <h4><span class="material-icons" style="color: var(--digilocker);">swap_horiz</span> Network DPIs</h4>
+                <p style="margin-bottom: 0.5rem;"><strong>What they do:</strong> Enable data flows across institutions with user consent</p>
+                <p style="margin-bottom: 0; color: var(--text-muted);">DEPA / Account Aggregator • ONDC • ABDM Health Data Exchange</p>
+            </div>
+            <div class="stack-layer layer-dpix">
+                <span class="stack-label" style="color: var(--dpix)">Tier 3 (NEW)</span>
+                <h4><span class="material-icons" style="color: var(--dpix);">smartphone</span> Edge DPIs</h4>
+                <p style="margin-bottom: 0.5rem;"><strong>What they do:</strong> Operate on user's device, synthesizing signals that have already arrived</p>
+                <p style="margin-bottom: 0; color: var(--text-muted);">DPIx / Journey Intelligence • User-controlled • Privacy-preserving • AI-powered</p>
+            </div>
+            <h3>DEPA vs DPIx: Complementary Layers</h3>
+            <table class="comparison-table">
+                <thead><tr><th>Dimension</th><th>DEPA / Account Aggregator</th><th class="highlight">DPIx / Journey Intelligence</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Core Question</strong></td><td>"May institution A share my data with B?"</td><td class="highlight">"What happened across A, B, C, D?"</td></tr>
+                    <tr><td><strong>Manages</strong></td><td>Consent for data sharing</td><td class="highlight">Evidence for journey stitching</td></tr>
+                    <tr><td><strong>Operates</strong></td><td>Between institutions (network)</td><td class="highlight">On user's device (edge)</td></tr>
+                    <tr><td><strong>Entity Type</strong></td><td>Regulated NBFC (institutional)</td><td class="highlight">On-device AI (user-controlled)</td></tr>
+                    <tr><td><strong>Analogy</strong></td><td>Consent Manager</td><td class="highlight">Personal Witness / Jeeves</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="vision">
+            <h2><span class="material-icons">public</span> Ecosystem Vision</h2>
+            <p>DPIx is not just an app; it is the <strong>Agentic Glue</strong> that binds India Stack components into coherent user journeys.</p>
+            <div class="stack-layer layer-digilocker">
+                <span class="stack-label" style="color: var(--digilocker)">The Vault</span>
+                <h4><span class="material-icons" style="color: var(--digilocker);">folder</span> DigiLocker (Storage)</h4>
+                <p style="margin-bottom: 0;"><strong>Role:</strong> Secure, government-backed vault for journey evidence bundles. Transaction receipts, warranty cards, consent records.</p>
+            </div>
+            <div class="stack-layer layer-aadhaar">
+                <span class="stack-label" style="color: var(--aadhaar)">The Key</span>
+                <h4><span class="material-icons" style="color: var(--aadhaar);">fingerprint</span> Aadhaar (Identity)</h4>
+                <p style="margin-bottom: 0;"><strong>Role:</strong> "Log in with Aadhaar" via App Intent. Zero-knowledge proof of identity. Face authentication without typing OTPs.</p>
+            </div>
+            <div class="stack-layer layer-upi">
+                <span class="stack-label" style="color: var(--upi)">The Rails</span>
+                <h4><span class="material-icons" style="color: var(--upi);">payments</span> UPI (Payments)</h4>
+                <p style="margin-bottom: 0;"><strong>Role:</strong> Execution of value transfer. DPIx sets up the payment context; UPI apps (GPay, PhonePe) execute it.</p>
+            </div>
+            <div class="stack-layer layer-dpix">
+                <span class="stack-label" style="color: var(--dpix)">The Brain</span>
+                <h4><span class="material-icons" style="color: var(--dpix);">psychology</span> DPIx (Experience)</h4>
+                <p style="margin-bottom: 0;"><strong>Role:</strong> The User Agent. It calls the Key, rides the Rails, locks results in the Vault, and explains everything in the user's language.</p>
+            </div>
+        </section>
+
+        <section id="architecture">
+            <h2><span class="material-icons">account_tree</span> The "Intent Weave" Architecture</h2>
+            <p>How DPIx stitches apps together using Android Intents and iOS Universal Links, without requiring a backend server.</p>
+            <div class="diagram-box">
+                <svg viewBox="0 0 700 350" width="100%">
+                    <defs><linearGradient id="dpixGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#8b5cf6"/><stop offset="100%" style="stop-color:#6d28d9"/></linearGradient></defs>
+                    <circle cx="350" cy="175" r="55" fill="url(#dpixGrad)" />
+                    <text x="350" y="170" fill="white" text-anchor="middle" font-weight="bold" font-size="13">DPIx</text>
+                    <text x="350" y="188" fill="white" text-anchor="middle" font-size="10" opacity="0.8">Agent</text>
+                    <g transform="translate(350, 45)"><rect x="-55" y="-28" width="110" height="56" rx="10" fill="#1f2937" stroke="#e43d30" stroke-width="2"/><text x="0" y="-3" fill="#e43d30" text-anchor="middle" font-weight="bold" font-size="12">mAadhaar</text><text x="0" y="12" fill="#94a3b8" text-anchor="middle" font-size="9">Identity</text><path d="M 0 28 L 0 75" stroke="#e43d30" stroke-width="2" stroke-dasharray="5,3"/></g>
+                    <g transform="translate(120, 175)"><rect x="-55" y="-28" width="110" height="56" rx="10" fill="#1f2937" stroke="#22c55e" stroke-width="2"/><text x="0" y="-3" fill="#22c55e" text-anchor="middle" font-weight="bold" font-size="12">UPI Apps</text><text x="0" y="12" fill="#94a3b8" text-anchor="middle" font-size="9">GPay / PhonePe</text><path d="M 55 0 L 150 0" stroke="#22c55e" stroke-width="2" stroke-dasharray="5,3"/></g>
+                    <g transform="translate(580, 175)"><rect x="-55" y="-28" width="110" height="56" rx="10" fill="#1f2937" stroke="#00baf2" stroke-width="2"/><text x="0" y="-3" fill="#00baf2" text-anchor="middle" font-weight="bold" font-size="12">DigiLocker</text><text x="0" y="12" fill="#94a3b8" text-anchor="middle" font-size="9">Storage</text><path d="M -55 0 L -150 0" stroke="#00baf2" stroke-width="2" stroke-dasharray="5,3"/></g>
+                    <g transform="translate(200, 305)"><rect x="-50" y="-22" width="100" height="44" rx="10" fill="#1f2937" stroke="#8b5cf6" stroke-width="2"/><text x="0" y="-2" fill="#8b5cf6" text-anchor="middle" font-weight="bold" font-size="10">Local LLM</text><text x="0" y="12" fill="#94a3b8" text-anchor="middle" font-size="8">Gemma 3n</text><path d="M 20 -22 L 310 -75" stroke="#8b5cf6" stroke-width="1.5" stroke-dasharray="4,3"/></g>
+                    <g transform="translate(500, 305)"><rect x="-50" y="-22" width="100" height="44" rx="10" fill="#1f2937" stroke="#8b5cf6" stroke-width="2"/><text x="0" y="-2" fill="#8b5cf6" text-anchor="middle" font-weight="bold" font-size="10">Signal Listener</text><text x="0" y="12" fill="#94a3b8" text-anchor="middle" font-size="8">SMS / Notifs</text><path d="M -20 -22 L -110 -75" stroke="#8b5cf6" stroke-width="1.5" stroke-dasharray="4,3"/></g>
+                </svg>
+            </div>
+            <h3>Data Flow Specification</h3>
+            <table class="spec-table">
+                <thead><tr><th>Signal Source</th><th>Data Captured</th><th>Storage</th></tr></thead>
+                <tbody>
+                    <tr><td>SMS Listener</td><td>Bank debit alerts, OTP messages, transaction IDs</td><td>On-device encrypted DB</td></tr>
+                    <tr><td>Notification Listener</td><td>App notifications from UPI, investment, e-commerce apps</td><td>On-device encrypted DB</td></tr>
+                    <tr><td>Intent Callbacks</td><td><code>KYC_Token</code>, <code>Txn_Ref_ID</code>, <code>DigiLocker_URI</code></td><td>On-device + DigiLocker</td></tr>
+                    <tr><td>Local LLM</td><td>Journey narrative, user queries, explanations</td><td>Ephemeral (not persisted)</td></tr>
+                </tbody>
+            </table>
+            <div class="alert alert-success"><span class="material-icons">security</span><div><strong>Privacy by Design:</strong> All signal processing happens on-device. No data leaves the phone unless the user explicitly chooses to store evidence in DigiLocker.</div></div>
+        </section>
+
+        <section id="journeys">
+            <h2><span class="material-icons">timeline</span> Journey Examples: Beyond Fintech</h2>
+            <p>DPIx is domain-agnostic. The same architecture applies wherever multiple asynchronous systems process a user's intent.</p>
+            <div class="journey-card fintech">
+                <div class="journey-header"><div class="journey-icon">💰</div><div><h4 class="journey-title">Fintech: The SIP Investment</h4><div class="journey-subtitle">Guruprasad's mutual fund journey</div></div></div>
+                <div class="journey-timeline">
+                    <div class="timeline-step"><span class="material-icons">touch_app</span> Tap "Pay"</div><div class="timeline-arrow"><span class="material-icons">arrow_forward</span></div>
+                    <div class="timeline-step"><span class="material-icons">account_balance</span> Bank debit</div><div class="timeline-arrow"><span class="material-icons">arrow_forward</span></div>
+                    <div class="timeline-step"><span class="material-icons">swap_horiz</span> UPI routing</div><div class="timeline-arrow"><span class="material-icons">arrow_forward</span></div>
+                    <div class="timeline-step"><span class="material-icons">hourglass_empty</span> Gateway limbo</div><div class="timeline-arrow"><span class="material-icons">arrow_forward</span></div>
+                    <div class="timeline-step"><span class="material-icons">trending_up</span> MF allocation</div>
+                </div>
+                <p style="font-size: 0.9rem; margin-bottom: 0;"><strong>DPIx value:</strong> Correlates bank SMS, UPI notification, and MF app status. Explains "deemed success" in Hindi. Auto-assembles evidence for dispute if needed.</p>
+            </div>
+            <div class="journey-card healthcare">
+                <div class="journey-header"><div class="journey-icon">🏥</div><div><h4 class="journey-title">Healthcare: Teleconsultation</h4><div class="journey-subtitle">From appointment to medicine delivery</div></div></div>
+                <div class="journey-timeline">
+                    <div class="timeline-step"><span class="material-icons">event</span> Book slot</div><div class="timeline-arrow"><span class="material-icons">arrow_forward</span></div>
+                    <div class="timeline-step"><span class="material-icons">videocam</span> Video call</div><div class="timeline-arrow"><span class="material-icons">arrow_forward</span></div>
+                    <div class="timeline-step"><span class="material-icons">description</span> e-Prescription</div><div class="timeline-arrow"><span class="material-icons">arrow_forward</span></div>
+                    <div class="timeline-step"><span class="material-icons">local_pharmacy</span> Pharmacy order</div><div class="timeline-arrow"><span class="material-icons">arrow_forward</span></div>
+                    <div class="timeline-step"><span class="material-icons">local_shipping</span> Delivery</div>
+                </div>
+                <p style="font-size: 0.9rem; margin-bottom: 0;"><strong>DPIx value:</strong> Links ABDM health ID, appointment confirmation, prescription PDF, pharmacy order, and delivery status into one coherent health journey.</p>
+            </div>
+            <div class="journey-card education">
+                <div class="journey-header"><div class="journey-icon">🎓</div><div><h4 class="journey-title">Education: College Admission</h4><div class="journey-subtitle">From application to enrollment</div></div></div>
+                <div class="journey-timeline">
+                    <div class="timeline-step"><span class="material-icons">edit</span> Apply</div><div class="timeline-arrow"><span class="material-icons">arrow_forward</span></div>
+                    <div class="timeline-step"><span class="material-icons">upload_file</span> Upload docs</div><div class="timeline-arrow"><span class="material-icons">arrow_forward</span></div>
+                    <div class="timeline-step"><span class="material-icons">payment</span> Pay fees</div><div class="timeline-arrow"><span class="material-icons">arrow_forward</span></div>
+                    <div class="timeline-step"><span class="material-icons">verified</span> Verification</div><div class="timeline-arrow"><span class="material-icons">arrow_forward</span></div>
+                    <div class="timeline-step"><span class="material-icons">school</span> Enrollment</div>
+                </div>
+                <p style="font-size: 0.9rem; margin-bottom: 0;"><strong>DPIx value:</strong> Tracks application status across portal, DigiLocker document fetch, fee payment, and enrollment confirmation.</p>
+            </div>
+            <div class="journey-card government">
+                <div class="journey-header"><div class="journey-icon">🏛️</div><div><h4 class="journey-title">Government: Benefit Application</h4><div class="journey-subtitle">DBT (Direct Benefit Transfer) journey</div></div></div>
+                <div class="journey-timeline">
+                    <div class="timeline-step"><span class="material-icons">app_registration</span> Apply</div><div class="timeline-arrow"><span class="material-icons">arrow_forward</span></div>
+                    <div class="timeline-step"><span class="material-icons">fingerprint</span> eKYC</div><div class="timeline-arrow"><span class="material-icons">arrow_forward</span></div>
+                    <div class="timeline-step"><span class="material-icons">fact_check</span> Dept review</div><div class="timeline-arrow"><span class="material-icons">arrow_forward</span></div>
+                    <div class="timeline-step"><span class="material-icons">check_circle</span> Approval</div><div class="timeline-arrow"><span class="material-icons">arrow_forward</span></div>
+                    <div class="timeline-step"><span class="material-icons">account_balance_wallet</span> DBT credit</div>
+                </div>
+                <p style="font-size: 0.9rem; margin-bottom: 0;"><strong>DPIx value:</strong> Explains application status in local language. Correlates Aadhaar verification, department processing, and bank credit.</p>
+            </div>
+        </section>
+
+        <section id="kya-likha-hai">
+            <h2><span class="material-icons">translate</span> "Kya Likha Hai?" The Query Interface</h2>
+            <p>The farmer's wife in rural Bihar attempting her first SIP is not an edge case. She is the median user in a country where so-called edge cases are the majority.</p>
+            <p>Her natural question, <strong>"Kya likha hai?" (What does it say?)</strong>, is not a limitation to be designed around. It is a design requirement to be designed for.</p>
+            <div class="alert alert-info"><span class="material-icons">format_quote</span><div><strong>Design Principle:</strong> "Kya likha hai?" should be a feature, not a barrier.</div></div>
+            <h3>Multilingual Support: 22 Scheduled Languages</h3>
+            <div class="language-grid">
+                <div class="language-chip active">हिन्दी</div>
+                <div class="language-chip">বাংলা</div>
+                <div class="language-chip">தமிழ்</div>
+                <div class="language-chip">తెలుగు</div>
+                <div class="language-chip">मराठी</div>
+                <div class="language-chip">ગુજરાતી</div>
+                <div class="language-chip">ಕನ್ನಡ</div>
+                <div class="language-chip">മലയാളം</div>
+                <div class="language-chip">ਪੰਜਾਬੀ</div>
+                <div class="language-chip">ଓଡ଼ିଆ</div>
+                <div class="language-chip">অসমীয়া</div>
+                <div class="language-chip">English</div>
+            </div>
+            <h3>UI Mockups: The Experience</h3>
+            <div class="phone-mockup-container">
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <div class="md-status-bar">9:41</div>
+                        <div class="md-app-bar"><span class="material-icons">menu</span><span class="md-app-bar-title">My Journeys</span><span class="material-icons">search</span></div>
+                        <div style="padding: 8px 16px;"><div class="md-chip"><span class="material-icons">filter_list</span>Today</div></div>
+                        <div class="md-list-item"><div class="md-list-icon" style="background: rgba(245,158,11,0.2);"><span class="material-icons" style="color: var(--warning);">hourglass_top</span></div><div class="md-list-content"><div class="md-list-title">SIP Payment</div><div class="md-list-subtitle">₹10,000 • In progress</div></div><span class="material-icons" style="color: var(--warning);">chevron_right</span></div>
+                        <div class="md-list-item"><div class="md-list-icon" style="background: rgba(16,185,129,0.2);"><span class="material-icons" style="color: var(--success);">check_circle</span></div><div class="md-list-content"><div class="md-list-title">Electricity Bill</div><div class="md-list-subtitle">₹2,450 • Completed</div></div><span class="material-icons" style="color: var(--text-dim);">chevron_right</span></div>
+                        <div class="md-list-item"><div class="md-list-icon" style="background: rgba(239,68,68,0.2);"><span class="material-icons" style="color: var(--error);">error</span></div><div class="md-list-content"><div class="md-list-title">Insurance KYC</div><div class="md-list-subtitle">Action needed</div></div><span class="material-icons" style="color: var(--error);">chevron_right</span></div>
+                        <div class="md-fab"><span class="material-icons">help_outline</span></div>
+                    </div>
+                </div>
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <div class="md-status-bar">9:41</div>
+                        <div class="md-app-bar"><span class="material-icons">arrow_back</span><span class="md-app-bar-title">Kya Likha Hai?</span><span class="material-icons">more_vert</span></div>
+                        <div style="padding: 16px; height: calc(100% - 130px); overflow-y: auto;">
+                            <div class="chat-bubble user">मेरा SIP payment का क्या हुआ?</div>
+                            <div class="chat-bubble assistant"><strong style="color: var(--dpix);">आपका SIP payment process में है।</strong><br><br>Bank से ₹10,000 debit हो गए हैं (10:42 AM)।<br><br>Groww को अभी तक confirmation नहीं मिला। यह "deemed success" state है।<br><br><span style="color: var(--success);">✓ आपका पैसा safe है।</span></div>
+                            <div class="chat-bubble user">Thursday tak nahi hua to?</div>
+                            <div class="chat-bubble assistant">Main Thursday को remind करूंगी। सारे screenshots ready हैं। 📋</div>
+                        </div>
+                        <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 10px 14px; background: var(--bg-card); border-top: 1px solid var(--border); display: flex; gap: 10px; align-items: center;">
+                            <span class="material-icons" style="color: var(--text-muted);">mic</span>
+                            <input type="text" placeholder="Type or speak..." style="flex: 1; background: var(--bg-surface); border: none; padding: 8px 14px; border-radius: 20px; color: var(--text-main); font-size: 0.85rem;">
+                            <span class="material-icons" style="color: var(--dpix);">send</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <div class="md-status-bar">9:41</div>
+                        <div class="md-app-bar"><span class="material-icons">arrow_back</span><span class="md-app-bar-title">Journey Evidence</span><span class="material-icons">share</span></div>
+                        <div style="padding: 16px;">
+                            <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 16px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;"><span style="font-weight: 500; color: white; font-size: 0.9rem;">SIP Payment</span><span class="md-chip" style="background: rgba(245,158,11,0.2); color: var(--warning); font-size: 0.7rem;">In Progress</span></div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Groww • ₹10,000 • Jan 15</div>
+                            </div>
+                            <h4 style="margin: 16px 0 10px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim);">Evidence Timeline</h4>
+                            <div style="border-left: 2px solid var(--border); margin-left: 6px; padding-left: 16px;">
+                                <div style="position: relative; padding-bottom: 14px;"><div style="position: absolute; left: -22px; top: 0; width: 10px; height: 10px; background: var(--success); border-radius: 50%;"></div><div style="font-size: 0.8rem; color: white;">Bank Debit</div><div style="font-size: 0.7rem; color: var(--text-muted);">10:42 AM • SMS</div></div>
+                                <div style="position: relative; padding-bottom: 14px;"><div style="position: absolute; left: -22px; top: 0; width: 10px; height: 10px; background: var(--success); border-radius: 50%;"></div><div style="font-size: 0.8rem; color: white;">UPI Processed</div><div style="font-size: 0.7rem; color: var(--text-muted);">10:42 AM • PhonePe</div></div>
+                                <div style="position: relative; padding-bottom: 14px;"><div style="position: absolute; left: -22px; top: 0; width: 10px; height: 10px; background: var(--warning); border-radius: 50%;"></div><div style="font-size: 0.8rem; color: white;">Gateway Pending</div><div style="font-size: 0.7rem; color: var(--text-muted);">10:45 AM • Timeout</div></div>
+                                <div style="position: relative;"><div style="position: absolute; left: -22px; top: 0; width: 10px; height: 10px; background: var(--border); border-radius: 50%; border: 2px dashed var(--text-dim);"></div><div style="font-size: 0.8rem; color: var(--text-dim);">Awaiting MF</div><div style="font-size: 0.7rem; color: var(--text-dim);">Expected Jan 17</div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h3>AI Capabilities</h3>
+            <div class="flow-step"><div class="step-number">1</div><div class="step-content"><strong>Temporal Correlation</strong><p>Matches timestamps across SMS, notifications, and app states to reconstruct what actually happened.</p></div></div>
+            <div class="flow-step"><div class="step-number">2</div><div class="step-content"><strong>Status Translation</strong><p>"Authorization failed" → "Bank ne confirmation maanga lekin samay par nahi mila. Aapka paisa safe hai."</p></div></div>
+            <div class="flow-step"><div class="step-number">3</div><div class="step-content"><strong>Proactive Alerts</strong><p>Detects anomalies (payment sent, no confirmation received) and alerts user before they discover the issue.</p></div></div>
+            <div class="flow-step"><div class="step-number">4</div><div class="step-content"><strong>Evidence Assembly</strong><p>Auto-bundles relevant signals into a chronological PDF with timestamps, ready for dispute resolution.</p></div></div>
+        </section>
+
+        <section id="personas">
+            <h2><span class="material-icons">people</span> User Personas: Billion Users, Million Journeys</h2>
+            <p>India's systems must serve not five user personas, but a combinatorial explosion of contexts. A linguistic diversity index of 0.93 multiplied by variations in literacy, connectivity, and digital fluency.</p>
+            <div class="persona-grid">
+                <div class="persona-card"><div class="persona-avatar">👨‍💼</div><div class="persona-name">Guruprasad</div><div class="persona-role">Urban Professional • Hyderabad</div><div class="persona-quote">"I'm comfortable with apps, but when things go wrong, I shouldn't have to become a detective."</div></div>
+                <div class="persona-card"><div class="persona-avatar">👩‍🌾</div><div class="persona-name">Sunita Devi</div><div class="persona-role">Farmer's Wife • Rural Bihar</div><div class="persona-quote">"Phone pe bahut kuch likha aata hai English mein. Mujhe Hindi mein samjhao."</div></div>
+                <div class="persona-card"><div class="persona-avatar">👨‍🎓</div><div class="persona-name">Arjun</div><div class="persona-role">First-Gen College Student • Nagpur</div><div class="persona-quote">"Admission process mein 5 alag portals hain. Kuch samajh nahi aata."</div></div>
+                <div class="persona-card"><div class="persona-avatar">👴</div><div class="persona-name">Ramachandran</div><div class="persona-role">Retired Teacher • Chennai</div><div class="persona-quote">"Hospital, lab, pharmacy - sab alag apps. Ek jagah dikhe to acha."</div></div>
+            </div>
+            <div class="alert alert-warning"><span class="material-icons">insights</span><div><strong>The Inverted Long Tail:</strong> In India, there is no "fat head" of typical users. Every user is unique. What appears to be one process reveals itself as a million variations.</div></div>
+        </section>
+
+        <section id="technical">
+            <h2><span class="material-icons">code</span> Technical Specifications</h2>
+            <h3>On-Device AI Requirements</h3>
+            <table class="spec-table">
+                <thead><tr><th>Component</th><th>Specification</th><th>Notes</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Model</strong></td><td>Gemma 3n 2B / IndicBERT</td><td>Optimized for Indic languages</td></tr>
+                    <tr><td><strong>Inference</strong></td><td>&lt; 500ms response</td><td>On Snapdragon 6xx or equivalent</td></tr>
+                    <tr><td><strong>Memory</strong></td><td>&lt; 500MB RAM</td><td>Background service optimization</td></tr>
+                    <tr><td><strong>Storage</strong></td><td>~1GB model + 50MB journey DB</td><td>Expandable to SD card</td></tr>
+                    <tr><td><strong>Offline</strong></td><td>Full functionality</td><td>Sync when connected</td></tr>
+                </tbody>
+            </table>
+            <h3>Data Residency</h3>
+            <table class="spec-table">
+                <thead><tr><th>Data Type</th><th>Location</th><th>Encryption</th></tr></thead>
+                <tbody>
+                    <tr><td>Raw signals (SMS, notifications)</td><td>On-device only</td><td>AES-256 at rest</td></tr>
+                    <tr><td>Journey narratives</td><td>Ephemeral</td><td>N/A</td></tr>
+                    <tr><td>Evidence bundles (user-initiated)</td><td>DigiLocker</td><td>DigiLocker encryption</td></tr>
+                    <tr><td>Consent records</td><td>On-device + DigiLocker</td><td>AES-256</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="governance">
+            <h2><span class="material-icons">gavel</span> Governance & Compliance</h2>
+            <h3>Regulatory Alignment</h3>
+            <div class="flow-step"><div class="step-number" style="background: var(--success);">✓</div><div class="step-content"><strong>Digital Personal Data Protection Act (DPDP) 2023</strong><p>Consent-based processing, data minimization, purpose limitation, user rights.</p></div></div>
+            <div class="flow-step"><div class="step-number" style="background: var(--success);">✓</div><div class="step-content"><strong>DEPA Framework Principles</strong><p>Granular consent artifacts, revocability, audit trails, data fiduciary responsibilities.</p></div></div>
+            <div class="flow-step"><div class="step-number" style="background: var(--success);">✓</div><div class="step-content"><strong>RBI Data Localization</strong><p>All payment data stored on-device within India. No cross-border transfer.</p></div></div>
+            <h3>Open Protocol Specification</h3>
+            <p>For DPIx to be a true DPI (not a proprietary app), it requires open specifications:</p>
+            <table class="spec-table">
+                <thead><tr><th>Specification</th><th>Purpose</th><th>Status</th></tr></thead>
+                <tbody>
+                    <tr><td><code>journey-signal-schema</code></td><td>Standardized format for transaction signals</td><td>Draft</td></tr>
+                    <tr><td><code>evidence-bundle-schema</code></td><td>Format for journey evidence PDFs</td><td>Draft</td></tr>
+                    <tr><td><code>consent-artifact-schema</code></td><td>DEPA-aligned consent format</td><td>Aligned with AA</td></tr>
+                    <tr><td><code>intent-weave-protocol</code></td><td>Standard intents for India Stack apps</td><td>Proposed</td></tr>
+                </tbody>
+            </table>
+            <div style="margin-top: 3rem; padding: 2rem; background: linear-gradient(135deg, rgba(139,92,246,0.1), rgba(139,92,246,0.05)); border: 1px solid var(--dpix); border-radius: 16px; text-align: center;">
+                <h3 style="margin-top: 0; color: white;">DPI<sup>AI</sup></h3>
+                <p style="font-size: 1.1rem; margin-bottom: 0;">As Nandan Nilekani observed: AI works to the power of DPI.<br>The stack is strong. The rails are laid. Now we need intelligence at the edge.</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) { targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+                document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-links a');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${id}`) { link.classList.add('active'); }
+                    });
+                }
+            });
+        }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+        sections.forEach(section => observer.observe(section));
+        document.querySelectorAll('.language-chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                document.querySelectorAll('.language-chip').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
