@@ -375,7 +375,51 @@
                 </p>
             </div>
 
-            <div class="distribution-container">
+            <div class="bellcurve-section">
+                <div class="bellcurve-title">Language Combinatorial Coverage: UIDAI vs Global Scale</div>
+                <div class="bellcurve-subtitle">How India's linguistic diversity creates unique design challenges at population scale</div>
+                <img src="bellall.png" alt="Language Coverage Chart">
+            </div>
+
+            <div class="distribution-chart">
+                <div class="chart-title">The Inverted Distribution</div>
+                <div class="chart-subtitle">Where Bharat actually lives in heterogeneous populations</div>
+                
+                <svg class="distribution-svg" viewBox="0 0 1000 240" xmlns="http://www.w3.org/2000/svg">
+                    <text x="15" y="120" class="axis-label" transform="rotate(-90 15 120)" text-anchor="middle">Population Density</text>
+                    <line x1="60" y1="200" x2="940" y2="200" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                    <path d="M 70,200 Q 80,170 90,160 T 110,180 L 110,200 Z" fill="rgba(6,214,160,0.3)" stroke="#06d6a0" stroke-width="2"/>
+                    <path d="M 110,200 Q 140,120 170,100 Q 200,90 230,110 Q 260,130 290,160 L 290,200 Z" fill="rgba(0,180,216,0.3)" stroke="#00b4d8" stroke-width="2"/>
+                    <path d="M 290,200 Q 320,80 380,50 Q 500,20 700,25 Q 850,28 920,30 L 920,200 Z" fill="rgba(255,107,53,0.4)" stroke="#ff6b35" stroke-width="3"/>
+                    <path d="M 70,200 Q 80,170 90,160 T 110,180 Q 140,120 170,100 Q 200,90 230,110 Q 260,130 290,160 Q 320,80 380,50 Q 500,20 700,25 Q 850,28 920,30" fill="none" stroke="#ff6b35" stroke-width="3"/>
+                    <line x1="90" y1="200" x2="90" y2="210" stroke="#06d6a0" stroke-width="2"/>
+                    <text x="90" y="225" class="curve-label" fill="#06d6a0" text-anchor="middle">HNIs</text>
+                    <text x="90" y="238" class="curve-sublabel" fill="#06d6a0" text-anchor="middle">~0.1%</text>
+                    <line x1="200" y1="200" x2="200" y2="210" stroke="#00b4d8" stroke-width="2"/>
+                    <text x="200" y="225" class="curve-label" fill="#00b4d8" text-anchor="middle">MIDDLE CLASS</text>
+                    <text x="200" y="238" class="curve-sublabel" fill="#00b4d8" text-anchor="middle">~3%</text>
+                    <line x1="700" y1="200" x2="700" y2="210" stroke="#ff6b35" stroke-width="2"/>
+                    <text x="700" y="225" class="curve-label" fill="#ff6b35" text-anchor="middle">THE EXCLUDED MAJORITY</text>
+                    <text x="700" y="238" class="curve-sublabel" fill="#ff6b35" text-anchor="middle">~97%</text>
+                    <text x="500" y="220" class="axis-label" text-anchor="middle" opacity="0.6">Wealth / Access / Capability</text>
+                    <path d="M 460,60 L 480,60" stroke="#ff6b35" stroke-width="2" marker-end="url(#arrowhead)"/>
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#ff6b35"/>
+                        </marker>
+                    </defs>
+                    <text x="500" y="50" class="mass-indicator">THIS IS WHERE BHARAT LIVES</text>
+                    <text x="500" y="70" class="mass-indicator">"India will be data rich before being economically rich."
+                    </br>- Nandan M. Nilekani</text>
+                </svg>
+                
+                <div class="chart-description">
+                    <strong>The Critical Inversion:</strong> Traditional fintech assumes a normal distribution where the middle class is the mass market. In India, the "tail" of excluded and underserved users is not an edge case—it's 1.36 billion people facing combinatorial barriers that create a million distinct journeys. The distribution isn't just skewed—it's inverted. Canonical UX can only serve the privileged minority; generative adaptation becomes structurally necessary.
+                </div>
+            </div>
+
+            
+<!--            <div class="distribution-container">
                 <svg class="distribution-svg" viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -441,7 +485,7 @@
                     </div>
                 </div>
             </div>
-
+-->
             <div class="quote-box">
                 <p>"India will be data rich before being economically rich."</p>
                 <cite>— Nandan M. Nilekani</cite>
