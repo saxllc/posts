@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DPIx: Journey Intelligence — The Experience Protocol for India Stack</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-card: #12121a;
+            --bg-card-hover: #1a1a25;
+            --text-primary: #f0f0f5;
+            --text-secondary: #a0a0b0;
+            --text-muted: #606070;
+            --accent-orange: #ff6b35;
+            --accent-orange-dim: rgba(255, 107, 53, 0.15);
+            --accent-cyan: #00d4aa;
+            --accent-cyan-dim: rgba(0, 212, 170, 0.15);
+            --accent-purple: #a855f7;
+            --accent-purple-dim: rgba(168, 85, 247, 0.15);
+            --accent-amber: #f59e0b;
+            --accent-amber-dim: rgba(245, 158, 11, 0.15);
+            --accent-red: #ef4444;
+            --accent-red-dim: rgba(239, 68, 68, 0.15);
+            --accent-blue: #3b82f6;
+            --accent-blue-dim: rgba(59, 130, 246, 0.15);
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-medium: rgba(255, 255, 255, 0.12);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+        h1, h2, h3, h4 { font-family: 'DM Serif Display', Georgia, serif; font-weight: 400; line-height: 1.2; }
+        h1 { font-size: clamp(2.5rem, 6vw, 4rem); }
+        h2 { font-size: clamp(1.8rem, 4vw, 2.5rem); margin-bottom: 1rem; }
+        h3 { font-size: clamp(1.3rem, 2.5vw, 1.6rem); margin-bottom: 0.75rem; }
+        p { color: var(--text-secondary); margin-bottom: 1rem; }
+        code, .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.9em; }
+        a { color: var(--accent-cyan); text-decoration: none; }
+        a:hover { color: var(--accent-orange); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        section { padding: 5rem 0; position: relative; }
+        section:nth-child(even) { background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.02) 50%, transparent 100%); }
+
+        /* Navigation */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            background: rgba(10, 10, 15, 0.9); backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle); padding: 1rem 2rem;
+        }
+        nav .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        nav .logo { font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: var(--text-primary); }
+        nav .logo span { color: var(--accent-orange); }
+        nav ul { display: flex; list-style: none; gap: 2rem; }
+        nav a { color: var(--text-secondary); font-size: 0.9rem; font-weight: 500; }
+        nav a:hover { color: var(--text-primary); }
+        @media (max-width: 768px) { nav ul { display: none; } }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh; display: flex; align-items: center;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1025 50%, #0f1a1a 100%);
+            position: relative; overflow: hidden; padding-top: 5rem;
+        }
+        .hero::before {
+            content: ''; position: absolute; top: -50%; right: -20%; width: 80%; height: 150%;
+            background: radial-gradient(ellipse at center, rgba(255, 107, 53, 0.08) 0%, transparent 60%);
+        }
+        .hero-content { position: relative; z-index: 2; }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            background: var(--accent-orange-dim); color: var(--accent-orange);
+            padding: 0.5rem 1rem; border-radius: 2rem; font-size: 0.85rem;
+            font-weight: 600; margin-bottom: 2rem; border: 1px solid rgba(255, 107, 53, 0.3);
+        }
+        .hero h1 { margin-bottom: 1.5rem; max-width: 900px; }
+        .hero h1 span { color: var(--accent-orange); }
+        .hero-subtitle { font-size: 1.25rem; color: var(--text-secondary); max-width: 700px; margin-bottom: 3rem; }
+        .hero-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.5rem; max-width: 800px; margin-top: 3rem; }
+        .hero-stat {
+            background: var(--bg-card); border: 1px solid var(--border-subtle);
+            border-radius: 1rem; padding: 1.5rem; text-align: center; transition: all 0.3s ease;
+        }
+        .hero-stat:hover { border-color: var(--accent-orange); transform: translateY(-2px); }
+        .hero-stat .number { font-family: 'DM Serif Display', serif; font-size: 2.5rem; color: var(--accent-orange); }
+        .hero-stat .label { font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem; }
+
+        /* Section Headers */
+        .section-header { margin-bottom: 3rem; }
+        .section-number { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--accent-orange); letter-spacing: 0.2em; margin-bottom: 1rem; display: block; }
+        .section-subtitle { font-size: 1.1rem; color: var(--text-secondary); max-width: 700px; }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card); border: 1px solid var(--border-subtle);
+            border-radius: 1rem; padding: 2rem; transition: all 0.3s ease;
+        }
+        .card:hover { border-color: var(--border-medium); background: var(--bg-card-hover); }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+        .card-icon {
+            width: 48px; height: 48px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1.5rem; font-size: 1.5rem;
+        }
+        .card-icon.orange { background: var(--accent-orange-dim); color: var(--accent-orange); }
+        .card-icon.cyan { background: var(--accent-cyan-dim); color: var(--accent-cyan); }
+        .card-icon.purple { background: var(--accent-purple-dim); color: var(--accent-purple); }
+        .card-icon.amber { background: var(--accent-amber-dim); color: var(--accent-amber); }
+        .card-icon.blue { background: var(--accent-blue-dim); color: var(--accent-blue); }
+
+        /* Distribution */
+        .distribution-container {
+            background: var(--bg-card); border: 1px solid var(--border-subtle);
+            border-radius: 1.5rem; padding: 2.5rem; margin: 2rem 0;
+        }
+        .distribution-svg { width: 100%; max-width: 900px; margin: 0 auto; display: block; }
+        .distribution-legend { display: flex; justify-content: center; gap: 2rem; margin-top: 2rem; flex-wrap: wrap; }
+        .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-secondary); }
+        .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .legend-dot.hni { background: var(--accent-cyan); }
+        .legend-dot.middle { background: var(--accent-blue); }
+        .legend-dot.majority { background: var(--accent-orange); }
+
+        /* Layers */
+        .layers-container { display: flex; flex-direction: column; gap: 1rem; max-width: 800px; margin: 0 auto; }
+        .layer { border-radius: 1rem; padding: 1.5rem 2rem; position: relative; overflow: hidden; }
+        .layer::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; }
+        .layer.canonical { background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%); border: 1px solid rgba(59, 130, 246, 0.3); }
+        .layer.canonical::before { background: var(--accent-blue); }
+        .layer.generative { background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(168, 85, 247, 0.05) 100%); border: 1px solid rgba(168, 85, 247, 0.3); }
+        .layer.generative::before { background: var(--accent-purple); }
+        .layer.rhetorical { background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(255, 107, 53, 0.05) 100%); border: 1px solid rgba(255, 107, 53, 0.3); }
+        .layer.rhetorical::before { background: var(--accent-orange); }
+        .layer-number { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; opacity: 0.6; margin-bottom: 0.5rem; }
+        .layer h4 { font-family: 'DM Sans', sans-serif; font-weight: 600; margin-bottom: 0.5rem; }
+        .layer.canonical h4 { color: var(--accent-blue); }
+        .layer.generative h4 { color: var(--accent-purple); }
+        .layer.rhetorical h4 { color: var(--accent-orange); }
+        .layer p { margin-bottom: 0; font-size: 0.95rem; }
+
+        /* Insight Box */
+        .insight-box {
+            background: linear-gradient(135deg, var(--accent-orange-dim) 0%, transparent 100%);
+            border: 1px solid rgba(255, 107, 53, 0.3); border-left: 4px solid var(--accent-orange);
+            border-radius: 0 1rem 1rem 0; padding: 1.5rem 2rem; margin: 2rem 0;
+        }
+        .insight-box.cyan { background: linear-gradient(135deg, var(--accent-cyan-dim) 0%, transparent 100%); border-color: rgba(0, 212, 170, 0.3); border-left-color: var(--accent-cyan); }
+        .insight-box p { margin: 0; color: var(--text-primary); }
+        .insight-box strong { color: var(--accent-orange); }
+        .insight-box.cyan strong { color: var(--accent-cyan); }
+
+        /* Quote */
+        .quote-box {
+            position: relative; padding: 2rem 2.5rem; background: var(--bg-card);
+            border-radius: 1rem; margin: 2rem 0; border: 1px solid var(--border-subtle);
+        }
+        .quote-box::before {
+            content: '"'; font-family: 'DM Serif Display', serif; font-size: 5rem;
+            color: var(--accent-orange); opacity: 0.2; position: absolute; top: -0.5rem; left: 1rem; line-height: 1;
+        }
+        .quote-box p { font-size: 1.2rem; color: var(--text-primary); font-style: italic; margin-bottom: 0.75rem; }
+        .quote-box cite { font-size: 0.9rem; color: var(--text-muted); font-style: normal; }
+
+        /* Comparison */
+        .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0; }
+        @media (max-width: 768px) { .comparison-grid { grid-template-columns: 1fr; } }
+        .comparison-box { padding: 1.5rem; border-radius: 1rem; }
+        .comparison-box.before { background: var(--accent-red-dim); border: 1px solid rgba(239, 68, 68, 0.3); }
+        .comparison-box.after { background: var(--accent-cyan-dim); border: 1px solid rgba(0, 212, 170, 0.3); }
+        .comparison-box h4 { font-family: 'DM Sans', sans-serif; font-weight: 600; margin-bottom: 1rem; }
+        .comparison-box.before h4 { color: var(--accent-red); }
+        .comparison-box.after h4 { color: var(--accent-cyan); }
+        .comparison-box ul { list-style: none; }
+        .comparison-box li { padding: 0.4rem 0; padding-left: 1.5rem; position: relative; color: var(--text-secondary); font-size: 0.9rem; }
+        .comparison-box li::before { content: '→'; position: absolute; left: 0; color: var(--text-muted); }
+
+        /* Tables */
+        .table-container { overflow-x: auto; margin: 2rem 0; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        th, td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border-subtle); }
+        th { background: var(--bg-card); color: var(--text-secondary); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        td { color: var(--text-secondary); }
+
+        /* Phone Mockups */
+        .mockup-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2rem; margin: 2rem 0; }
+        .phone-mockup { background: #1a1a25; border-radius: 2rem; padding: 0.5rem; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); max-width: 300px; margin: 0 auto; }
+        .phone-screen { background: #ffffff; border-radius: 1.5rem; overflow: hidden; min-height: 420px; }
+        .phone-header { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 1rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #dee2e6; }
+        .phone-title { font-weight: 600; color: #212529; font-size: 0.9rem; }
+        .phone-content { padding: 1rem; }
+        .form-field { margin-bottom: 1rem; }
+        .form-label { font-size: 0.8rem; color: #495057; margin-bottom: 0.3rem; display: block; font-weight: 500; }
+        .form-input { width: 100%; padding: 0.7rem 1rem; border: 1px solid #dee2e6; border-radius: 0.5rem; font-size: 0.9rem; background: #fff; color: #212529; }
+        .alert-banner { padding: 0.75rem; border-radius: 0.5rem; margin-bottom: 1rem; font-size: 0.8rem; }
+        .alert-banner.warning { background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); color: #92400e; }
+        .alert-banner.danger { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #991b1b; }
+        .mockup-label { text-align: center; margin-top: 1.25rem; }
+        .mockup-label h4 { font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.95rem; color: var(--text-primary); margin-bottom: 0.25rem; }
+        .mockup-label p { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0; }
+
+        /* GATO Box */
+        .gato-box { background: linear-gradient(135deg, rgba(255, 107, 53, 0.15) 0%, rgba(255, 107, 53, 0.05) 100%); border: 1px solid rgba(255, 107, 53, 0.3); border-radius: 0.75rem; padding: 1rem; margin: 1rem 0; }
+        .gato-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+        .gato-header .icon { color: var(--accent-orange); }
+        .gato-header .label { font-size: 0.75rem; color: var(--accent-orange); font-weight: 600; }
+        .gato-text { font-size: 0.8rem; color: #374151; line-height: 1.5; font-style: italic; }
+
+        /* Roadmap */
+        .roadmap-container { position: relative; }
+        .roadmap-line { position: absolute; left: 2rem; top: 0; bottom: 0; width: 3px; background: linear-gradient(180deg, var(--accent-cyan), var(--accent-purple), var(--accent-orange), var(--accent-amber)); border-radius: 3px; }
+        @media (max-width: 768px) { .roadmap-line { left: 1.25rem; } }
+        .roadmap-phase { position: relative; padding-left: 5rem; padding-bottom: 3rem; }
+        @media (max-width: 768px) { .roadmap-phase { padding-left: 3.5rem; } }
+        .roadmap-phase:last-child { padding-bottom: 0; }
+        .roadmap-marker {
+            position: absolute; left: 0; top: 0; width: 4rem; height: 4rem;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: white; z-index: 2;
+        }
+        @media (max-width: 768px) { .roadmap-marker { width: 2.5rem; height: 2.5rem; font-size: 1rem; } }
+        .roadmap-marker.phase-1 { background: var(--accent-cyan); }
+        .roadmap-marker.phase-2 { background: var(--accent-purple); }
+        .roadmap-marker.phase-3 { background: var(--accent-orange); }
+        .roadmap-marker.phase-4 { background: var(--accent-amber); }
+        .roadmap-content { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 1rem; padding: 1.5rem 2rem; }
+        .roadmap-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem; }
+        .roadmap-title h3 { margin-bottom: 0.25rem; }
+        .roadmap-duration { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-muted); }
+        .roadmap-metrics { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+        .roadmap-metric { text-align: right; }
+        .roadmap-metric .value { font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: var(--accent-orange); }
+        .roadmap-metric .label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
+        .roadmap-activities { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .activity-card { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-subtle); border-radius: 0.75rem; padding: 1rem; }
+        .activity-card h5 { font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: var(--text-primary); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .activity-card p { font-size: 0.8rem; margin-bottom: 0; }
+        .activity-card ul { margin: 0.5rem 0 0 0; padding-left: 1.25rem; }
+        .activity-card li { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.25rem; }
+        .success-metrics { background: var(--accent-cyan-dim); border: 1px solid rgba(0, 212, 170, 0.3); border-radius: 0.75rem; padding: 1rem; margin-top: 1rem; }
+        .success-metrics h5 { font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.8rem; color: var(--accent-cyan); margin-bottom: 0.75rem; }
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.75rem; }
+        .metric-item { text-align: center; }
+        .metric-item .value { font-family: 'JetBrains Mono', monospace; font-size: 1rem; color: var(--text-primary); font-weight: 600; }
+        .metric-item .label { font-size: 0.65rem; color: var(--text-muted); margin-top: 0.15rem; }
+
+        /* Footer */
+        footer { background: var(--bg-card); border-top: 1px solid var(--border-subtle); padding: 3rem 0; text-align: center; }
+        footer .logo { font-family: 'DM Serif Display', serif; font-size: 2rem; margin-bottom: 1rem; }
+        footer .logo span { color: var(--accent-orange); }
+        footer p { color: var(--text-muted); font-size: 0.9rem; }
+        footer .author { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-subtle); }
+        footer .author strong { color: var(--text-primary); display: block; margin-bottom: 0.25rem; }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-inner">
+            <div class="logo">DPI<span>x</span></div>
+            <ul>
+                <li><a href="#problem">Problem</a></li>
+                <li><a href="#distribution">Distribution</a></li>
+                <li><a href="#framework">Framework</a></li>
+                <li><a href="#architecture">Architecture</a></li>
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#roadmap">Roadmap</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <div class="hero-badge">
+                <span class="material-icons-outlined" style="font-size: 1rem;">hub</span>
+                DESIGNNESS FRAMEWORK + DPIx PRD v2.0
+            </div>
+            <h1>Journey Intelligence:<br><span>The Missing Stitch</span> in India Stack</h1>
+            <p class="hero-subtitle">
+                An edge-based experience layer that watches, correlates, explains, and acts. 
+                Enabling billion users to navigate million journeys through adaptive, AI-powered guidance.
+            </p>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span class="number">97%</span>
+                    <span class="label">Excluded Majority</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="number">390K+</span>
+                    <span class="label">Barrier Combinations</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="number">0.93</span>
+                    <span class="label">Linguistic Diversity</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="number">13L+</span>
+                    <span class="label">Annual Complaints</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section id="problem">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">01 / THE PROBLEM</span>
+                <h2>Screenshot Stitchers</h2>
+                <p class="section-subtitle">
+                    Behind every complaint is someone assembling screenshots, presenting them to institutions 
+                    that already possess the data but will not correlate it.
+                </p>
+            </div>
+
+            <div class="card" style="max-width: 800px; margin: 0 auto 2rem;">
+                <h3 style="color: var(--accent-orange); margin-bottom: 1rem;">The Guruprasad Story</h3>
+                <p>
+                    At 10:42 AM, Guruprasad tapped 'Pay' on his mutual fund SIP. His bank instantly sent an SMS: 
+                    ₹10,000 debited. But the investment app showed 'payment failed.'
+                </p>
+                <p style="font-size: 1.1rem; color: var(--text-primary); font-weight: 500;">
+                    Three systems. Three different answers. His money sat in limbo for days.
+                </p>
+            </div>
+
+            <div class="insight-box">
+                <p><strong>This is not a bug. It is the architecture.</strong> India's financial systems operate on 
+                fundamentally different clocks. OTPs expire in 60 seconds. UPI sessions timeout in 180 seconds. 
+                MF NAV allocation follows T+1 or T+2. No clock accounts for the others.</p>
+            </div>
+
+            <div class="comparison-grid">
+                <div class="comparison-box before">
+                    <h4>Before: User as Integration Layer</h4>
+                    <ul>
+                        <li>Check bank app → screenshot</li>
+                        <li>Check UPI app → screenshot</li>
+                        <li>Check investment app → screenshot</li>
+                        <li>Call customer care → explain</li>
+                        <li>Wait 3-7 days → anxiety</li>
+                    </ul>
+                </div>
+                <div class="comparison-box after">
+                    <h4>After: DPIx as Integration Layer</h4>
+                    <ul>
+                        <li>Tap "?" button</li>
+                        <li>Ask "Kya likha hai?"</li>
+                        <li>Receive explanation in your language</li>
+                        <li>Get timeline for resolution</li>
+                        <li>Auto-assembled evidence ready</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Distribution Section -->
+    <section id="distribution">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">02 / THE INVERTED DISTRIBUTION</span>
+                <h2>Where Bharat Actually Lives</h2>
+                <p class="section-subtitle">
+                    Traditional fintech assumes a normal distribution where the middle class is the mass market. 
+                    In India, the "tail" is 1.36 billion people.
+                </p>
+            </div>
+
+            <div class="distribution-container">
+                <svg class="distribution-svg" viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#ff6b35;stop-opacity:0.8"/>
+                            <stop offset="100%" style="stop-color:#ff6b35;stop-opacity:0.2"/>
+                        </linearGradient>
+                        <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#00d4aa;stop-opacity:0.8"/>
+                            <stop offset="100%" style="stop-color:#00d4aa;stop-opacity:0.2"/>
+                        </linearGradient>
+                        <linearGradient id="blueGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:0.8"/>
+                            <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:0.2"/>
+                        </linearGradient>
+                    </defs>
+                    
+                    <!-- Axes -->
+                    <line x1="60" y1="260" x2="760" y2="260" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                    <line x1="60" y1="40" x2="60" y2="260" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                    
+                    <!-- Y-axis label -->
+                    <text x="25" y="150" fill="rgba(255,255,255,0.5)" font-size="11" transform="rotate(-90, 25, 150)">Population Density</text>
+                    
+                    <!-- X-axis label -->
+                    <text x="410" y="295" fill="rgba(255,255,255,0.5)" font-size="11" text-anchor="middle">Wealth / Access / Capability →</text>
+                    
+                    <!-- HNI Bell Curve -->
+                    <path d="M80,260 Q80,230 95,180 Q110,130 125,180 Q140,230 140,260" fill="url(#cyanGrad)" stroke="#00d4aa" stroke-width="2"/>
+                    
+                    <!-- Middle Class Bell Curve -->
+                    <path d="M160,260 Q160,220 190,150 Q220,80 250,150 Q280,220 280,260" fill="url(#blueGrad)" stroke="#3b82f6" stroke-width="2"/>
+                    
+                    <!-- Fat Tail -->
+                    <path d="M300,260 Q300,180 360,90 Q420,40 500,55 Q600,70 680,120 Q720,160 740,200 Q755,230 760,260" fill="url(#orangeGrad)" stroke="#ff6b35" stroke-width="2"/>
+                    
+                    <!-- Labels -->
+                    <text x="110" y="195" fill="#00d4aa" font-size="10" text-anchor="middle" font-weight="600">HNIs</text>
+                    <text x="110" y="210" fill="rgba(255,255,255,0.5)" font-size="9" text-anchor="middle">~0.1%</text>
+                    
+                    <text x="220" y="175" fill="#3b82f6" font-size="10" text-anchor="middle" font-weight="600">MIDDLE CLASS</text>
+                    <text x="220" y="190" fill="rgba(255,255,255,0.5)" font-size="9" text-anchor="middle">~3%</text>
+                    
+                    <text x="530" y="75" fill="#ff6b35" font-size="12" text-anchor="middle" font-weight="700">THE EXCLUDED MAJORITY</text>
+                    <text x="530" y="92" fill="rgba(255,255,255,0.6)" font-size="10" text-anchor="middle">~97%</text>
+                    
+                    <!-- Callout -->
+                    <rect x="440" y="200" width="180" height="40" rx="6" fill="rgba(255,107,53,0.15)" stroke="rgba(255,107,53,0.4)"/>
+                    <text x="530" y="225" fill="#ff6b35" font-size="11" text-anchor="middle" font-weight="600">THIS IS WHERE BHARAT LIVES</text>
+                </svg>
+
+                <div class="distribution-legend">
+                    <div class="legend-item">
+                        <div class="legend-dot hni"></div>
+                        <span>HNIs (0.1%) — Canonical sufficient</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot middle"></div>
+                        <span>Middle Class (3%) — Light adaptation</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot majority"></div>
+                        <span>Excluded Majority (97%) — Generative required</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quote-box">
+                <p>"India will be data rich before being economically rich."</p>
+                <cite>— Nandan M. Nilekani</cite>
+            </div>
+        </div>
+    </section>
+
+    <!-- Heterogeneity Section -->
+    <section id="heterogeneity">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">03 / THE CHALLENGE</span>
+                <h2>The Heterogeneity Explosion</h2>
+                <p class="section-subtitle">Why the tail requires million journeys, not six personas.</p>
+            </div>
+
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-icon orange"><span class="material-icons-outlined">translate</span></div>
+                    <h4>Language</h4>
+                    <p>22 scheduled languages × dialects. LDI of 0.93 approaching maximum diversity.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon cyan"><span class="material-icons-outlined">wifi</span></div>
+                    <h4>Digital Access</h4>
+                    <p>66% urban vs 31% rural internet penetration. Connectivity is not binary.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon purple"><span class="material-icons-outlined">account_balance_wallet</span></div>
+                    <h4>Income</h4>
+                    <p>Daily wages to HNI spectrum. ₹500 SIP vs ₹5L investment need different journeys.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon amber"><span class="material-icons-outlined">psychology</span></div>
+                    <h4>Literacy</h4>
+                    <p>Varying mental models. First-gen investors lack inherited financial vocabulary.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon blue"><span class="material-icons-outlined">trending_up</span></div>
+                    <h4>Aspiration</h4>
+                    <p>Survival vs investment mindset. Different emotional starting points.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon orange"><span class="material-icons-outlined">fingerprint</span></div>
+                    <h4>KYC Complexity</h4>
+                    <p>Aadhaar availability varies by region, documentation, and background.</p>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 3rem;">
+                <div style="font-family: 'DM Serif Display', serif; font-size: 3.5rem; color: var(--accent-orange);">390,625</div>
+                <div style="font-size: 1.1rem; color: var(--text-secondary);">possible barrier combinations</div>
+                <p style="margin-top: 0.75rem; font-style: italic; color: var(--text-muted);">
+                    The 'tail' isn't an edge case—it's the PRIMARY use case.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Framework Section -->
+    <section id="framework">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">04 / THE FRAMEWORK</span>
+                <h2>Billion Users, Million Journeys</h2>
+                <p class="section-subtitle">
+                    Rethinking UX means generating the PATH to the interface, not just customizing the interface itself.
+                </p>
+            </div>
+
+            <div class="layers-container">
+                <div class="layer canonical">
+                    <div class="layer-number">LAYER 1</div>
+                    <h4>Canonical (During)</h4>
+                    <p>Fixed, auditable, regulatory compliance. SEBI regulations, KYC/AML, legal disclosures. 
+                    Server-Driven UI (SDUI). Same for all users—the non-negotiable foundation.</p>
+                </div>
+                <div class="layer generative">
+                    <div class="layer-number">LAYER 2</div>
+                    <h4>Generative (Journey)</h4>
+                    <p>AI-powered barrier detection and path generation. Analyzes context across 8 dimensions. 
+                    <strong>Generates the PATH to the UI</strong>, not the UI itself.</p>
+                </div>
+                <div class="layer rhetorical">
+                    <div class="layer-number">LAYER 3</div>
+                    <h4>Rhetorical (Before)</h4>
+                    <p>GATO audio guidance, context inference, language selection, trust building, complexity reduction, 
+                    personalized onboarding. Million rhetorical variations possible.</p>
+                </div>
+            </div>
+
+            <div class="insight-box" style="margin-top: 2rem;">
+                <p><strong>Key Insight:</strong> A billion users can have a million different journeys TO the form. 
+                But they all complete THE SAME FORM. The canonical layer remains deterministic; 
+                the rhetorical layer adapts.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- DPI Positioning Section -->
+    <section id="positioning">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">05 / DPI POSITIONING</span>
+                <h2>The Three-Tier Ontology</h2>
+                <p class="section-subtitle">
+                    India Stack handles identity, money, and data. But no layer handles journey continuity.
+                </p>
+            </div>
+
+            <div class="card-grid" style="margin-bottom: 2rem;">
+                <div class="card">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                        <span style="background: var(--accent-blue); color: white; padding: 0.2rem 0.6rem; border-radius: 1rem; font-size: 0.7rem; font-weight: 600;">TIER 1</span>
+                        <span style="color: var(--text-muted); font-size: 0.8rem;">Foundational</span>
+                    </div>
+                    <h4>Core Capabilities</h4>
+                    <p style="margin-bottom: 0;">Aadhaar • UPI • DigiLocker • eSign</p>
+                </div>
+                <div class="card">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                        <span style="background: var(--accent-purple); color: white; padding: 0.2rem 0.6rem; border-radius: 1rem; font-size: 0.7rem; font-weight: 600;">TIER 2</span>
+                        <span style="color: var(--text-muted); font-size: 0.8rem;">Network</span>
+                    </div>
+                    <h4>Data Flows</h4>
+                    <p style="margin-bottom: 0;">DEPA / Account Aggregator • ONDC • ABDM</p>
+                </div>
+                <div class="card" style="border-color: var(--accent-orange);">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                        <span style="background: var(--accent-orange); color: white; padding: 0.2rem 0.6rem; border-radius: 1rem; font-size: 0.7rem; font-weight: 600;">TIER 3 — NEW</span>
+                        <span style="color: var(--text-muted); font-size: 0.8rem;">Edge</span>
+                    </div>
+                    <h4>User's Device</h4>
+                    <p style="margin-bottom: 0;">DPIx / Journey Intelligence • User-controlled • AI-powered</p>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Dimension</th>
+                            <th>DEPA / Account Aggregator</th>
+                            <th>DPIx / Journey Intelligence</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Core Question</strong></td>
+                            <td>"May institution A share data with B?"</td>
+                            <td>"What happened across A, B, C, D?"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Manages</strong></td>
+                            <td>Consent for data sharing</td>
+                            <td>Evidence for journey stitching</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Operates</strong></td>
+                            <td>Between institutions (network)</td>
+                            <td>On user's device (edge)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Analogy</strong></td>
+                            <td>Consent Manager</td>
+                            <td>Personal Witness / Jeeves</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Architecture Section -->
+    <section id="architecture">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">06 / ARCHITECTURE</span>
+                <h2>The Intent Weave</h2>
+                <p class="section-subtitle">
+                    How DPIx stitches apps together with DigiLocker as the evidence orchestrator.
+                </p>
+            </div>
+
+            <div class="distribution-container">
+                <svg class="distribution-svg" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+                    <!-- DigiLocker -->
+                    <rect x="300" y="30" width="200" height="70" rx="10" fill="rgba(59, 130, 246, 0.2)" stroke="#3b82f6" stroke-width="2"/>
+                    <text x="400" y="60" fill="#3b82f6" font-size="13" font-weight="600" text-anchor="middle">DigiLocker</text>
+                    <text x="400" y="78" fill="rgba(255,255,255,0.5)" font-size="9" text-anchor="middle">Transaction Inbox + Vault</text>
+                    
+                    <!-- DPIx Agent -->
+                    <rect x="300" y="160" width="200" height="60" rx="10" fill="rgba(255, 107, 53, 0.2)" stroke="#ff6b35" stroke-width="2"/>
+                    <text x="400" y="190" fill="#ff6b35" font-size="13" font-weight="600" text-anchor="middle">DPIx Agent</text>
+                    <text x="400" y="205" fill="rgba(255,255,255,0.5)" font-size="9" text-anchor="middle">The Weaver</text>
+                    
+                    <!-- Connection -->
+                    <line x1="400" y1="100" x2="400" y2="160" stroke="rgba(255,255,255,0.3)" stroke-width="2" stroke-dasharray="5,5"/>
+                    <text x="420" y="135" fill="rgba(255,255,255,0.4)" font-size="8">API Read</text>
+                    
+                    <!-- Push sources -->
+                    <rect x="40" y="40" width="130" height="40" rx="6" fill="rgba(0, 212, 170, 0.15)" stroke="rgba(0, 212, 170, 0.4)"/>
+                    <text x="105" y="65" fill="#00d4aa" font-size="10" text-anchor="middle" font-weight="500">Banks</text>
+                    
+                    <rect x="40" y="100" width="130" height="40" rx="6" fill="rgba(0, 212, 170, 0.15)" stroke="rgba(0, 212, 170, 0.4)"/>
+                    <text x="105" y="125" fill="#00d4aa" font-size="10" text-anchor="middle" font-weight="500">Payment Gateways</text>
+                    
+                    <rect x="40" y="160" width="130" height="40" rx="6" fill="rgba(0, 212, 170, 0.15)" stroke="rgba(0, 212, 170, 0.4)"/>
+                    <text x="105" y="185" fill="#00d4aa" font-size="10" text-anchor="middle" font-weight="500">Services</text>
+                    
+                    <!-- Push arrows -->
+                    <path d="M170,60 L290,60" stroke="#00d4aa" stroke-width="1.5" marker-end="url(#arrowC)"/>
+                    <path d="M170,120 L290,65" stroke="#00d4aa" stroke-width="1.5" marker-end="url(#arrowC)"/>
+                    <path d="M170,180 L290,70" stroke="#00d4aa" stroke-width="1.5" marker-end="url(#arrowC)"/>
+                    
+                    <defs>
+                        <marker id="arrowC" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                            <polygon points="0 0, 8 3, 0 6" fill="#00d4aa"/>
+                        </marker>
+                        <marker id="arrowP" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                            <polygon points="0 0, 8 3, 0 6" fill="#a855f7"/>
+                        </marker>
+                    </defs>
+                    
+                    <!-- Intent targets -->
+                    <rect x="630" y="60" width="130" height="40" rx="6" fill="rgba(168, 85, 247, 0.15)" stroke="rgba(168, 85, 247, 0.4)"/>
+                    <text x="695" y="85" fill="#a855f7" font-size="10" text-anchor="middle" font-weight="500">mAadhaar</text>
+                    
+                    <rect x="630" y="120" width="130" height="40" rx="6" fill="rgba(168, 85, 247, 0.15)" stroke="rgba(168, 85, 247, 0.4)"/>
+                    <text x="695" y="145" fill="#a855f7" font-size="10" text-anchor="middle" font-weight="500">UPI Apps</text>
+                    
+                    <!-- Intent arrows -->
+                    <path d="M500,180 L620,80" stroke="#a855f7" stroke-width="1.5" stroke-dasharray="5,5" marker-end="url(#arrowP)"/>
+                    <path d="M500,190 L620,140" stroke="#a855f7" stroke-width="1.5" stroke-dasharray="5,5" marker-end="url(#arrowP)"/>
+                    
+                    <!-- User -->
+                    <circle cx="400" cy="280" r="25" fill="rgba(255, 107, 53, 0.2)" stroke="#ff6b35" stroke-width="2"/>
+                    <text x="400" y="286" fill="#ff6b35" font-size="20" text-anchor="middle">👤</text>
+                    <line x1="400" y1="220" x2="400" y2="255" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+                    
+                    <!-- Legend -->
+                    <rect x="40" y="330" width="720" height="50" rx="6" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)"/>
+                    <line x1="80" y1="355" x2="120" y2="355" stroke="#00d4aa" stroke-width="2"/>
+                    <text x="130" y="359" fill="rgba(255,255,255,0.5)" font-size="9">Push (email)</text>
+                    <line x1="250" y1="355" x2="290" y2="355" stroke="#a855f7" stroke-width="2" stroke-dasharray="5,5"/>
+                    <text x="300" y="359" fill="rgba(255,255,255,0.5)" font-size="9">Intent (app-to-app)</text>
+                    <text x="450" y="359" fill="rgba(255,255,255,0.4)" font-size="9">Privacy by Design: All processing on-device</text>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">07 / EXPERIENCE</span>
+                <h2>"Kya Likha Hai?"</h2>
+                <p class="section-subtitle">
+                    The farmer's wife in rural Bihar attempting her first SIP is not an edge case. 
+                    She is the median user.
+                </p>
+            </div>
+
+            <div class="insight-box cyan" style="margin-bottom: 2rem;">
+                <p><strong>Design Principle:</strong> "Kya likha hai?" should be a feature, not a barrier. 
+                GATO (Generative Audio-Tooltip Overlay) provides context-aware audio in 22+ languages.</p>
+            </div>
+
+            <!-- Mockups -->
+            <h3 style="text-align: center; margin-bottom: 1.5rem;">Aadhaar Update: Rhetorical Variants</h3>
+            <div class="mockup-grid">
+                <!-- Variant A -->
+                <div>
+                    <div class="phone-mockup">
+                        <div class="phone-screen">
+                            <div class="phone-header">
+                                <span class="phone-title">Aadhaar Update</span>
+                                <span style="color: #ff6b35;">🔊</span>
+                            </div>
+                            <div class="phone-content">
+                                <div class="form-field">
+                                    <label class="form-label">Aadhaar Number</label>
+                                    <input type="text" class="form-input" placeholder="12-digit number">
+                                </div>
+                                <div class="form-field">
+                                    <label class="form-label">Mobile Number</label>
+                                    <input type="text" class="form-input" placeholder="Registered mobile">
+                                </div>
+                                <button style="width: 100%; padding: 0.8rem; background: #3b82f6; color: white; border: none; border-radius: 0.5rem; font-weight: 600; margin-top: 1rem;">Continue</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mockup-label">
+                        <h4>Variant A: Standard</h4>
+                        <p>Default for digital-confident users</p>
+                    </div>
+                </div>
+
+                <!-- Variant B -->
+                <div>
+                    <div class="phone-mockup">
+                        <div class="phone-screen">
+                            <div class="phone-header" style="background: linear-gradient(135deg, #fef2f2, #fee2e2);">
+                                <span class="phone-title">Aadhaar Update</span>
+                                <span style="color: #ff6b35;">🔊</span>
+                            </div>
+                            <div class="phone-content">
+                                <div class="alert-banner danger">
+                                    <strong>⚠️ Urgent Action Required</strong><br>
+                                    Update within 48 hours
+                                </div>
+                                <div class="form-field">
+                                    <label class="form-label">Aadhaar <span style="color: #dc2626;">⚠️</span></label>
+                                    <input type="text" class="form-input" style="border-color: #dc2626;">
+                                </div>
+                                <div class="form-field">
+                                    <label class="form-label">Mobile <span style="color: #dc2626;">⚠️</span></label>
+                                    <input type="text" class="form-input" style="border-color: #dc2626;">
+                                </div>
+                                <button style="width: 100%; padding: 0.8rem; background: #dc2626; color: white; border: none; border-radius: 0.5rem; font-weight: 600;">Update Now</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mockup-label">
+                        <h4>Variant B: Urgent</h4>
+                        <p>High-urgency visual cues</p>
+                    </div>
+                </div>
+
+                <!-- Variant C -->
+                <div>
+                    <div class="phone-mockup">
+                        <div class="phone-screen">
+                            <div class="phone-header" style="background: linear-gradient(135deg, #f0fdf4, #dcfce7);">
+                                <span class="phone-title">Update Details</span>
+                                <span style="color: #ff6b35;">🔊</span>
+                            </div>
+                            <div class="phone-content">
+                                <div style="text-align: center; color: #16a34a; margin-bottom: 1rem; font-size: 0.85rem;">✓ Simple & Safe</div>
+                                <div class="form-field">
+                                    <label class="form-label" style="font-size: 0.95rem;">Your Aadhaar</label>
+                                    <input type="text" class="form-input" style="font-size: 1rem; padding: 0.9rem;" placeholder="12 numbers">
+                                </div>
+                                <div class="form-field">
+                                    <label class="form-label" style="font-size: 0.95rem;">Your Phone</label>
+                                    <input type="text" class="form-input" style="font-size: 1rem; padding: 0.9rem;" placeholder="10 numbers">
+                                </div>
+                                <button style="width: 100%; padding: 0.9rem; background: #16a34a; color: white; border: none; border-radius: 0.5rem; font-weight: 600; font-size: 1rem;">Next →</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mockup-label">
+                        <h4>Variant C: Simplified</h4>
+                        <p>Reduced cognitive load</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trading Mockup with GATO -->
+            <h3 style="text-align: center; margin: 3rem 0 1rem;">Fear Metabolism: After-Market Trading</h3>
+            <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                Context-aware visual language adapts to temporal risk. Red wash + GATO guidance metabolizes user fear.
+            </p>
+
+            <div style="max-width: 320px; margin: 0 auto;">
+                <div class="phone-mockup">
+                    <div class="phone-screen" style="background: linear-gradient(180deg, #fef2f2, #fee2e2);">
+                        <div class="phone-header" style="background: transparent;">
+                            <span style="font-weight: 600; color: #374151;">6:45 PM</span>
+                            <span style="color: #dc2626; font-size: 0.8rem;">After Market</span>
+                        </div>
+                        <div style="text-align: center; padding: 1rem; border-bottom: 1px solid rgba(0,0,0,0.1);">
+                            <div style="font-weight: 700; font-size: 1.1rem; color: #111827;">RELIANCE</div>
+                            <div style="font-size: 1.4rem; font-weight: 700; color: #111827; margin-top: 0.25rem;">₹2,456.75</div>
+                            <div style="font-size: 0.85rem; color: #059669; font-weight: 600;">+1.24%</div>
+                        </div>
+                        <div class="phone-content">
+                            <div style="background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 0.5rem; padding: 0.75rem; margin-bottom: 1rem;">
+                                <div style="font-size: 0.8rem; color: #374151;">
+                                    <strong style="display: block; margin-bottom: 0.25rem;">⚠️ Market Closed</strong>
+                                    Order queued, executes tomorrow 9:45 AM. Price may differ.
+                                </div>
+                            </div>
+                            <div class="gato-box">
+                                <div class="gato-header">
+                                    <span class="icon">🔊</span>
+                                    <span class="label">"kya likha hai"</span>
+                                </div>
+                                <p class="gato-text">
+                                    "Market band hai. Aapka order kal subah 9:45 baje execute hoga. 
+                                    Raat bhar price badal sakta hai."
+                                </p>
+                            </div>
+                            <button style="width: 100%; padding: 0.9rem; background: #dc2626; color: white; border: none; border-radius: 0.5rem; font-weight: 600; margin-top: 1rem;">QUEUE ORDER</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Section -->
+    <section id="technical">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">08 / TECHNICAL SPECIFICATIONS</span>
+                <h2>On-Device AI Requirements</h2>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Component</th>
+                            <th>Specification</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Model</strong></td>
+                            <td>Gemma 3n 2B / IndicBERT</td>
+                            <td>Optimized for Indic languages</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Inference</strong></td>
+                            <td>&lt; 500ms response</td>
+                            <td>On Snapdragon 6xx or equivalent</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Memory</strong></td>
+                            <td>&lt; 500MB RAM</td>
+                            <td>Background service optimization</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Storage</strong></td>
+                            <td>~1GB model + 50MB DB</td>
+                            <td>Expandable to SD card</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Offline</strong></td>
+                            <td>Full functionality</td>
+                            <td>Sync when connected</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="insight-box cyan" style="margin-top: 2rem;">
+                <p><strong>Privacy by Design:</strong> All signal processing happens on-device. Raw signals stay local with AES-256 encryption. 
+                Only user-initiated evidence bundles go to DigiLocker.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap Section -->
+    <section id="roadmap">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">09 / IMPLEMENTATION ROADMAP</span>
+                <h2>From POC to 100M MAU</h2>
+                <p class="section-subtitle">
+                    A structured path from preparation through scale, with clear metrics at each phase.
+                </p>
+            </div>
+
+            <div class="roadmap-container">
+                <div class="roadmap-line"></div>
+
+                <!-- Phase 1: Preparation -->
+                <div class="roadmap-phase">
+                    <div class="roadmap-marker phase-1">1</div>
+                    <div class="roadmap-content">
+                        <div class="roadmap-header">
+                            <div class="roadmap-title">
+                                <h3>Preparatory Stage</h3>
+                                <div class="roadmap-duration">Months 1-4</div>
+                            </div>
+                            <div class="roadmap-metrics">
+                                <div class="roadmap-metric">
+                                    <div class="value">0</div>
+                                    <div class="label">Users</div>
+                                </div>
+                                <div class="roadmap-metric">
+                                    <div class="value">POC</div>
+                                    <div class="label">Goal</div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>Evaluate technology options, build foundational infrastructure, and create proof-of-concept demos.</p>
+                        
+                        <div class="roadmap-activities">
+                            <div class="activity-card">
+                                <h5><span class="material-icons-outlined" style="font-size: 1rem; color: var(--accent-cyan);">science</span> Tech Evaluation</h5>
+                                <ul>
+                                    <li>Benchmark Gemma 3n vs Qwen2.5 vs Phi-3.5 on Indic languages</li>
+                                    <li>Test on-device inference on Snapdragon 6xx class devices</li>
+                                    <li>Evaluate DigiLocker API capabilities</li>
+                                </ul>
+                            </div>
+                            <div class="activity-card">
+                                <h5><span class="material-icons-outlined" style="font-size: 1rem; color: var(--accent-cyan);">architecture</span> POC Development</h5>
+                                <ul>
+                                    <li>Build "Kya Likha Hai" prototype for 3 languages</li>
+                                    <li>Implement basic journey correlation engine</li>
+                                    <li>Create GATO audio overlay demo</li>
+                                </ul>
+                            </div>
+                            <div class="activity-card">
+                                <h5><span class="material-icons-outlined" style="font-size: 1rem; color: var(--accent-cyan);">groups</span> Partnerships</h5>
+                                <ul>
+                                    <li>Engage DigiLocker team for inbox feature</li>
+                                    <li>Identify pilot partner (fintech or government)</li>
+                                    <li>Establish UIDAI/NPCI liaisons</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="success-metrics">
+                            <h5><span class="material-icons-outlined" style="font-size: 1rem;">check_circle</span> Success Criteria</h5>
+                            <div class="metrics-grid">
+                                <div class="metric-item">
+                                    <div class="value">&lt;500ms</div>
+                                    <div class="label">On-device inference</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="value">3</div>
+                                    <div class="label">Languages working</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="value">1</div>
+                                    <div class="label">Pilot partner signed</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="value">POC</div>
+                                    <div class="label">Demo ready</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phase 2: Pilot -->
+                <div class="roadmap-phase">
+                    <div class="roadmap-marker phase-2">2</div>
+                    <div class="roadmap-content">
+                        <div class="roadmap-header">
+                            <div class="roadmap-title">
+                                <h3>Pilot Stage</h3>
+                                <div class="roadmap-duration">Months 5-10</div>
+                            </div>
+                            <div class="roadmap-metrics">
+                                <div class="roadmap-metric">
+                                    <div class="value">50K</div>
+                                    <div class="label">Target Users</div>
+                                </div>
+                                <div class="roadmap-metric">
+                                    <div class="value">3</div>
+                                    <div class="label">Flows Live</div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>Launch with controlled audience, validate core hypotheses, and iterate based on real usage data.</p>
+                        
+                        <div class="roadmap-activities">
+                            <div class="activity-card">
+                                <h5><span class="material-icons-outlined" style="font-size: 1rem; color: var(--accent-purple);">rocket_launch</span> Controlled Launch</h5>
+                                <ul>
+                                    <li>Deploy to 10K users in Tier 2-3 cities</li>
+                                    <li>3 core flows: KYC, First SIP, Payment Status</li>
+                                    <li>Hindi + Tamil + Telugu support</li>
+                                </ul>
+                            </div>
+                            <div class="activity-card">
+                                <h5><span class="material-icons-outlined" style="font-size: 1rem; color: var(--accent-purple);">analytics</span> Validation Metrics</h5>
+                                <ul>
+                                    <li>Track activation rate improvement</li>
+                                    <li>Measure GATO audio engagement</li>
+                                    <li>Monitor journey completion rates</li>
+                                </ul>
+                            </div>
+                            <div class="activity-card">
+                                <h5><span class="material-icons-outlined" style="font-size: 1rem; color: var(--accent-purple);">sync</span> Iteration</h5>
+                                <ul>
+                                    <li>A/B test rhetorical variants</li>
+                                    <li>Refine barrier detection algorithms</li>
+                                    <li>Expand to 50K users by end of phase</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="success-metrics">
+                            <h5><span class="material-icons-outlined" style="font-size: 1rem;">check_circle</span> Success Criteria</h5>
+                            <div class="metrics-grid">
+                                <div class="metric-item">
+                                    <div class="value">+15%</div>
+                                    <div class="label">Activation rate lift</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="value">40%</div>
+                                    <div class="label">GATO audio usage</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="value">-20%</div>
+                                    <div class="label">Support tickets</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="value">4.2+</div>
+                                    <div class="label">App store rating</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phase 3: Scale to 1% -->
+                <div class="roadmap-phase">
+                    <div class="roadmap-marker phase-3">3</div>
+                    <div class="roadmap-content">
+                        <div class="roadmap-header">
+                            <div class="roadmap-title">
+                                <h3>Scale to 1% of Billion</h3>
+                                <div class="roadmap-duration">Months 11-18</div>
+                            </div>
+                            <div class="roadmap-metrics">
+                                <div class="roadmap-metric">
+                                    <div class="value">10M</div>
+                                    <div class="label">Target MAU</div>
+                                </div>
+                                <div class="roadmap-metric">
+                                    <div class="value">10+</div>
+                                    <div class="label">Languages</div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>Expand language coverage, onboard multiple partners, and build towards 10 million monthly active users.</p>
+                        
+                        <div class="roadmap-activities">
+                            <div class="activity-card">
+                                <h5><span class="material-icons-outlined" style="font-size: 1rem; color: var(--accent-orange);">language</span> Language Expansion</h5>
+                                <ul>
+                                    <li>Add 7 more scheduled languages</li>
+                                    <li>Regional dialect variants for top 3</li>
+                                    <li>Voice-first UX refinements</li>
+                                </ul>
+                            </div>
+                            <div class="activity-card">
+                                <h5><span class="material-icons-outlined" style="font-size: 1rem; color: var(--accent-orange);">handshake</span> Partner Scaling</h5>
+                                <ul>
+                                    <li>Onboard 3-5 fintech partners</li>
+                                    <li>Integrate with 2 government services</li>
+                                    <li>SDK for third-party adoption</li>
+                                </ul>
+                            </div>
+                            <div class="activity-card">
+                                <h5><span class="material-icons-outlined" style="font-size: 1rem; color: var(--accent-orange);">hub</span> Platform Evolution</h5>
+                                <ul>
+                                    <li>Multi-domain journey support (fintech + health + govt)</li>
+                                    <li>Enhanced barrier detection ML</li>
+                                    <li>Journey analytics dashboard</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="success-metrics">
+                            <h5><span class="material-icons-outlined" style="font-size: 1rem;">check_circle</span> Success Criteria</h5>
+                            <div class="metrics-grid">
+                                <div class="metric-item">
+                                    <div class="value">10M</div>
+                                    <div class="label">Monthly Active Users</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="value">60%</div>
+                                    <div class="label">D30 Retention</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="value">5+</div>
+                                    <div class="label">Partner integrations</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="value">+25%</div>
+                                    <div class="label">Conversion lift</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phase 4: Growth to 100M -->
+                <div class="roadmap-phase">
+                    <div class="roadmap-marker phase-4">4</div>
+                    <div class="roadmap-content">
+                        <div class="roadmap-header">
+                            <div class="roadmap-title">
+                                <h3>Growth Hacking to 100M</h3>
+                                <div class="roadmap-duration">Months 19-36</div>
+                            </div>
+                            <div class="roadmap-metrics">
+                                <div class="roadmap-metric">
+                                    <div class="value">100M</div>
+                                    <div class="label">Peak MAU</div>
+                                </div>
+                                <div class="roadmap-metric">
+                                    <div class="value">22</div>
+                                    <div class="label">Languages</div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>Achieve protocol-level adoption, establish DPIx as Layer 4 of India Stack, and reach 100 million MAU.</p>
+                        
+                        <div class="roadmap-activities">
+                            <div class="activity-card">
+                                <h5><span class="material-icons-outlined" style="font-size: 1rem; color: var(--accent-amber);">viral</span> Viral Mechanics</h5>
+                                <ul>
+                                    <li>Referral program with journey sharing</li>
+                                    <li>"Explain to family" feature</li>
+                                    <li>WhatsApp integration for evidence sharing</li>
+                                </ul>
+                            </div>
+                            <div class="activity-card">
+                                <h5><span class="material-icons-outlined" style="font-size: 1rem; color: var(--accent-amber);">account_tree</span> Protocol Standardization</h5>
+                                <ul>
+                                    <li>Open-source journey-signal-schema</li>
+                                    <li>Intent-weave protocol for India Stack</li>
+                                    <li>DEPA integration for consent flows</li>
+                                </ul>
+                            </div>
+                            <div class="activity-card">
+                                <h5><span class="material-icons-outlined" style="font-size: 1rem; color: var(--accent-amber);">public</span> Ecosystem Leadership</h5>
+                                <ul>
+                                    <li>DPIx adopted as official Experience Layer</li>
+                                    <li>Mandatory integration for regulated entities</li>
+                                    <li>International DPI export (MOSIP integration)</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="success-metrics">
+                            <h5><span class="material-icons-outlined" style="font-size: 1rem;">check_circle</span> Success Criteria</h5>
+                            <div class="metrics-grid">
+                                <div class="metric-item">
+                                    <div class="value">100M</div>
+                                    <div class="label">Monthly Active Users</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="value">50+</div>
+                                    <div class="label">Partner integrations</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="value">-50%</div>
+                                    <div class="label">RBI complaint reduction</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="value">Layer 4</div>
+                                    <div class="label">India Stack status</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quote-box" style="margin-top: 3rem;">
+                <p>"AI works to the power of DPI. The stack is strong. The rails are laid. Now we need intelligence at the edge."</p>
+                <cite>— Nandan Nilekani</cite>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="logo">DPI<span>x</span></div>
+            <p>Journey Intelligence — The Missing Stitch in India Stack</p>
+            <p>Billion Users, Million Journeys</p>
+            <div class="author">
+                <strong>Sridhar Dhulipala</strong>
+                <p>Principal Design Advisor, UIDAI • Visiting Faculty, NID</p>
+                <p style="margin-top: 0.5rem;">© 2026 • saxllc.github.io</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
