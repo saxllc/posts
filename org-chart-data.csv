@@ -1,0 +1,31 @@
+EmployeeID,Name,Title,Department,ManagerID,Level,Location,Status
+E001,Sarah Johnson,CEO,Executive,,1,New York,Active
+E002,Michael Chen,CFO,Finance,E001,2,New York,Active
+E003,Lisa Williams,CTO,Technology,E001,2,San Francisco,Active
+E004,James Brown,COO,Operations,E001,2,Chicago,Active
+E005,Emily Davis,CMO,Marketing,E001,2,Los Angeles,Active
+E006,Robert Taylor,VP Finance,Finance,E002,3,New York,Active
+E007,Amanda Martinez,VP Accounting,Finance,E002,3,New York,Active
+E008,David Wilson,VP Engineering,Technology,E003,3,San Francisco,Active
+E009,Jennifer Lee,VP Product,Technology,E003,3,San Francisco,Active
+E010,Christopher Moore,VP Operations,Operations,E004,3,Chicago,Active
+E011,Jessica Anderson,VP Supply Chain,Operations,E004,3,Chicago,Active
+E012,Matthew Thomas,VP Marketing,Marketing,E005,3,Los Angeles,Active
+E013,Ashley Jackson,VP Brand,Marketing,E005,3,Los Angeles,Active
+E014,Daniel White,Senior Accountant,Finance,E006,4,New York,Active
+E015,Stephanie Harris,Financial Analyst,Finance,E006,4,New York,Active
+E016,Kevin Martin,Staff Accountant,Finance,E007,4,New York,Active
+E017,Nicole Thompson,Senior Developer,Technology,E008,4,San Francisco,Active
+E018,Brian Garcia,Software Engineer,Technology,E008,4,San Francisco,Remote
+E019,Rachel Robinson,Product Manager,Technology,E009,4,San Francisco,Active
+E020,Jason Clark,UX Designer,Technology,E009,4,Austin,Remote
+E021,Michelle Lewis,Operations Manager,Operations,E010,4,Chicago,Active
+E022,Ryan Walker,Logistics Coordinator,Operations,E011,4,Chicago,Active
+E023,Laura Hall,Marketing Manager,Marketing,E012,4,Los Angeles,Active
+E024,Eric Allen,Digital Marketing Specialist,Marketing,E012,4,Los Angeles,Remote
+E025,Samantha Young,Brand Manager,Marketing,E013,4,Los Angeles,Active
+E026,Tyler King,Junior Developer,Technology,E017,5,San Francisco,Active
+E027,Megan Wright,Junior Developer,Technology,E017,5,Denver,Remote
+E028,Brandon Scott,Marketing Coordinator,Marketing,E023,5,Los Angeles,Active
+E029,Courtney Green,Operations Assistant,Operations,E021,5,Chicago,Active
+E030,Justin Adams,Finance Associate,Finance,E014,5,New York,Active

@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organization Chart Viewer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-group label {
+            color: #fff;
+            font-weight: 500;
+        }
+
+        select, button, input[type="file"] {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        select {
+            background: #fff;
+            color: #333;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .file-upload {
+            background: #fff;
+            border-radius: 8px;
+            padding: 5px 15px;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .org-chart-container {
+            overflow: auto;
+            padding: 40px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            min-height: 500px;
+        }
+
+        .org-chart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .level {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .employee-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 15px 20px;
+            min-width: 200px;
+            max-width: 250px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            border-top: 4px solid #667eea;
+        }
+
+        .employee-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .employee-card.executive { border-top-color: #e74c3c; }
+        .employee-card.finance { border-top-color: #27ae60; }
+        .employee-card.technology { border-top-color: #3498db; }
+        .employee-card.operations { border-top-color: #f39c12; }
+        .employee-card.marketing { border-top-color: #9b59b6; }
+
+        .employee-card .name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .employee-card .title {
+            font-size: 13px;
+            color: #7f8c8d;
+            margin-bottom: 8px;
+        }
+
+        .employee-card .department {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #fff;
+        }
+
+        .department.executive { background: #e74c3c; }
+        .department.finance { background: #27ae60; }
+        .department.technology { background: #3498db; }
+        .department.operations { background: #f39c12; }
+        .department.marketing { background: #9b59b6; }
+
+        .employee-card .location {
+            margin-top: 8px;
+            font-size: 11px;
+            color: #95a5a6;
+        }
+
+        .employee-card .status {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #27ae60;
+        }
+
+        .employee-card .status.remote {
+            background: #3498db;
+        }
+
+        .employee-card .status.inactive {
+            background: #e74c3c;
+        }
+
+        .connector {
+            position: absolute;
+            background: rgba(255,255,255,0.3);
+        }
+
+        .tree-view {
+            display: none;
+        }
+
+        .tree-node {
+            margin-left: 30px;
+            position: relative;
+        }
+
+        .tree-node::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: rgba(255,255,255,0.2);
+        }
+
+        .tree-node::after {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 20px;
+            width: 20px;
+            height: 2px;
+            background: rgba(255,255,255,0.2);
+        }
+
+        .tree-node:last-child::before {
+            height: 20px;
+        }
+
+        .tree-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin: 5px 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid #667eea;
+        }
+
+        .tree-card.executive { border-left-color: #e74c3c; }
+        .tree-card.finance { border-left-color: #27ae60; }
+        .tree-card.technology { border-left-color: #3498db; }
+        .tree-card.operations { border-left-color: #f39c12; }
+        .tree-card.marketing { border-left-color: #9b59b6; }
+
+        .tree-card .name {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .tree-card .title {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 20px 30px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-card .label {
+            font-size: 12px;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .employee-card {
+                min-width: 150px;
+            }
+
+            .stats {
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Organization Chart Viewer</h1>
+        <p style="color: rgba(255,255,255,0.7);">Interactive visualization with department color coding</p>
+    </div>
+
+    <div class="controls">
+        <div class="control-group">
+            <label>Upload CSV:</label>
+            <input type="file" id="csvFile" accept=".csv" class="file-upload">
+        </div>
+        <div class="control-group">
+            <label>View:</label>
+            <select id="viewMode">
+                <option value="hierarchy">Hierarchy View</option>
+                <option value="tree">Tree View</option>
+                <option value="department">By Department</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label>Color By:</label>
+            <select id="colorMode">
+                <option value="department">Department</option>
+                <option value="level">Level</option>
+                <option value="location">Location</option>
+            </select>
+        </div>
+        <button onclick="loadSampleData()">Load Sample Data</button>
+    </div>
+
+    <div class="legend" id="legend"></div>
+
+    <div class="stats" id="stats"></div>
+
+    <div class="org-chart-container">
+        <div class="org-chart" id="orgChart"></div>
+    </div>
+
+    <script>
+        let orgData = [];
+        let colorSchemes = {
+            department: {
+                'Executive': '#e74c3c',
+                'Finance': '#27ae60',
+                'Technology': '#3498db',
+                'Operations': '#f39c12',
+                'Marketing': '#9b59b6'
+            },
+            level: {
+                '1': '#e74c3c',
+                '2': '#f39c12',
+                '3': '#27ae60',
+                '4': '#3498db',
+                '5': '#9b59b6'
+            },
+            location: {
+                'New York': '#e74c3c',
+                'San Francisco': '#3498db',
+                'Chicago': '#f39c12',
+                'Los Angeles': '#9b59b6',
+                'Austin': '#27ae60',
+                'Denver': '#1abc9c',
+                'Remote': '#95a5a6'
+            }
+        };
+
+        // Parse CSV
+        function parseCSV(text) {
+            const lines = text.trim().split('\n');
+            const headers = lines[0].split(',').map(h => h.trim());
+            const data = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',').map(v => v.trim());
+                const row = {};
+                headers.forEach((h, idx) => {
+                    row[h] = values[idx] || '';
+                });
+                data.push(row);
+            }
+            return data;
+        }
+
+        // File upload handler
+        document.getElementById('csvFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    orgData = parseCSV(e.target.result);
+                    renderChart();
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        // View/Color mode change handlers
+        document.getElementById('viewMode').addEventListener('change', renderChart);
+        document.getElementById('colorMode').addEventListener('change', renderChart);
+
+        // Load sample data
+        function loadSampleData() {
+            const sampleCSV = `EmployeeID,Name,Title,Department,ManagerID,Level,Location,Status
+E001,Sarah Johnson,CEO,Executive,,1,New York,Active
+E002,Michael Chen,CFO,Finance,E001,2,New York,Active
+E003,Lisa Williams,CTO,Technology,E001,2,San Francisco,Active
+E004,James Brown,COO,Operations,E001,2,Chicago,Active
+E005,Emily Davis,CMO,Marketing,E001,2,Los Angeles,Active
+E006,Robert Taylor,VP Finance,Finance,E002,3,New York,Active
+E007,Amanda Martinez,VP Accounting,Finance,E002,3,New York,Active
+E008,David Wilson,VP Engineering,Technology,E003,3,San Francisco,Active
+E009,Jennifer Lee,VP Product,Technology,E003,3,San Francisco,Active
+E010,Christopher Moore,VP Operations,Operations,E004,3,Chicago,Active
+E011,Jessica Anderson,VP Supply Chain,Operations,E004,3,Chicago,Active
+E012,Matthew Thomas,VP Marketing,Marketing,E005,3,Los Angeles,Active
+E013,Ashley Jackson,VP Brand,Marketing,E005,3,Los Angeles,Active
+E014,Daniel White,Senior Accountant,Finance,E006,4,New York,Active
+E015,Stephanie Harris,Financial Analyst,Finance,E006,4,New York,Active
+E016,Kevin Martin,Staff Accountant,Finance,E007,4,New York,Active
+E017,Nicole Thompson,Senior Developer,Technology,E008,4,San Francisco,Active
+E018,Brian Garcia,Software Engineer,Technology,E008,4,San Francisco,Remote
+E019,Rachel Robinson,Product Manager,Technology,E009,4,San Francisco,Active
+E020,Jason Clark,UX Designer,Technology,E009,4,Austin,Remote
+E021,Michelle Lewis,Operations Manager,Operations,E010,4,Chicago,Active
+E022,Ryan Walker,Logistics Coordinator,Operations,E011,4,Chicago,Active
+E023,Laura Hall,Marketing Manager,Marketing,E012,4,Los Angeles,Active
+E024,Eric Allen,Digital Marketing Specialist,Marketing,E012,4,Los Angeles,Remote
+E025,Samantha Young,Brand Manager,Marketing,E013,4,Los Angeles,Active
+E026,Tyler King,Junior Developer,Technology,E017,5,San Francisco,Active
+E027,Megan Wright,Junior Developer,Technology,E017,5,Denver,Remote
+E028,Brandon Scott,Marketing Coordinator,Marketing,E023,5,Los Angeles,Active
+E029,Courtney Green,Operations Assistant,Operations,E021,5,Chicago,Active
+E030,Justin Adams,Finance Associate,Finance,E014,5,New York,Active`;
+
+            orgData = parseCSV(sampleCSV);
+            renderChart();
+        }
+
+        // Get color for employee based on mode
+        function getColor(employee, mode) {
+            const scheme = colorSchemes[mode];
+            const value = employee[mode.charAt(0).toUpperCase() + mode.slice(1)] || employee[mode];
+            return scheme[value] || '#667eea';
+        }
+
+        // Render legend
+        function renderLegend() {
+            const mode = document.getElementById('colorMode').value;
+            const scheme = colorSchemes[mode];
+            const legend = document.getElementById('legend');
+
+            let html = '';
+            for (const [key, color] of Object.entries(scheme)) {
+                html += `
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: ${color}"></div>
+                        <span>${key}</span>
+                    </div>
+                `;
+            }
+            legend.innerHTML = html;
+        }
+
+        // Render stats
+        function renderStats() {
+            const stats = document.getElementById('stats');
+            const totalEmployees = orgData.length;
+            const departments = [...new Set(orgData.map(e => e.Department))].length;
+            const locations = [...new Set(orgData.map(e => e.Location))].length;
+            const remoteCount = orgData.filter(e => e.Status === 'Remote').length;
+
+            stats.innerHTML = `
+                <div class="stat-card">
+                    <div class="number">${totalEmployees}</div>
+                    <div class="label">Total Employees</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">${departments}</div>
+                    <div class="label">Departments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">${locations}</div>
+                    <div class="label">Locations</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">${remoteCount}</div>
+                    <div class="label">Remote Workers</div>
+                </div>
+            `;
+        }
+
+        // Create employee card
+        function createCard(employee, mode) {
+            const color = getColor(employee, mode);
+            const deptClass = employee.Department.toLowerCase();
+            const statusClass = employee.Status.toLowerCase();
+
+            return `
+                <div class="employee-card ${deptClass}" style="border-top-color: ${color}">
+                    <div class="status ${statusClass}" title="${employee.Status}"></div>
+                    <div class="name">${employee.Name}</div>
+                    <div class="title">${employee.Title}</div>
+                    <div class="department ${deptClass}">${employee.Department}</div>
+                    <div class="location">📍 ${employee.Location}</div>
+                </div>
+            `;
+        }
+
+        // Render hierarchy view
+        function renderHierarchy() {
+            const mode = document.getElementById('colorMode').value;
+            const levels = {};
+
+            orgData.forEach(emp => {
+                const level = emp.Level || '1';
+                if (!levels[level]) levels[level] = [];
+                levels[level].push(emp);
+            });
+
+            let html = '';
+            const sortedLevels = Object.keys(levels).sort((a, b) => parseInt(a) - parseInt(b));
+
+            sortedLevels.forEach(level => {
+                html += `<div class="level">`;
+                levels[level].forEach(emp => {
+                    html += createCard(emp, mode);
+                });
+                html += `</div>`;
+            });
+
+            document.getElementById('orgChart').innerHTML = html;
+        }
+
+        // Render tree view
+        function renderTree() {
+            const mode = document.getElementById('colorMode').value;
+
+            function buildTree(parentId) {
+                const children = orgData.filter(e => e.ManagerID === parentId);
+                if (children.length === 0) return '';
+
+                let html = '';
+                children.forEach(child => {
+                    const color = getColor(child, mode);
+                    const deptClass = child.Department.toLowerCase();
+                    html += `
+                        <div class="tree-node">
+                            <div class="tree-card ${deptClass}" style="border-left-color: ${color}">
+                                <div>
+                                    <div class="name">${child.Name}</div>
+                                    <div class="title">${child.Title} - ${child.Department}</div>
+                                </div>
+                            </div>
+                            ${buildTree(child.EmployeeID)}
+                        </div>
+                    `;
+                });
+                return html;
+            }
+
+            // Find root (CEO - no manager)
+            const root = orgData.find(e => !e.ManagerID || e.ManagerID === '');
+            if (!root) {
+                document.getElementById('orgChart').innerHTML = '<p style="color: #fff;">No root employee found</p>';
+                return;
+            }
+
+            const color = getColor(root, mode);
+            const deptClass = root.Department.toLowerCase();
+
+            const html = `
+                <div style="color: #fff;">
+                    <div class="tree-card ${deptClass}" style="border-left-color: ${color}">
+                        <div>
+                            <div class="name">${root.Name}</div>
+                            <div class="title">${root.Title} - ${root.Department}</div>
+                        </div>
+                    </div>
+                    ${buildTree(root.EmployeeID)}
+                </div>
+            `;
+
+            document.getElementById('orgChart').innerHTML = html;
+        }
+
+        // Render by department
+        function renderByDepartment() {
+            const mode = document.getElementById('colorMode').value;
+            const departments = {};
+
+            orgData.forEach(emp => {
+                const dept = emp.Department;
+                if (!departments[dept]) departments[dept] = [];
+                departments[dept].push(emp);
+            });
+
+            let html = '';
+            for (const [dept, employees] of Object.entries(departments)) {
+                const color = colorSchemes.department[dept] || '#667eea';
+                html += `
+                    <div style="margin-bottom: 40px; width: 100%;">
+                        <h2 style="color: ${color}; margin-bottom: 20px; text-align: center; text-transform: uppercase; letter-spacing: 2px;">
+                            ${dept}
+                        </h2>
+                        <div class="level" style="justify-content: center;">
+                            ${employees.map(emp => createCard(emp, mode)).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('orgChart').innerHTML = html;
+        }
+
+        // Main render function
+        function renderChart() {
+            if (orgData.length === 0) {
+                document.getElementById('orgChart').innerHTML = `
+                    <p style="color: rgba(255,255,255,0.7); text-align: center; padding: 50px;">
+                        Upload a CSV file or click "Load Sample Data" to visualize the organization chart
+                    </p>
+                `;
+                document.getElementById('stats').innerHTML = '';
+                document.getElementById('legend').innerHTML = '';
+                return;
+            }
+
+            renderLegend();
+            renderStats();
+
+            const viewMode = document.getElementById('viewMode').value;
+
+            switch(viewMode) {
+                case 'hierarchy':
+                    renderHierarchy();
+                    break;
+                case 'tree':
+                    renderTree();
+                    break;
+                case 'department':
+                    renderByDepartment();
+                    break;
+            }
+        }
+
+        // Initial render
+        renderChart();
+    </script>
+</body>
+</html>
