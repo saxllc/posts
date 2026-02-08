@@ -449,9 +449,10 @@
 <div class="setup-banner show" id="setupBanner">
   <strong>⚙️ Setup (one time):</strong> Open this file in a code editor (or any text editor), scroll to the bottom, and paste your API keys in the two clearly marked lines:<br><br>
   <code>const SARVAM_KEY = "paste-your-sarvam-key"</code><br>
-  <code>const CLAUDE_KEY = "paste-your-claude-key"</code><br><br>
-  Get keys: <a href="https://www.sarvam.ai" target="_blank">sarvam.ai</a> (free ₹1,000 credits) · <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a><br><br>
-  <em>Once keys are added, this message will disappear.</em>
+  <code>const GEMINI_KEY = "paste-your-gemini-key"</code><br><br>
+  Get keys: <a href="https://dashboard.sarvam.ai/key-management" target="_blank">dashboard.sarvam.ai/key-management</a> (free ₹1,000 credits) · <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a> (free tier available)<br><br>
+  <em>Once keys are added, this message will disappear.</em><br><br>
+  <strong>⚠️ Security:</strong> This file runs locally on YOUR device only. Keys never leave your browser except to call the APIs directly. Never upload this file to any website or share it with keys inside.
 </div>
 
 <!-- ====== LANGUAGE BAR ====== -->
@@ -580,15 +581,19 @@
 
 <footer>
   Kya Likha Hai? · Inclusive Intelligence PoC<br>
-  Powered by <a href="https://www.sarvam.ai" target="_blank">Sarvam AI</a> (voice) + <a href="https://www.anthropic.com" target="_blank">Claude</a> (intelligence)
+  Powered by <a href="https://www.sarvam.ai" target="_blank">Sarvam AI</a> (voice) + <a href="https://ai.google.dev" target="_blank">Google Gemini</a> (intelligence)
 </footer>
 
 <script>
 // =========================================================
 // 🔑 PASTE YOUR API KEYS HERE (two lines only)
 // =========================================================
-const SARVAM_KEY = "";   // ← Paste your Sarvam AI key between the quotes
-const CLAUDE_KEY = "";   // ← Paste your Claude API key between the quotes
+const SARVAM_KEY = "";   // ← Paste your Sarvam AI key (from dashboard.sarvam.ai/key-management)
+const GEMINI_KEY = "";   // ← Paste your Google Gemini key (from aistudio.google.com/apikey)
+// =========================================================
+// ⚠️ SECURITY: This file runs LOCALLY on your device.
+// Keys are sent ONLY to Sarvam and Google APIs, nowhere else.
+// NEVER upload this file to a website or share it with keys inside.
 // =========================================================
 
 // ============ STATE ============
@@ -600,7 +605,6 @@ let currentAudio = null;
 let mediaRecorder = null;
 let audioChunks = [];
 let isRecording = false;
-let capturedImageBase64 = null;
 
 // ============ LANGUAGE MAP ============
 const langMap = {
@@ -645,12 +649,10 @@ const inputLabel = $("inputLabel");
 
 // ============ INIT ============
 function init() {
-  // Check API keys
-  if (SARVAM_KEY && CLAUDE_KEY) {
+  if (SARVAM_KEY && GEMINI_KEY) {
     setupBanner.classList.remove("show");
   }
 
-  // Language chips
   langBar.querySelectorAll(".lang-chip").forEach(chip => {
     chip.addEventListener("click", () => {
       langBar.querySelectorAll(".lang-chip").forEach(c => c.classList.remove("active"));
@@ -661,7 +663,6 @@ function init() {
     });
   });
 
-  // Mode buttons
   micBtn.addEventListener("click", toggleRecording);
   cameraBtn.addEventListener("click", openCamera);
   pasteBtn.addEventListener("click", togglePaste);
@@ -669,8 +670,6 @@ function init() {
   speakBtn.addEventListener("click", speakResponse);
   newBtn.addEventListener("click", resetAll);
   followupBtn.addEventListener("click", toggleRecording);
-
-  // Camera/image inputs
   cameraInput.addEventListener("change", handleImageCapture);
   imageInput.addEventListener("change", handleImageCapture);
 
@@ -688,10 +687,7 @@ function updateLabels() {
 
 // ============ RECORDING ============
 async function toggleRecording() {
-  if (isRecording) {
-    stopRecording();
-    return;
-  }
+  if (isRecording) { stopRecording(); return; }
 
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -715,9 +711,7 @@ async function toggleRecording() {
 }
 
 function stopRecording() {
-  if (mediaRecorder && mediaRecorder.state !== "inactive") {
-    mediaRecorder.stop();
-  }
+  if (mediaRecorder && mediaRecorder.state !== "inactive") mediaRecorder.stop();
   isRecording = false;
   micBtn.classList.remove("recording");
   followupBtn.classList.remove("recording");
@@ -728,7 +722,6 @@ async function processVoice(audioBlob) {
   showStatus(langMap[selectedLang]?.thinking || "Understanding...");
 
   try {
-    // Convert to WAV for better compatibility
     const formData = new FormData();
     formData.append("file", audioBlob, "audio.webm");
     formData.append("language_code", selectedLang);
@@ -756,7 +749,6 @@ async function processVoice(audioBlob) {
 
     showCaptured(transcript);
 
-    // If this is a follow-up turn
     if (turnCount > 0) {
       await interpretFollowup(transcript);
     } else {
@@ -770,7 +762,6 @@ async function processVoice(audioBlob) {
 
 // ============ CAMERA / IMAGE ============
 function openCamera() {
-  // On mobile, use camera capture. On desktop, file picker.
   if (/Mobi|Android/i.test(navigator.userAgent)) {
     cameraInput.click();
   } else {
@@ -785,22 +776,15 @@ async function handleImageCapture(e) {
   showStatus(langMap[selectedLang]?.thinking || "Reading image...");
 
   try {
-    // Convert to base64
     const base64 = await fileToBase64(file);
-    capturedImageBase64 = base64;
-
-    // Show preview
     previewImg.src = `data:${file.type};base64,${base64}`;
     imagePreview.classList.add("show");
-
-    // Send to Claude with vision
     await interpretImage(base64, file.type);
   } catch (err) {
     hideStatus();
     showError("Image reading issue: " + err.message);
   }
 
-  // Reset input so same file can be re-selected
   e.target.value = "";
 }
 
@@ -816,9 +800,7 @@ function fileToBase64(file) {
 // ============ TEXT PASTE ============
 function togglePaste() {
   pasteArea.classList.toggle("show");
-  if (pasteArea.classList.contains("show")) {
-    pasteText.focus();
-  }
+  if (pasteArea.classList.contains("show")) pasteText.focus();
 }
 
 async function handleTextSubmit() {
@@ -828,13 +810,12 @@ async function handleTextSubmit() {
   submitTextBtn.disabled = true;
   showCaptured(text);
   pasteArea.classList.remove("show");
-
   await interpretText(text);
   submitTextBtn.disabled = false;
 }
 
-// ============ CLAUDE INTERPRETATION ============
-function getSystemPrompt() {
+// ============ GEMINI INTERPRETATION ============
+function getSystemInstruction() {
   const langInfo = langMap[selectedLang] || langMap["hi-IN"];
   return `You are an inclusive intelligence assistant called "Kya Likha Hai?" — helping people understand documents, notifications, messages, and labels they cannot read or fully comprehend.
 
@@ -856,14 +837,14 @@ CRITICAL RULES:
 async function interpretText(text) {
   showStatus(langMap[selectedLang]?.thinking || "Understanding...");
 
-  const systemPrompt = getSystemPrompt();
   const userMessage = `The user has encountered this text and is asking "Kya likha hai?" (What does it say?). Please interpret it for them:\n\n${text}`;
 
-  conversationHistory = [{ role: "user", content: userMessage }];
+  // Reset conversation for new interpretation
+  conversationHistory = [{ role: "user", parts: [{ text: userMessage }] }];
   turnCount = 0;
 
   try {
-    const response = await callClaude(systemPrompt, conversationHistory);
+    const response = await callGemini(conversationHistory);
     showResponse(response);
   } catch (err) {
     hideStatus();
@@ -874,18 +855,20 @@ async function interpretText(text) {
 async function interpretImage(base64, mediaType) {
   showStatus(langMap[selectedLang]?.thinking || "Reading image...");
 
-  const systemPrompt = getSystemPrompt() + `\n\nThe user has photographed something they cannot read. First identify what the document is (bank notice, medicine label, government letter, SMS screenshot, bill, form, etc.), then interpret it for them.`;
+  // For images, include additional instruction
+  const imageInstruction = `The user has photographed something they cannot read. First identify what the document is (bank notice, medicine label, government letter, SMS screenshot, bill, form, etc.), then interpret it for them. They are asking "Kya likha hai?" (What does it say?)`;
 
-  const userMessage = [
-    { type: "image", source: { type: "base64", media_type: mediaType, data: base64 } },
-    { type: "text", text: 'The user photographed this and is asking "Kya likha hai?" (What does it say?). Interpret it for them.' }
-  ];
-
-  conversationHistory = [{ role: "user", content: userMessage }];
+  conversationHistory = [{
+    role: "user",
+    parts: [
+      { inlineData: { mimeType: mediaType, data: base64 } },
+      { text: imageInstruction }
+    ]
+  }];
   turnCount = 0;
 
   try {
-    const response = await callClaude(systemPrompt, conversationHistory);
+    const response = await callGemini(conversationHistory);
     showResponse(response);
   } catch (err) {
     hideStatus();
@@ -896,12 +879,10 @@ async function interpretImage(base64, mediaType) {
 async function interpretFollowup(text) {
   showStatus(langMap[selectedLang]?.thinking || "Understanding...");
 
-  const systemPrompt = getSystemPrompt();
-
-  conversationHistory.push({ role: "user", content: text });
+  conversationHistory.push({ role: "user", parts: [{ text: text }] });
 
   try {
-    const response = await callClaude(systemPrompt, conversationHistory);
+    const response = await callGemini(conversationHistory);
     showResponse(response);
   } catch (err) {
     hideStatus();
@@ -909,36 +890,48 @@ async function interpretFollowup(text) {
   }
 }
 
-async function callClaude(systemPrompt, messages) {
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": CLAUDE_KEY,
-      "anthropic-version": "2023-06-01",
-      "anthropic-dangerous-direct-browser-access": "true",
+async function callGemini(contents) {
+  // Using Gemini 2.5 Flash — fast, multilingual, supports vision
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`;
+
+  const body = {
+    system_instruction: {
+      parts: [{ text: getSystemInstruction() }]
     },
-    body: JSON.stringify({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 500,
-      system: systemPrompt,
-      messages: messages,
-    }),
+    contents: contents,
+    generationConfig: {
+      maxOutputTokens: 500,
+      temperature: 0.7,
+    },
+  };
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
   });
 
   if (!res.ok) {
     const errBody = await res.text();
-    throw new Error(`Claude API error: ${res.status} — ${errBody}`);
+    throw new Error(`Gemini API error: ${res.status} — ${errBody}`);
   }
 
   const data = await res.json();
-  const text = data.content.map(c => c.text || "").join("");
 
-  // Add to conversation history
-  conversationHistory.push({ role: "assistant", content: text });
+  // Extract text from Gemini response
+  const responseText = data.candidates?.[0]?.content?.parts
+    ?.map(p => p.text || "")
+    .join("") || "";
+
+  if (!responseText) {
+    throw new Error("No response from Gemini. Please try again.");
+  }
+
+  // Add assistant response to conversation history for follow-ups
+  conversationHistory.push({ role: "model", parts: [{ text: responseText }] });
   turnCount++;
 
-  return text;
+  return responseText;
 }
 
 // ============ SARVAM TTS (BULBUL V3) ============
@@ -949,11 +942,7 @@ async function speakResponse() {
   speakBtn.classList.add("speaking");
 
   try {
-    // Stop any current audio
-    if (currentAudio) {
-      currentAudio.pause();
-      currentAudio = null;
-    }
+    if (currentAudio) { currentAudio.pause(); currentAudio = null; }
 
     const res = await fetch("https://api.sarvam.ai/text-to-speech", {
       method: "POST",
@@ -978,11 +967,8 @@ async function speakResponse() {
     const data = await res.json();
     const audioBase64 = data.audios && data.audios[0];
 
-    if (!audioBase64) {
-      throw new Error("No audio returned from Sarvam");
-    }
+    if (!audioBase64) throw new Error("No audio returned from Sarvam");
 
-    // Decode and play
     const audioBytes = atob(audioBase64);
     const audioArray = new Uint8Array(audioBytes.length);
     for (let i = 0; i < audioBytes.length; i++) {
@@ -1015,9 +1001,7 @@ function showStatus(msg) {
   errorMsg.classList.remove("show");
 }
 
-function hideStatus() {
-  status.classList.remove("show");
-}
+function hideStatus() { status.classList.remove("show"); }
 
 function showError(msg) {
   errorMsg.textContent = msg;
@@ -1035,36 +1019,23 @@ function showResponse(text) {
   responseText.textContent = text;
   responseCard.classList.add("show");
 
-  // Show follow-up if under 5 turns
   if (turnCount < 5) {
     followupArea.classList.add("show");
     const lang = langMap[selectedLang];
-    if (lang) {
-      $("followupLabel").textContent = `${lang.askMore} · Ask more`;
-    }
+    if (lang) $("followupLabel").textContent = `${lang.askMore} · Ask more`;
   } else {
     followupArea.classList.remove("show");
   }
 
   // Auto-speak the first response
-  if (turnCount === 1 && SARVAM_KEY) {
-    speakResponse();
-  }
+  if (turnCount === 1 && SARVAM_KEY) speakResponse();
 }
 
 function resetAll() {
-  // Stop audio
-  if (currentAudio) {
-    currentAudio.pause();
-    currentAudio = null;
-  }
-
-  // Reset state
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
   conversationHistory = [];
   turnCount = 0;
-  capturedImageBase64 = null;
 
-  // Reset UI
   responseCard.classList.remove("show");
   capturedTextEl.classList.remove("show");
   imagePreview.classList.remove("show");
