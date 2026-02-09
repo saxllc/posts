@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="referrer" content="no-referrer">
 <title>क्या लिखा है? — Kya Likha Hai?</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -610,14 +611,19 @@
 
 <script>
 // =========================================================
-// 🔑 API KEYS — entered via the on-screen form
+// 🔑 API KEYS — entered via form or URL params
+//   URL usage: ?sarvam_key=YOUR_KEY&gemini_key=YOUR_KEY
+//   Keys are stripped from the URL immediately after loading.
 // =========================================================
 let SARVAM_KEY = "";
 let GEMINI_KEY = "";
 // =========================================================
-// ⚠️ SECURITY: This file runs LOCALLY on your device.
-// Keys are sent ONLY to Sarvam and Google APIs, nowhere else.
-// Keys are stored in memory only — they disappear when you close the tab.
+// ⚠️ SECURITY:
+// - No keys are hardcoded in this file — safe for public repos.
+// - Keys live in browser memory only — gone when tab closes.
+// - Keys are sent ONLY to Sarvam and Google APIs via headers.
+// - <meta referrer="no-referrer"> prevents URL leakage.
+// - URL params are stripped via history.replaceState on load.
 // =========================================================
 
 // ============ STATE ============
@@ -629,6 +635,8 @@ let currentAudio = null;
 let mediaRecorder = null;
 let audioChunks = [];
 let isRecording = false;
+let isSpeaking = false;
+let ttsAbortController = null;
 
 // ============ LANGUAGE MAP ============
 const langMap = {
@@ -672,9 +680,28 @@ const imageInput = $("imageInput");
 const inputLabel = $("inputLabel");
 const mainEl = document.querySelector("main");
 
+// ============ URL PARAMETER KEYS ============
+function loadKeysFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const sk = params.get("sarvam_key") || params.get("sarvam");
+  const gk = params.get("gemini_key") || params.get("gemini");
+
+  if (sk) SARVAM_KEY = sk;
+  if (gk) GEMINI_KEY = gk;
+
+  // Strip keys from URL immediately for security (browser history, referrer)
+  if (sk || gk) {
+    const cleanURL = window.location.origin + window.location.pathname;
+    window.history.replaceState({}, document.title, cleanURL);
+  }
+}
+
 // ============ INIT ============
 function init() {
-  // Show setup screen if keys are empty
+  // Load keys from URL params if provided (stripped from URL immediately)
+  loadKeysFromURL();
+
+  // Show setup screen if keys are still empty
   showSetupScreen();
 
   // Key save button
@@ -698,10 +725,13 @@ function init() {
 
   langBar.querySelectorAll(".lang-chip").forEach(chip => {
     chip.addEventListener("click", () => {
+      if (chip.classList.contains("active")) return;
       langBar.querySelectorAll(".lang-chip").forEach(c => c.classList.remove("active"));
       chip.classList.add("active");
       selectedLang = chip.dataset.lang;
       selectedLangName = chip.dataset.name;
+      resetAll();
+      hidePipeline();
       updateLabels();
     });
   });
@@ -738,11 +768,26 @@ function updateLabels() {
   micBtn.querySelector("span").textContent = lang.speakText;
   cameraBtn.querySelector("span").textContent = lang.photoText;
   pasteBtn.querySelector("span").textContent = lang.writeText;
+  speakBtn.querySelector("span").textContent = `${lang.listenText} · Listen`;
+  newBtn.querySelector("span").textContent = `${lang.newText} · New`;
+  $("followupLabel").textContent = `${lang.askMore} · Ask more`;
+  document.querySelector(".response-card .card-label").textContent = `${lang.means} · Here's what it means`;
+}
+
+// ============ INPUT MODE SWITCHING ============
+function clearInputState() {
+  pasteArea.classList.remove("show");
+  pasteText.value = "";
+  capturedTextEl.classList.remove("show");
+  imagePreview.classList.remove("show");
+  errorMsg.classList.remove("show");
+  if (isRecording) stopRecording();
 }
 
 // ============ RECORDING ============
 async function toggleRecording() {
   if (isRecording) { stopRecording(); return; }
+  clearInputState();
 
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -822,6 +867,7 @@ async function processVoice(audioBlob) {
 
 // ============ CAMERA / IMAGE ============
 function openCamera() {
+  clearInputState();
   if (/Mobi|Android/i.test(navigator.userAgent)) {
     cameraInput.click();
   } else {
@@ -859,8 +905,12 @@ function fileToBase64(file) {
 
 // ============ TEXT PASTE ============
 function togglePaste() {
-  pasteArea.classList.toggle("show");
-  if (pasteArea.classList.contains("show")) pasteText.focus();
+  const wasShown = pasteArea.classList.contains("show");
+  clearInputState();
+  if (!wasShown) {
+    pasteArea.classList.add("show");
+    pasteText.focus();
+  }
 }
 
 async function handleTextSubmit() {
@@ -977,7 +1027,7 @@ async function callGemini(contents) {
     },
   };
 
-  const res = await fetch(url + "?key=" + encodeURIComponent(GEMINI_KEY), {
+  const res = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -1010,39 +1060,53 @@ async function callGemini(contents) {
 }
 
 // ============ SARVAM TTS (BULBUL V3) ============
+function stopPlayback() {
+  if (currentAudio) {
+    currentAudio.onended = null;
+    currentAudio.onerror = null;
+    currentAudio.pause();
+    currentAudio = null;
+  }
+  if (ttsAbortController) {
+    ttsAbortController.abort();
+    ttsAbortController = null;
+  }
+  isSpeaking = false;
+  speakBtn.classList.remove("speaking");
+}
+
 async function speakResponse() {
+  // Always stop any existing playback first — restart from scratch
+  stopPlayback();
+
   const text = responseText.textContent;
   if (!text) return;
+
+  isSpeaking = true;
+  ttsAbortController = new AbortController();
+  const signal = ttsAbortController.signal;
 
   speakBtn.classList.add("speaking");
   activateStep(3, "speaking...");
 
   try {
-    if (currentAudio) { currentAudio.pause(); currentAudio = null; }
-
     // Sarvam TTS limit: 500 chars per input, max 3 inputs per call
-    // Trim response if too long (safety net)
     let ttsText = text;
-    console.log("🔊 TTS input text:", ttsText);
-    console.log("🔊 TTS text length:", ttsText.length, "chars");
 
     if (ttsText.length > 1400) {
-      // Cut at last sentence boundary before 1400 chars
       const cutPoint = ttsText.lastIndexOf('।', 1400);
       const cutPoint2 = ttsText.lastIndexOf('. ', 1400);
       const best = Math.max(cutPoint, cutPoint2);
       ttsText = best > 200 ? ttsText.substring(0, best + 1) : ttsText.substring(0, 1400);
     }
 
-    // Split text into chunks at sentence boundaries
     const chunks = splitTextForTTS(ttsText, 400);
-    console.log("🔊 TTS chunks:", chunks.length, chunks.map(c => c.length + " chars"));
 
-    // Process in batches of 3 (Sarvam max per call)
     const allAudioBlobs = [];
     for (let i = 0; i < chunks.length; i += 3) {
+      if (signal.aborted) return;
+
       const batch = chunks.slice(i, i + 3);
-      console.log("🔊 Sending batch", Math.floor(i/3)+1, "to Sarvam:", batch.map(b => b.substring(0, 50) + "..."));
 
       const res = await fetch("https://api.sarvam.ai/text-to-speech", {
         method: "POST",
@@ -1057,6 +1121,7 @@ async function speakResponse() {
           pace: 0.9,
           enable_preprocessing: true,
         }),
+        signal: signal,
       });
 
       if (!res.ok) {
@@ -1066,7 +1131,6 @@ async function speakResponse() {
 
       const data = await res.json();
       if (data.audios) {
-        console.log("🔊 Sarvam returned", data.audios.length, "audio segments for this batch");
         for (const audioBase64 of data.audios) {
           const audioBytes = atob(audioBase64);
           const audioArray = new Uint8Array(audioBytes.length);
@@ -1078,14 +1142,14 @@ async function speakResponse() {
       }
     }
 
+    if (signal.aborted) return;
     if (allAudioBlobs.length === 0) throw new Error("No audio returned from Sarvam");
-    console.log("🔊 Total audio segments to play:", allAudioBlobs.length);
 
-    // Play all audio segments in sequence
-    await playAudioSequence(allAudioBlobs);
+    await playAudioSequence(allAudioBlobs, signal);
 
   } catch (err) {
-    speakBtn.classList.remove("speaking");
+    if (err.name === "AbortError") return; // silently ignore aborted requests
+    stopPlayback();
     failStep(3, "TTS error");
     showError("Voice output issue: " + err.message);
   }
@@ -1131,15 +1195,30 @@ function splitTextForTTS(text, maxLen) {
   return chunks.filter(c => c.length > 0);
 }
 
-// Play an array of audio blobs one after another
-function playAudioSequence(blobs) {
+// Play an array of audio blobs one after another (abortable)
+function playAudioSequence(blobs, signal) {
   return new Promise((resolve) => {
     let index = 0;
 
+    if (signal) {
+      signal.addEventListener("abort", () => {
+        if (currentAudio) {
+          currentAudio.onended = null;
+          currentAudio.onerror = null;
+          currentAudio.pause();
+          currentAudio = null;
+        }
+        resolve();
+      }, { once: true });
+    }
+
     function playNext() {
-      if (index >= blobs.length) {
-        speakBtn.classList.remove("speaking");
-        completeStep(3, "spoken");
+      if ((signal && signal.aborted) || index >= blobs.length) {
+        if (!signal || !signal.aborted) {
+          isSpeaking = false;
+          speakBtn.classList.remove("speaking");
+          completeStep(3, "spoken");
+        }
         resolve();
         return;
       }
@@ -1153,6 +1232,7 @@ function playAudioSequence(blobs) {
       };
       currentAudio.onerror = () => {
         URL.revokeObjectURL(url);
+        isSpeaking = false;
         speakBtn.classList.remove("speaking");
         failStep(3, "playback error");
         resolve();
@@ -1231,7 +1311,7 @@ function showResponse(text) {
 }
 
 function resetAll() {
-  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  stopPlayback();
   conversationHistory = [];
   turnCount = 0;
 
@@ -1242,7 +1322,7 @@ function resetAll() {
   followupArea.classList.remove("show");
   errorMsg.classList.remove("show");
   hideStatus();
-  speakBtn.classList.remove("speaking");
+  hidePipeline();
   pasteText.value = "";
 }
 
