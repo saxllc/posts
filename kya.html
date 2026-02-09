@@ -436,6 +436,57 @@
   }
 
   .error-msg.show { display: block; }
+
+  /* ============ DEBUG CONSOLES ============ */
+  .debug-panel { margin-top: 8px; }
+
+  .debug-panel details {
+    background: var(--white);
+    border: 1px solid var(--cream-dark);
+    border-radius: var(--radius-sm);
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+
+  .debug-panel summary {
+    padding: 10px 14px;
+    font-size: 0.73rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--text-soft);
+    cursor: pointer;
+    user-select: none;
+    background: var(--cream);
+    list-style: none;
+  }
+
+  .debug-panel summary::-webkit-details-marker { display: none; }
+  .debug-panel summary::marker { content: ""; }
+  .debug-panel summary::before { content: "\25B6  "; font-size: 0.6rem; }
+  .debug-panel details[open] summary::before { content: "\25BC  "; }
+
+  .debug-log {
+    padding: 10px 14px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.7rem;
+    line-height: 1.6;
+    color: var(--text);
+    max-height: 260px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+    background: #FAFAF7;
+  }
+
+  .debug-log .log-entry {
+    padding: 3px 0;
+    border-bottom: 1px dotted var(--cream-dark);
+  }
+
+  .debug-log .log-entry:last-child { border-bottom: none; }
+  .debug-log .log-label { color: var(--saffron); font-weight: 700; }
+  .debug-log .log-warn { color: var(--red-soft); font-weight: 700; }
+  .debug-log .log-ok { color: var(--green); font-weight: 700; }
 </style>
 </head>
 <body>
@@ -598,6 +649,18 @@
     </div>
   </div>
 
+  <!-- Debug Consoles (collapsible) -->
+  <div class="debug-panel" id="debugPanel" style="display:none;">
+    <details id="geminiConsole">
+      <summary>Gemini Console</summary>
+      <div class="debug-log" id="geminiLog"></div>
+    </details>
+    <details id="ttsConsole">
+      <summary>Sarvam TTS Console</summary>
+      <div class="debug-log" id="ttsLog"></div>
+    </details>
+  </div>
+
 </main>
 
 <!-- File inputs -->
@@ -606,7 +669,8 @@
 
 <footer>
   Kya Likha Hai? · Inclusive Intelligence PoC<br>
-  Powered by <a href="https://www.sarvam.ai" target="_blank">Sarvam AI</a> (voice) + <a href="https://ai.google.dev" target="_blank">Google Gemini</a> (intelligence)
+  Powered by <a href="https://www.sarvam.ai" target="_blank">Sarvam AI</a> (voice) + <a href="https://ai.google.dev" target="_blank">Google Gemini</a> (intelligence)<br>
+  <span style="font-size:0.6rem; color:#CCC;">v2 · Updated 2026-02-09 · Fixed truncation + debug consoles</span>
 </footer>
 
 <script>
@@ -679,6 +743,32 @@ const cameraInput = $("cameraInput");
 const imageInput = $("imageInput");
 const inputLabel = $("inputLabel");
 const mainEl = document.querySelector("main");
+const debugPanel = $("debugPanel");
+const geminiLog = $("geminiLog");
+const ttsLog = $("ttsLog");
+
+// ============ DEBUG LOGGING ============
+function escapeHtml(str) {
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function logTo(logEl, label, msg, cls) {
+  debugPanel.style.display = "block";
+  const entry = document.createElement("div");
+  entry.className = "log-entry";
+  const span = `<span class="${cls || 'log-label'}">[${label}]</span> `;
+  entry.innerHTML = span + escapeHtml(String(msg));
+  logEl.appendChild(entry);
+  logEl.scrollTop = logEl.scrollHeight;
+}
+
+function logGemini(label, msg, cls) { logTo(geminiLog, label, msg, cls); }
+function logTTS(label, msg, cls) { logTo(ttsLog, label, msg, cls); }
+
+function clearDebugLogs() {
+  geminiLog.innerHTML = "";
+  ttsLog.innerHTML = "";
+}
 
 // ============ URL PARAMETER KEYS ============
 function loadKeysFromURL() {
@@ -946,6 +1036,7 @@ CRITICAL RULES:
 }
 
 async function interpretText(text) {
+  clearDebugLogs();
   showStatus(langMap[selectedLang]?.thinking || "Understanding...");
   showPipeline();
   // Step 1 already done if voice; mark it done for paste input too
@@ -969,6 +1060,7 @@ async function interpretText(text) {
 }
 
 async function interpretImage(base64, mediaType) {
+  clearDebugLogs();
   showStatus(langMap[selectedLang]?.thinking || "Reading image...");
   showPipeline();
   completeStep(1, "image captured");
@@ -1015,6 +1107,7 @@ async function interpretFollowup(text) {
 async function callGemini(contents) {
   // Using Gemini 2.5 Flash — fast, multilingual, supports vision
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`;
+  logGemini("REQUEST", `model: gemini-2.5-flash | lang: ${selectedLang} | maxTokens: 4096`);
 
   const body = {
     system_instruction: {
@@ -1022,7 +1115,7 @@ async function callGemini(contents) {
     },
     contents: contents,
     generationConfig: {
-      maxOutputTokens: 500,
+      maxOutputTokens: 4096,
       temperature: 0.7,
     },
   };
@@ -1043,10 +1136,25 @@ async function callGemini(contents) {
 
   const data = await res.json();
 
+  // Log raw Gemini response metadata
+  const candidate = data.candidates?.[0];
+  const finishReason = candidate?.finishReason || "UNKNOWN";
+  const usage = data.usageMetadata;
+  logGemini("FINISH", `finishReason: ${finishReason}`, finishReason === "MAX_TOKENS" ? "log-warn" : "log-ok");
+  if (usage) {
+    logGemini("TOKENS", `prompt: ${usage.promptTokenCount || "?"}, response: ${usage.candidatesTokenCount || "?"}, total: ${usage.totalTokenCount || "?"}`);
+  }
+  if (finishReason === "MAX_TOKENS") {
+    logGemini("WARN", "Response was TRUNCATED by maxOutputTokens limit!", "log-warn");
+  }
+
   // Extract text from Gemini response
-  const responseText = data.candidates?.[0]?.content?.parts
+  const responseText = candidate?.content?.parts
     ?.map(p => p.text || "")
     .join("") || "";
+
+  logGemini("RESPONSE", `${responseText.length} chars, ~${responseText.split(/\s+/).length} words`);
+  logGemini("TEXT", responseText);
 
   if (!responseText) {
     throw new Error("No response from Gemini. Please try again.");
@@ -1092,21 +1200,26 @@ async function speakResponse() {
   try {
     // Sarvam TTS limit: 500 chars per input, max 3 inputs per call
     let ttsText = text;
+    logTTS("INPUT", `Full text: ${ttsText.length} chars`);
 
-    if (ttsText.length > 1400) {
-      const cutPoint = ttsText.lastIndexOf('।', 1400);
-      const cutPoint2 = ttsText.lastIndexOf('. ', 1400);
+    if (ttsText.length > 3000) {
+      const cutPoint = ttsText.lastIndexOf('।', 3000);
+      const cutPoint2 = ttsText.lastIndexOf('. ', 3000);
       const best = Math.max(cutPoint, cutPoint2);
-      ttsText = best > 200 ? ttsText.substring(0, best + 1) : ttsText.substring(0, 1400);
+      ttsText = best > 200 ? ttsText.substring(0, best + 1) : ttsText.substring(0, 3000);
+      logTTS("TRIM", `Trimmed to ${ttsText.length} chars (limit: 3000)`, "log-warn");
     }
 
     const chunks = splitTextForTTS(ttsText, 400);
+    logTTS("CHUNKS", `${chunks.length} chunk(s): [${chunks.map(c => c.length + " chars").join(", ")}]`);
 
     const allAudioBlobs = [];
     for (let i = 0; i < chunks.length; i += 3) {
       if (signal.aborted) return;
 
       const batch = chunks.slice(i, i + 3);
+      const batchNum = Math.floor(i / 3) + 1;
+      logTTS("BATCH " + batchNum, `Sending ${batch.length} chunk(s) to Sarvam...`);
 
       const res = await fetch("https://api.sarvam.ai/text-to-speech", {
         method: "POST",
@@ -1126,11 +1239,13 @@ async function speakResponse() {
 
       if (!res.ok) {
         const errBody = await res.text();
+        logTTS("ERROR", `Sarvam returned ${res.status}: ${errBody}`, "log-warn");
         throw new Error(`Sarvam TTS error: ${res.status} — ${errBody}`);
       }
 
       const data = await res.json();
       if (data.audios) {
+        logTTS("BATCH " + batchNum, `Received ${data.audios.length} audio segment(s)`, "log-ok");
         for (const audioBase64 of data.audios) {
           const audioBytes = atob(audioBase64);
           const audioArray = new Uint8Array(audioBytes.length);
@@ -1145,6 +1260,7 @@ async function speakResponse() {
     if (signal.aborted) return;
     if (allAudioBlobs.length === 0) throw new Error("No audio returned from Sarvam");
 
+    logTTS("PLAY", `Playing ${allAudioBlobs.length} audio segment(s)`, "log-ok");
     await playAudioSequence(allAudioBlobs, signal);
 
   } catch (err) {
