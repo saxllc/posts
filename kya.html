@@ -958,11 +958,10 @@ async function processVoice(audioBlob) {
 // ============ CAMERA / IMAGE ============
 function openCamera() {
   clearInputState();
-  if (/Mobi|Android/i.test(navigator.userAgent)) {
-    cameraInput.click();
-  } else {
-    imageInput.click();
-  }
+  // On mobile: imageInput (accept="image/*" without capture) lets the OS
+  // show both camera and gallery. cameraInput with capture="environment"
+  // forces camera-only on most mobile browsers.
+  imageInput.click();
 }
 
 async function handleImageCapture(e) {
