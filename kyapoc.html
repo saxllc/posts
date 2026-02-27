@@ -1417,10 +1417,10 @@ const SarvamTTS = (() => {
           'api-subscription-key': _key,
         },
         body: JSON.stringify({
-          text: text,
-          target_language_code: lang,
-          speaker: speaker,
-          model: 'bulbul:v2',
+          inputs: batch,
+          target_language_code: selectedLang,
+          model: "bulbul:v3",      // ← v3 (newer)
+          pace: 0.9,
           enable_preprocessing: true,
         }),
       });
