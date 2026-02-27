@@ -1017,6 +1017,45 @@ body {
   .phone-frame { width: 300px; height: 640px; }
   .section { padding: 32px 16px; }
 }
+
+/* TTS Status */
+.tts-status {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  transition: all 0.3s;
+  font-family: var(--font-body);
+}
+.tts-status.connected { background: var(--green-light); color: #005A30; border: 1px solid var(--green); }
+.tts-status.disconnected { background: var(--surface); color: var(--ink-tertiary); border: 1px solid var(--border); }
+.tts-status.speaking { background: var(--green); color: #fff; border: 1px solid var(--green); }
+.tts-status.error { background: var(--red-light); color: var(--red); border: 1px solid var(--red); }
+.tts-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.tts-status.connected .tts-dot { background: var(--green); }
+.tts-status.disconnected .tts-dot { background: var(--ink-tertiary); }
+.tts-status.speaking .tts-dot { background: #fff; animation: ttsPulse 0.6s infinite; }
+.tts-status.error .tts-dot { background: var(--red); }
+@keyframes ttsPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+.voice-bar.tts-speaking {
+  background: rgba(0,112,60,0.85);
+  animation: voiceBarPulse 1s infinite;
+}
+@keyframes voiceBarPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.75; } }
 </style>
 </head>
 <body>
@@ -1148,7 +1187,7 @@ body {
           <p style="margin-bottom: 14px;">Tap the ear icon next to any heading. The system confirms with a <em>ting</em>, classifies the content, plays a distinct tone, then speaks the explanation aloud.</p>
           <div class="explain-step"><div class="explain-step-num">1</div><div class="explain-step-text"><strong>Ting</strong> (880Hz, 80ms) — auditory confirmation. "I heard you."</div></div>
           <div class="explain-step"><div class="explain-step-num">2</div><div class="explain-step-text"><strong>Classification</strong> — Gemini infers informational / caution / critical. Distinct tone per class.</div></div>
-          <div class="explain-step"><div class="explain-step-num">3</div><div class="explain-step-text"><strong>Explanation</strong> — AI generates a plain-language summary. Sarvam Bulbul speaks it aloud in the active language.</div></div>
+          <div class="explain-step"><div class="explain-step-num">3</div><div class="explain-step-text"><strong>Explanation</strong> — AI generates a plain-language summary. <strong>Sarvam Bulbul speaks it aloud</strong> in Hindi via live TTS API. Text types out simultaneously.</div></div>
           <div class="explain-step"><div class="explain-step-num">4</div><div class="explain-step-text"><strong>ARIA live region</strong> updates at each step — screen readers announce in parallel.</div></div>
         </div>
 
@@ -1160,8 +1199,13 @@ body {
         </div>
 
         <div class="explain-card fade-in fade-in-d2" style="background: var(--saffron-light); border-color: var(--saffron);">
-          <h3>🔊 Voice Guidance Engine</h3>
-          <p>Shared service across both patterns. Queued announcements — never overlapping. Minimum 1.5s gap. <code>aria-live="polite"</code> throughout. Tones via Web Audio API (no files needed). TTS via Sarvam Bulbul for natural Indic speech.</p>
+          <h3>🔊 Live Voice — Sarvam Bulbul TTS</h3>
+          <p style="margin-bottom: 10px;">This demo integrates <strong>Sarvam AI Bulbul</strong> for real Hindi speech synthesis. Pass your API key via URL:</p>
+          <div style="background: rgba(0,0,0,0.06); padding: 10px 14px; border-radius: 6px; font-family: var(--font-mono); font-size: 12px; word-break: break-all; margin-bottom: 10px;">
+            igds-poc.html<strong style="color: var(--red);">?sarvam_key=YOUR_KEY</strong>
+          </div>
+          <p style="font-size: 13px; color: var(--ink-secondary);"><strong>Security:</strong> Key is extracted once, URL is immediately cleaned via <code>history.replaceState</code> — invisible in browser history, screenshots, or share links. Never logged, never stored. Status indicator bottom-right shows connection state.</p>
+          <p style="font-size: 13px; color: var(--ink-secondary); margin-top: 6px;"><strong>Without key:</strong> Everything works — tones play, text appears, UI animates. TTS adds the voice layer on top.</p>
         </div>
 
         <div class="explain-card fade-in fade-in-d3" style="background: var(--green-light); border-color: var(--green);">
@@ -1322,16 +1366,159 @@ body {
 <!-- ============================================================ -->
 <div class="poc-footer">
   <strong>IGDS — Indian Government Design System · Proof of Concept v0.2.0</strong><br>
-  Draft · February 2026<br>
+  Prepared by the Office of the Principal Design Advisor, UIDAI · February 2026<br>
   Adapted from GOV.UK Design System (MIT License) · Built as Digital Public Infrastructure<br><br>
   <span style="color: var(--saffron);">नींव पक्की तो इमारत पक्की</span>
 </div>
 
 <!-- ============================================================ -->
-<!-- JAVASCRIPT — INTERACTIONS -->
+<!-- JAVASCRIPT — INTERACTIONS + SARVAM BULBUL TTS -->
 <!-- ============================================================ -->
 <script>
-// === WEB AUDIO TONE ENGINE ===
+// ================================================================
+// SARVAM TTS ENGINE
+// Key passed via URL: ?sarvam_key=YOUR_KEY
+// Never hardcoded. Never logged. Extracted once, held in closure.
+// ================================================================
+const SarvamTTS = (() => {
+  // Extract key from URL params — runs once, then params are consumed
+  const params = new URLSearchParams(window.location.search);
+  const _key = params.get('sarvam_key') || params.get('key') || '';
+
+  // Clean URL bar so key isn't visible in screenshots / browser history
+  if (_key && window.history.replaceState) {
+    const cleanURL = window.location.pathname + window.location.hash;
+    window.history.replaceState({}, document.title, cleanURL);
+  }
+
+  let _currentAudio = null; // Track playing audio for interruption
+  let _speaking = false;
+
+  const isAvailable = () => _key.length > 8;
+
+  const setStatus = (state, msg) => {
+    const el = document.getElementById('ttsStatus');
+    if (!el) return;
+    el.className = 'tts-status ' + state;
+    el.querySelector('.tts-label').textContent = msg;
+  };
+
+  // Core TTS call — returns a playable Audio object
+  const synthesize = async (text, lang = 'hi-IN', speaker = 'Meera') => {
+    if (!isAvailable()) return null;
+    try {
+      setStatus('speaking', 'Sarvam Bulbul · Speaking...');
+      _speaking = true;
+
+      const res = await fetch('https://api.sarvam.ai/text-to-speech', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'api-subscription-key': _key,
+        },
+        body: JSON.stringify({
+          inputs: [text],
+          target_language_code: lang,
+          speaker: speaker,
+          model: 'bulbul:v1',
+          enable_preprocessing: true,
+        }),
+      });
+
+      if (!res.ok) {
+        const errText = await res.text().catch(() => res.status);
+        console.warn('Sarvam TTS error:', res.status, errText);
+        setStatus('error', `TTS Error (${res.status})`);
+        setTimeout(() => { if (!_speaking) setStatus('connected', 'Sarvam Bulbul · Ready'); }, 3000);
+        return null;
+      }
+
+      const data = await res.json();
+      const b64 = data.audios?.[0];
+      if (!b64) {
+        setStatus('error', 'TTS: No audio returned');
+        return null;
+      }
+
+      const audio = new Audio('data:audio/wav;base64,' + b64);
+      audio.addEventListener('ended', () => {
+        _speaking = false;
+        _currentAudio = null;
+        setStatus('connected', 'Sarvam Bulbul · Ready');
+      });
+      audio.addEventListener('error', () => {
+        _speaking = false;
+        _currentAudio = null;
+        setStatus('error', 'Audio playback error');
+      });
+
+      return audio;
+    } catch (e) {
+      console.warn('Sarvam TTS fetch error:', e);
+      _speaking = false;
+      setStatus('error', 'TTS Network Error');
+      setTimeout(() => setStatus('connected', 'Sarvam Bulbul · Ready'), 3000);
+      return null;
+    }
+  };
+
+  // Speak immediately — interrupts any current speech
+  const speak = async (text, lang = 'hi-IN', speaker = 'Meera') => {
+    stop(); // interrupt previous
+    const audio = await synthesize(text, lang, speaker);
+    if (audio) {
+      _currentAudio = audio;
+      await audio.play().catch(e => console.warn('Audio play blocked:', e));
+    }
+    return audio;
+  };
+
+  // Speak after a delay (ms) — for sequenced guidance
+  const speakAfter = (text, delayMs, lang = 'hi-IN', speaker = 'Meera') => {
+    return new Promise(resolve => {
+      setTimeout(async () => {
+        const audio = await speak(text, lang, speaker);
+        resolve(audio);
+      }, delayMs);
+    });
+  };
+
+  // Stop current speech
+  const stop = () => {
+    if (_currentAudio) {
+      _currentAudio.pause();
+      _currentAudio.currentTime = 0;
+      _currentAudio = null;
+    }
+    _speaking = false;
+  };
+
+  // Wait for current speech to finish
+  const waitForEnd = () => {
+    return new Promise(resolve => {
+      if (!_currentAudio || _currentAudio.ended) return resolve();
+      _currentAudio.addEventListener('ended', resolve, { once: true });
+      // Safety timeout — don't wait forever
+      setTimeout(resolve, 15000);
+    });
+  };
+
+  // Init — set status indicator
+  const init = () => {
+    if (isAvailable()) {
+      setStatus('connected', 'Sarvam Bulbul · Ready');
+    } else {
+      setStatus('disconnected', 'TTS off · Add ?sarvam_key=');
+    }
+  };
+
+  return { isAvailable, speak, speakAfter, stop, waitForEnd, init, setStatus, get speaking() { return _speaking; } };
+})();
+
+
+// ================================================================
+// WEB AUDIO TONE ENGINE
+// ================================================================
 let audioCtx = null;
 function getAudioCtx() {
   if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1357,19 +1544,38 @@ function toneCaution() { playTone(330, 150, 'triangle', 0.1); setTimeout(() => p
 function toneCritical() { playTone(440, 100, 'square', 0.06); setTimeout(() => playTone(440, 100, 'square', 0.06), 150); setTimeout(() => playTone(440, 150, 'square', 0.06), 300); }
 function toneSuccess() { playTone(523, 120, 'sine', 0.08); setTimeout(() => playTone(659, 120, 'sine', 0.08), 140); setTimeout(() => playTone(784, 200, 'sine', 0.08), 280); }
 
-// === KLH DATA ===
+
+// ================================================================
+// KYA LIKHA HAI — with Sarvam TTS
+// ================================================================
 const klhData = {
-  1: { classification: 'informational', badge: 'ⓘ सूचना', explanation: 'यहाँ आप अपना नाम, पता, या जन्मतिथि जैसी जानकारी बदल सकते हैं। यह एक सामान्य सेवा है।', toneFn: toneInformational },
-  2: { classification: 'caution', badge: '△ सावधानी', explanation: 'आपका बायोमेट्रिक लॉक चालू है। कोई भी आपके फिंगरप्रिंट से सत्यापन नहीं कर सकता। अनलॉक करने के लिए सिक्योरिटी में जाएं।', toneFn: toneCaution },
-  3: { classification: 'critical', badge: '⚠ महत्वपूर्ण', explanation: 'आपके आधार से असामान्य गतिविधि जुड़ी है। कृपया तुरंत पहचान सत्यापित करें और हेल्पलाइन 1947 पर संपर्क करें।', toneFn: toneCritical },
+  1: {
+    classification: 'informational', badge: 'ⓘ सूचना',
+    explanation: 'यहाँ आप अपना नाम, पता, या जन्मतिथि जैसी जानकारी बदल सकते हैं। यह एक सामान्य सेवा है।',
+    ttsText: 'सूचना। यहाँ आप अपना नाम, पता, या जन्मतिथि जैसी जानकारी बदल सकते हैं। यह एक सामान्य सेवा है।',
+    toneFn: toneInformational
+  },
+  2: {
+    classification: 'caution', badge: '△ सावधानी',
+    explanation: 'आपका बायोमेट्रिक लॉक चालू है। कोई भी आपके फिंगरप्रिंट से सत्यापन नहीं कर सकता। अनलॉक करने के लिए सिक्योरिटी में जाएं।',
+    ttsText: 'सावधानी। आपका बायोमेट्रिक लॉक चालू है। कोई भी आपके फिंगरप्रिंट से सत्यापन नहीं कर सकता। अनलॉक करने के लिए सिक्योरिटी में जाएं।',
+    toneFn: toneCaution
+  },
+  3: {
+    classification: 'critical', badge: '⚠ महत्वपूर्ण',
+    explanation: 'आपके आधार से असामान्य गतिविधि जुड़ी है। कृपया तुरंत पहचान सत्यापित करें और हेल्पलाइन 1947 पर संपर्क करें।',
+    ttsText: 'महत्वपूर्ण। आपके आधार से असामान्य गतिविधि जुड़ी है। कृपया तुरंत पहचान सत्यापित करें और हेल्पलाइन 1,947 पर संपर्क करें।',
+    toneFn: toneCritical
+  },
 };
+
 let klhTimeouts = [];
 let activeKLH = null;
-
 function clearKLHTimeouts() { klhTimeouts.forEach(clearTimeout); klhTimeouts = []; }
 
 function resetKLH() {
   clearKLHTimeouts();
+  SarvamTTS.stop();
   [1,2,3].forEach(i => {
     const btn = document.getElementById('klh-btn-' + i);
     const row = document.getElementById('klh-row-' + i);
@@ -1382,7 +1588,7 @@ function resetKLH() {
   activeKLH = null;
 }
 
-function triggerKLH(id) {
+async function triggerKLH(id) {
   resetKLH();
   activeKLH = id;
   const data = klhData[id];
@@ -1391,61 +1597,93 @@ function triggerKLH(id) {
   const resp = document.getElementById('klh-response-' + id);
   row.classList.add('active');
 
-  // Step 1: Ting
+  // Step 1: Ting (80ms confirmation tone)
   btn.className = 'klh-ear-btn ting';
   ting();
 
-  // Step 2: Processing
+  // Step 2: Processing state
   klhTimeouts.push(setTimeout(() => {
+    if (activeKLH !== id) return;
     btn.className = 'klh-ear-btn processing';
     resp.style.display = 'block';
     resp.innerHTML = '<div class="klh-response"><div class="klh-processing-text">समझ रहा हूँ...</div></div>';
   }, 400));
 
-  // Step 3: Classification
+  // Step 3: Classification tone
   klhTimeouts.push(setTimeout(() => {
+    if (activeKLH !== id) return;
     data.toneFn();
     resp.innerHTML = `<div class="klh-response"><div class="klh-badge ${data.classification}">${data.badge}</div></div>`;
   }, 2000));
 
-  // Step 4: Explanation
-  klhTimeouts.push(setTimeout(() => {
+  // Step 4: Explanation + TTS speech
+  klhTimeouts.push(setTimeout(async () => {
+    if (activeKLH !== id) return;
     btn.className = 'klh-ear-btn speaking';
-    // Reveal with typing effect
+
+    // Show text with typing effect
     const fullText = data.explanation;
     let charIdx = 0;
     resp.innerHTML = `<div class="klh-response"><div class="klh-badge ${data.classification}">${data.badge}</div><div class="klh-explanation" id="klh-type-${id}"></div></div>`;
     const typeEl = document.getElementById('klh-type-' + id);
     const typeInterval = setInterval(() => {
       charIdx += 2;
-      typeEl.textContent = fullText.substring(0, charIdx);
+      if (typeEl) typeEl.textContent = fullText.substring(0, charIdx);
       if (charIdx >= fullText.length) clearInterval(typeInterval);
     }, 20);
-  }, 3000));
 
-  // Step 5: Done
-  klhTimeouts.push(setTimeout(() => {
-    btn.className = 'klh-ear-btn';
-  }, 7000));
+    // === SARVAM TTS: Speak the explanation ===
+    if (SarvamTTS.isAvailable()) {
+      const audio = await SarvamTTS.speak(data.ttsText, 'hi-IN', 'Meera');
+      if (audio) {
+        // Keep speaking state until audio ends
+        audio.addEventListener('ended', () => {
+          if (activeKLH === id) btn.className = 'klh-ear-btn';
+        }, { once: true });
+        return; // Don't use timeout for done state — let audio end trigger it
+      }
+    }
+
+    // Fallback: if no TTS, use timeout to end speaking state
+    klhTimeouts.push(setTimeout(() => {
+      if (activeKLH === id) btn.className = 'klh-ear-btn';
+    }, 4000));
+  }, 3000));
 }
 
-// === SCAN FAB ===
+
+// ================================================================
+// SCAN FAB — with Sarvam TTS voice guidance
+// ================================================================
 let scanState = 'closed';
 let scanTimeouts = [];
 function clearScanTimeouts() { scanTimeouts.forEach(clearTimeout); scanTimeouts = []; }
 
 function toggleScanSheet() {
-  if (scanState === 'closed') {
-    openSheet();
-  } else {
-    closeScan();
-  }
+  if (scanState === 'closed') { openSheet(); } else { closeScan(); }
 }
 
 function updateFabIcon(isOpen) {
   document.getElementById('fabIconScan').style.display = isOpen ? 'none' : 'block';
   document.getElementById('fabIconClose').style.display = isOpen ? 'block' : 'none';
   document.getElementById('scanFab').classList.toggle('open', isOpen);
+}
+
+// Speak + update voice bar simultaneously
+async function voiceGuide(barId, text) {
+  const v = document.getElementById(barId);
+  if (v) {
+    v.textContent = '🔊 ' + text;
+    if (SarvamTTS.isAvailable()) {
+      v.classList.add('tts-speaking');
+      const audio = await SarvamTTS.speak(text, 'hi-IN', 'Meera');
+      if (audio) {
+        audio.addEventListener('ended', () => v.classList.remove('tts-speaking'), { once: true });
+      } else {
+        v.classList.remove('tts-speaking');
+      }
+    }
+  }
 }
 
 function openSheet() {
@@ -1469,6 +1707,7 @@ function openSheet() {
 
 function closeScan() {
   clearScanTimeouts();
+  SarvamTTS.stop();
   scanState = 'closed';
   updateFabIcon(false);
   document.getElementById('overlayContainer').innerHTML = '';
@@ -1496,18 +1735,29 @@ function startQR() {
     if (el) el.style.top = scanPos + '%';
   }, 30);
 
-  // Voice guidance
+  // Voice guidance — immediate
+  voiceGuide('qrVoice', 'कैमरा तैयार है।');
+
+  // Second prompt after pause
   scanTimeouts.push(setTimeout(() => {
-    const v = document.getElementById('qrVoice');
-    if (v) v.textContent = '🔊 QR कोड को फ्रेम में दिखाएं।';
-  }, 2000));
+    voiceGuide('qrVoice', 'QR कोड को फ्रेम में दिखाएं।');
+  }, 3000));
 
   // Simulate success
   scanTimeouts.push(setTimeout(() => {
     clearInterval(scanInterval);
+    SarvamTTS.stop();
     toneSuccess();
+
+    // Speak success
+    setTimeout(async () => {
+      if (SarvamTTS.isAvailable()) {
+        await SarvamTTS.speak('सत्यापन सफल।', 'hi-IN', 'Meera');
+      }
+    }, 400);
+
     showSuccess();
-  }, 5000));
+  }, 7000));
 }
 
 function startFaceAuth() {
@@ -1547,20 +1797,21 @@ function startFaceCamera() {
       <div class="voice-bar" role="status" aria-live="polite" id="faceVoice">🔊 कैमरा तैयार है।</div>
     </div>`;
 
-  // Voice sequence
-  scanTimeouts.push(setTimeout(() => {
-    const v = document.getElementById('faceVoice');
-    if (v) v.textContent = '🔊 कृपया अपना चेहरा अंडाकार में लाएं।';
-  }, 1500));
+  // Voice guidance sequence
+  voiceGuide('faceVoice', 'कैमरा तैयार है।');
 
-  // Verifying
+  scanTimeouts.push(setTimeout(() => {
+    voiceGuide('faceVoice', 'कृपया अपना चेहरा अंडाकार में लाएं।');
+  }, 2500));
+
+  // Verifying phase
   scanTimeouts.push(setTimeout(() => {
     const oval = document.getElementById('faceOval');
     const pw = document.getElementById('faceProgressWrap');
-    const v = document.getElementById('faceVoice');
     if (oval) oval.classList.add('verifying');
     if (pw) pw.style.display = 'block';
-    if (v) v.textContent = '🔊 स्थिर रहें... पहचान हो रही है।';
+
+    voiceGuide('faceVoice', 'स्थिर रहें। पहचान हो रही है।');
 
     let prog = 0;
     const progInterval = setInterval(() => {
@@ -1569,11 +1820,19 @@ function startFaceCamera() {
       if (bar) bar.style.width = prog + '%';
       if (prog >= 100) {
         clearInterval(progInterval);
+        SarvamTTS.stop();
         toneSuccess();
+
+        setTimeout(async () => {
+          if (SarvamTTS.isAvailable()) {
+            await SarvamTTS.speak('पहचान सफल।', 'hi-IN', 'Meera');
+          }
+        }, 400);
+
         showSuccess();
       }
     }, 50);
-  }, 4000));
+  }, 5500));
 }
 
 function showSuccess() {
@@ -1585,7 +1844,21 @@ function showSuccess() {
       <button class="success-dismiss" onclick="closeScan()">ठीक है</button>
     </div>`;
 }
+
+
+// ================================================================
+// INIT
+// ================================================================
+document.addEventListener('DOMContentLoaded', () => {
+  SarvamTTS.init();
+});
 </script>
+
+<!-- TTS Status Indicator -->
+<div class="tts-status disconnected" id="ttsStatus">
+  <div class="tts-dot"></div>
+  <span class="tts-label">Initializing...</span>
+</div>
 
 </body>
 </html>
