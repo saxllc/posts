@@ -1410,7 +1410,7 @@ const SarvamTTS = (() => {
       setStatus('speaking', 'Sarvam Bulbul · Speaking...');
       _speaking = true;
 
-      const res = await fetch('https://api.sarvam.ai/text-to-speech/stream', {
+      const res = await fetch('https://api.sarvam.ai/text-to-speech', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
