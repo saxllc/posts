@@ -1404,23 +1404,23 @@ const SarvamTTS = (() => {
   };
 
   // Core TTS call — returns a playable Audio object
-  const synthesize = async (text, lang = 'hi-IN', speaker = 'Meera') => {
+  const synthesize = async (text, lang = 'hi-IN', speaker = 'Anushka') => {
     if (!isAvailable()) return null;
     try {
       setStatus('speaking', 'Sarvam Bulbul · Speaking...');
       _speaking = true;
 
-      const res = await fetch('https://api.sarvam.ai/text-to-speech/stream', {
+      const res = await fetch('https://api.sarvam.ai/text-to-speech', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'api-subscription-key': _key,
         },
         body: JSON.stringify({
-          inputs: [text],
+          text: text,
           target_language_code: lang,
           speaker: speaker,
-          model: 'bulbul:v1',
+          model: 'bulbul:v2',
           enable_preprocessing: true,
         }),
       });
@@ -1463,7 +1463,7 @@ const SarvamTTS = (() => {
   };
 
   // Speak immediately — interrupts any current speech
-  const speak = async (text, lang = 'hi-IN', speaker = 'Meera') => {
+  const speak = async (text, lang = 'hi-IN', speaker = 'Anushka') => {
     stop(); // interrupt previous
     const audio = await synthesize(text, lang, speaker);
     if (audio) {
@@ -1474,7 +1474,7 @@ const SarvamTTS = (() => {
   };
 
   // Speak after a delay (ms) — for sequenced guidance
-  const speakAfter = (text, delayMs, lang = 'hi-IN', speaker = 'Meera') => {
+  const speakAfter = (text, delayMs, lang = 'hi-IN', speaker = 'Anushka') => {
     return new Promise(resolve => {
       setTimeout(async () => {
         const audio = await speak(text, lang, speaker);
@@ -1634,7 +1634,7 @@ async function triggerKLH(id) {
 
     // === SARVAM TTS: Speak the explanation ===
     if (SarvamTTS.isAvailable()) {
-      const audio = await SarvamTTS.speak(data.ttsText, 'hi-IN', 'Meera');
+      const audio = await SarvamTTS.speak(data.ttsText, 'hi-IN', 'Anushka');
       if (audio) {
         // Keep speaking state until audio ends
         audio.addEventListener('ended', () => {
@@ -1676,7 +1676,7 @@ async function voiceGuide(barId, text) {
     v.textContent = '🔊 ' + text;
     if (SarvamTTS.isAvailable()) {
       v.classList.add('tts-speaking');
-      const audio = await SarvamTTS.speak(text, 'hi-IN', 'Meera');
+      const audio = await SarvamTTS.speak(text, 'hi-IN', 'Anushka');
       if (audio) {
         audio.addEventListener('ended', () => v.classList.remove('tts-speaking'), { once: true });
       } else {
@@ -1752,7 +1752,7 @@ function startQR() {
     // Speak success
     setTimeout(async () => {
       if (SarvamTTS.isAvailable()) {
-        await SarvamTTS.speak('सत्यापन सफल।', 'hi-IN', 'Meera');
+        await SarvamTTS.speak('सत्यापन सफल।', 'hi-IN', 'Anushka');
       }
     }, 400);
 
@@ -1825,7 +1825,7 @@ function startFaceCamera() {
 
         setTimeout(async () => {
           if (SarvamTTS.isAvailable()) {
-            await SarvamTTS.speak('पहचान सफल।', 'hi-IN', 'Meera');
+            await SarvamTTS.speak('पहचान सफल।', 'hi-IN', 'Anushka');
           }
         }, 400);
 
